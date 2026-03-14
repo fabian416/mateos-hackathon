@@ -39,7 +39,7 @@ html {
 }
 
 h1, h2, h3 {
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-playfair), Georgia, serif;
 }
 
 /* Scrollbar sutil */

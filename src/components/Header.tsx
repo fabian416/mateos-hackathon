@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import MateLogo from "./MateLogo";
 
 const navLinks = [
-  { label: "Inicio", href: "#inicio" },
   { label: "Agentes", href: "#agentes" },
   { label: "Proceso", href: "#proceso" },
   { label: "Precios", href: "#precios" },
@@ -66,8 +66,10 @@ export default function Header() {
             e.preventDefault();
             handleNavClick("#inicio");
           }}
-          className={`font-bold text-xl lg:text-2xl shrink-0 transition-colors duration-300 ${scrolled ? "text-text" : "text-white"}`}
+          className={`font-extrabold text-xl lg:text-2xl shrink-0 transition-colors duration-300 flex items-center gap-2 ${scrolled ? "text-text" : "text-white"}`}
+          style={{ fontFamily: "var(--font-playfair)" }}
         >
+          <MateLogo size={36} />
           Gaucho Solutions
         </a>
 

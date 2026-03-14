@@ -30,10 +30,10 @@ export default function Hero() {
         />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-16 w-full py-32 lg:py-0">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-16 w-full py-32 lg:pt-24 lg:pb-0">
         <div className="lg:grid lg:grid-cols-12 gap-12 items-center">
           {/* Left column */}
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-9">
             {/* Heading */}
             <motion.h1
               initial={{ opacity: 0, y: 30 }}

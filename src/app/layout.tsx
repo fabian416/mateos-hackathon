@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
-import { DM_Serif_Display, Source_Sans_3, JetBrains_Mono } from "next/font/google";
+import { DM_Serif_Display, Playfair_Display, Source_Sans_3, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 const dmSerif = DM_Serif_Display({
   variable: "--font-display",
   subsets: ["latin"],
   weight: "400",
+});
+
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+  weight: ["700", "800", "900"],
 });
 
 const sourceSans = Source_Sans_3({
@@ -22,6 +28,10 @@ export const metadata: Metadata = {
   title: "Empleados de IA para Empresas Argentinas | Gaucho Solutions",
   description:
     "Empleados digitales con IA para empresas argentinas. Agentes de inteligencia artificial que trabajan 24/7 automatizando ventas, atención y operaciones.",
+  icons: {
+    icon: "/favicon.svg",
+    apple: "/apple-icon.svg",
+  },
   openGraph: {
     type: "website",
     url: "https://gauchosolutions.com/",
@@ -48,7 +58,7 @@ export default function RootLayout({
   return (
     <html lang="es-AR">
       <body
-        className={`${dmSerif.variable} ${sourceSans.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${dmSerif.variable} ${playfair.variable} ${sourceSans.variable} ${jetbrainsMono.variable} antialiased`}
       >
         {children}
       </body>
