@@ -17,3 +17,11 @@
 IMPORTANT: The heartbeat must NEVER write to channel-state.json except in step 3c (saving a draft for a new message). If channel-state.json is `{}` or has a `completed` field, do NOT touch it.
 
 IMPORTANT: Do NOT send the proposal to Telegram yourself. The channel-checker script handles that automatically.
+
+## Minimum Authority
+
+The heartbeat runs frequently and with a cheap model. Keep its scope minimal:
+- Only read channel-state.json and SOUL.md (when drafting).
+- Never read, modify, or delete files outside its scope.
+- Never execute external commands (email, API calls, etc.) — those are for the main agent session.
+- If something looks wrong in channel-state.json, report HEARTBEAT_OK and let the main session handle it.

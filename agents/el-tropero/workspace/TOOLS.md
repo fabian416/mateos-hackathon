@@ -75,6 +75,17 @@ gog sheets update --spreadsheet-id {{PIPELINE_SPREADSHEET_ID}} --range "Pipeline
 gog sheets update --spreadsheet-id {{PIPELINE_SPREADSHEET_ID}} --range "Pipeline!H5" --values '[["Seguimiento en 48hs"]]'
 ```
 
+#### Buscar lead por email (leer y filtrar manualmente)
+```bash
+gog sheets get --spreadsheet-id {{PIPELINE_SPREADSHEET_ID}} --range "Pipeline!A:I"
+```
+Después de leer, buscá en los resultados por email o WhatsApp para evitar duplicados antes de agregar un lead nuevo.
+
+#### Registrar motivo de cierre (ejemplo: fila 5, columna I)
+```bash
+gog sheets update --spreadsheet-id {{PIPELINE_SPREADSHEET_ID}} --range "Pipeline!I5" --values '[["Cerrado: eligió competencia. Sin rencor."]]'
+```
+
 ---
 
 ## Google Calendar — Reuniones
@@ -95,12 +106,134 @@ gog calendar events --calendar-id {{CALENDAR_ID}} --time-min "$(date -Iseconds)"
 gog calendar events --calendar-id {{CALENDAR_ID}} --time-min "$(date -d 'monday' -Iseconds)" --time-max "$(date -d 'next monday' -Iseconds)" --max-results 20
 ```
 
+#### Ver disponibilidad para proponer horarios al prospecto
+```bash
+gog calendar events --calendar-id {{CALENDAR_ID}} --time-min "$(date -Iseconds)" --time-max "$(date -d '+7 days' -Iseconds)" --max-results 30
+```
+Revisá los huecos entre eventos para proponer 2-3 opciones al lead. Solo proponé horarios en la franja hábil: {{BUSINESS_HOURS}}.
+
 #### Crear reunión
 ```bash
 gog calendar create --calendar-id {{CALENDAR_ID}} --summary "Reunión con [nombre]" --start "2026-03-17T10:00:00-03:00" --end "2026-03-17T10:30:00-03:00" --description "Lead: [nombre]. Tema: [tema]." --attendees "[email del lead]"
 ```
 
 **IMPORTANTE:** NUNCA crear reuniones sin aprobación del operador. Siempre redactar el borrador del evento y esperar confirmación.
+
+---
+
+## Lead Tracking — Workflow de registro
+
+### Cuándo registrar en Sheets
+
+| Evento | Qué registrar | Columnas a actualizar |
+|--------|---------------|----------------------|
+| Lead nuevo llega | Datos del lead + estado "nuevo" | A, B, C, D, E, F, H |
+| Primer contacto enviado | Estado → "contactado" + fecha | E, G, H |
+| Lead responde | Notas con resumen de respuesta + próximo paso | G, H, I |
+| Reunión agendada | Estado → "reunión_agendada" + fecha de reunión en notas | E, G, H, I |
+| Reunión realizada | Notas con resumen + próximo paso | G, H, I |
+| Propuesta enviada | Estado → "propuesta_enviada" + detalle en notas | E, G, H, I |
+| Lead responde a propuesta | Estado → "negociando" + feedback en notas | E, G, H, I |
+| Cierre ganado | Estado → "cerrado_ganado" + condiciones en notas | E, G, H, I |
+| Cierre perdido | Estado → "cerrado_perdido" + motivo en notas | E, G, H, I |
+| Seguimiento sin respuesta | Solo actualizar fecha y próximo paso | G, H |
+
+### Formato de notas (columna I)
+
+Cada entrada en notas sigue este formato para mantener el historial legible:
+
+```
+[YYYY-MM-DD] Acción: detalle breve.
+```
+
+Ejemplo:
+```
+[2026-03-16] Primer contacto por WhatsApp. Interesado en plan Pro.
+[2026-03-18] Seguimiento #1. Sin respuesta.
+[2026-03-20] Respondió. Quiere agendar demo. Tiene equipo de 5 personas.
+[2026-03-21] Reunión agendada para 2026-03-23 10:00.
+```
+
+No borrar notas anteriores. Siempre agregar al final.
+
+---
+
+## Meeting Scheduling — Patrones
+
+### Antes de proponer horarios
+
+1. Leé Google Calendar para ver disponibilidad real
+2. Solo proponé horarios dentro de la franja hábil: {{BUSINESS_HOURS}}
+3. Proponé siempre **2-3 opciones** (nunca 1, nunca más de 3)
+4. Dejá al menos **30 minutos de buffer** entre reuniones
+5. No agendes reuniones para el mismo día si es después de las 14:00 (salvo urgencia)
+
+### Formato de propuesta de horarios
+
+```
+¿Te viene bien alguno de estos?
+- [Día 1] a las [hora]
+- [Día 2] a las [hora]
+- [Día 3] a las [hora]
+Si ninguno te sirve, decime qué días y horarios te quedan mejor.
+```
+
+### Duración estándar por tipo de reunión
+
+| Tipo de reunión | Duración | Descripción |
+|----------------|----------|-------------|
+| Charla introductoria | 20 min | Primer contacto, calificación |
+| Demo de producto/servicio | 30 min | Mostrar lo que hacemos |
+| Revisión de propuesta | 30 min | Ir punto por punto sobre la propuesta |
+| Negociación | 45 min | Ajustar términos y condiciones |
+
+### Post-scheduling
+
+Después de confirmar una reunión:
+1. Crear evento en Google Calendar (con aprobación)
+2. Actualizar Sheets: estado → "reunión_agendada", próximo paso → "Preparar para reunión [fecha]"
+3. Enviar confirmación al lead con fecha, hora, link/lugar y tema
+
+### 24hs antes de la reunión
+
+- Enviar recordatorio al lead:
+  > Hola [nombre], te recuerdo que mañana a las [hora] tenemos nuestra charla sobre [tema]. ¿Sigue en pie? {{SUPPORT_SIGNATURE}}
+- Alertar al operador para que prepare lo necesario
+
+---
+
+## Follow-up Cadence — Reglas de seguimiento
+
+### Cadencia estándar (lead tibio/caliente)
+
+| Día | Acción | Template |
+|-----|--------|----------|
+| Día 0 | Primer contacto | SOUL.md - Template 1 |
+| Día 2 | Primer follow-up (sin respuesta) | TEMPLATES-EXTRA.md - Día 3 |
+| Día 5 | Segundo follow-up (valor agregado) | TEMPLATES-EXTRA.md - Día 7 |
+| Día 10 | Tercer follow-up (directo) | TEMPLATES-EXTRA.md - Día 14 |
+| Día 21 | Último intento | TEMPLATES-EXTRA.md - Día 30 |
+| Día 21+ | Cerrar como perdido si no responde | Alertar operador, cerrar con gracia |
+
+### Cadencia post-propuesta
+
+| Día | Acción | Template |
+|-----|--------|----------|
+| Día 0 | Enviar propuesta | SOUL.md - Template 3 |
+| Día 2 | Follow-up propuesta | TEMPLATES-EXTRA.md - Seguimiento post-propuesta |
+| Día 5 | Segundo follow-up (ofrecer llamada para dudas) | Custom: "¿Querés que lo charlemos por llamada?" |
+| Día 10 | Último follow-up | "¿Sigue siendo prioridad? Si no, sin problema." |
+| Día 10+ | Alertar operador, esperar instrucciones | No cerrar solo, consultar |
+
+### Reglas de la cadencia
+
+- **Máximo 5 contactos sin respuesta** antes de cerrar como perdido. No hay sexto intento.
+- **Cada contacto aporta valor diferente**: no repetir el mismo mensaje reformulado. Primer contacto = presentación. Segundo = valor agregado. Tercero = directo. Cuarto = despedida respetuosa.
+- **Si el lead responde en cualquier punto**: resetear la cadencia. Volvés a interacción activa.
+- **Si el lead dice "ahora no" o "más adelante"**: no contar como sin respuesta. Agendar reactivación para la fecha que sugiera (o 30 días si no especifica). Registrar en Sheets.
+- **Si el lead dice "no me contacten más"**: parar inmediatamente. Estado → cerrado_perdido. Motivo: "Pidió no ser contactado." Cero seguimiento después de eso.
+- **Horario de envío**: solo en horario hábil ({{BUSINESS_HOURS}}). Nunca sábados, domingos ni feriados.
+- **No enviar dos mensajes el mismo día** al mismo lead (salvo que el lead responda y amerite respuesta inmediata).
 
 ---
 
@@ -129,14 +262,16 @@ gog calendar create --calendar-id {{CALENDAR_ID}} --summary "Reunión con [nombr
 
 ```
 1. Llega lead (WhatsApp/Email/manual en Sheets)
-2. Registrar en Sheets si no existe (estado: nuevo)
-3. Leé SOUL.md → identificá template que aplica
-4. Redactá borrador siguiendo el template
-5. Guardá en channel-state.json (campo draft)
-6. El script lo envía a Telegram para aprobación
-7. Operador aprueba/modifica/descarta
-8. Se ejecuta la acción (enviar mensaje)
-9. Actualizar Sheets: estado + último seguimiento + próximo paso
+2. Verificar si ya existe en Sheets (buscar por email/WhatsApp). Si existe, retomar conversación. Si no, crear registro nuevo.
+3. Calificar lead (ver AGENTS.md - Lead Scoring). Registrar calificación en Notas.
+4. Leé SOUL.md → identificá template que aplica
+5. Redactá borrador siguiendo el template
+6. Guardá en channel-state.json (campo draft)
+7. El script lo envía a Telegram para aprobación
+8. Operador aprueba/modifica/descarta
+9. Se ejecuta la acción (enviar mensaje)
+10. Actualizar Sheets: estado + último seguimiento + próximo paso + notas
+11. Programar próximo follow-up según cadencia (ver arriba)
 ```
 
 ## Productos/Servicios de {{CLIENT_NAME}}
@@ -146,6 +281,10 @@ gog calendar create --calendar-id {{CALENDAR_ID}} --summary "Reunión con [nombr
 ## Pricing (referencia — SIEMPRE confirmar con operador)
 
 {{CLIENT_PRICING}}
+
+## Horario hábil
+
+{{BUSINESS_HOURS}}
 
 ## Información de contacto
 
