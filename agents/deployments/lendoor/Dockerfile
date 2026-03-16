@@ -1,0 +1,46 @@
+FROM node:24-slim
+
+# Install system deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 \
+    cron \
+    curl \
+    git \
+    gettext-base \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install himalaya (email CLI)
+ARG HIMALAYA_VERSION=v1.2.0
+RUN curl -fsSL "https://github.com/pimalaya/himalaya/releases/download/${HIMALAYA_VERSION}/himalaya.x86_64-linux.tgz" \
+    | tar -xz -C /usr/local/bin/ \
+    && chmod +x /usr/local/bin/himalaya
+
+# Install openclaw globally
+RUN npm i -g openclaw
+
+# Create app user and directories
+ARG AGENT_USER=agent
+RUN useradd -m -s /bin/bash ${AGENT_USER}
+USER ${AGENT_USER}
+WORKDIR /home/${AGENT_USER}
+
+RUN mkdir -p .openclaw/workspace .openclaw/logs .openclaw/credentials/whatsapp .config/himalaya
+
+# Copy project files
+COPY --chown=${AGENT_USER}:${AGENT_USER} workspace/ .openclaw/workspace/
+COPY --chown=${AGENT_USER}:${AGENT_USER} config/ /tmp/config/
+COPY --chown=${AGENT_USER}:${AGENT_USER} scripts/ /tmp/scripts/
+
+# Copy entrypoint
+COPY --chown=${AGENT_USER}:${AGENT_USER} docker-entrypoint.sh /home/${AGENT_USER}/
+RUN chmod +x /home/${AGENT_USER}/docker-entrypoint.sh
+
+# Initialize channel state
+RUN echo '{}' > .openclaw/workspace/channel-state.json
+
+# Make channel-checker executable
+RUN cp /tmp/scripts/channel-checker.py /home/${AGENT_USER}/channel-checker.py \
+    && chmod +x /home/${AGENT_USER}/channel-checker.py
+
+ENTRYPOINT ["/home/agent/docker-entrypoint.sh"]

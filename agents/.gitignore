@@ -1,0 +1,9 @@
+# Deployments con credenciales
+deployments/*/.env
+deployments/*/logs/
+deployments/*/tweet-state.json
+
+# Credenciales
+*.pem
+credentials/
+__pycache__/

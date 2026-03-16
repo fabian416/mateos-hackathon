@@ -1,0 +1,29 @@
+{
+  "agent_type": "el-tropero",
+  "display_name": "El Tropero — Ventas y Seguimiento de Leads",
+  "description": "Arrea los leads por el pipeline sin perder ninguno. Sabe cuándo empujar y cuándo esperar. Ningún lead se le enfría.",
+  "required_channels": ["telegram"],
+  "optional_channels": ["whatsapp", "email", "google-sheets", "google-calendar"],
+  "default_channels": ["telegram", "whatsapp", "google-sheets", "google-calendar"],
+  "trust_level": 2,
+  "sla": {
+    "new_lead_first_contact_minutes": 5,
+    "follow_up_hours": 48,
+    "meeting_from_first_contact_hours": 72,
+    "proposal_post_meeting_hours": 24,
+    "prospect_reply_minutes": 30
+  },
+  "pipeline": {
+    "spreadsheet_placeholder": "{{PIPELINE_SPREADSHEET_ID}}",
+    "calendar_placeholder": "{{CALENDAR_ID}}",
+    "states": [
+      "nuevo",
+      "contactado",
+      "reunión_agendada",
+      "propuesta_enviada",
+      "negociando",
+      "cerrado_ganado",
+      "cerrado_perdido"
+    ]
+  }
+}

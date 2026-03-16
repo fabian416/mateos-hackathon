@@ -1,0 +1,14 @@
+{
+  "agent_type": "el-baqueano",
+  "display_name": "El Baqueano — Soporte al Cliente",
+  "description": "Conoce cada rincón del negocio. Guía a los clientes por WhatsApp, email o web sin perderse nunca.",
+  "required_channels": ["telegram"],
+  "optional_channels": ["email", "whatsapp"],
+  "default_channels": ["telegram", "whatsapp"],
+  "trust_level": 1,
+  "sla": {
+    "whatsapp_first_response_minutes": 15,
+    "email_first_response_hours": 4,
+    "critical_response_minutes": 30
+  }
+}

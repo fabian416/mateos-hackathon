@@ -1,0 +1,50 @@
+# === Gaucho Solutions — Agentes ===
+# Levanta todos los agentes con: docker compose up -d
+# Logs: docker compose logs -f
+
+services:
+
+  # --- Marcos CEO (Gaucho Solutions) ---
+  # Tweet scheduler standalone (Python, sin OpenClaw)
+  # Genera ~6 sugerencias/día, las manda a Telegram, postea con aprobación
+  marcos-ceo:
+    build:
+      context: ./gaucho-solutions
+    container_name: marcos-ceo
+    restart: unless-stopped
+    env_file: ./gaucho-solutions/.env
+    volumes:
+      - marcos-logs:/home/agent/app/logs
+      - marcos-state:/home/agent/app
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "tweet-scheduler"]
+      interval: 5m
+      timeout: 5s
+      retries: 3
+
+  # --- El Baqueano (Lendoor) ---
+  # OpenClaw gateway + WhatsApp + Telegram
+  # Soporte al cliente por WhatsApp, aprobación por Telegram
+  baqueano-lendoor:
+    build:
+      context: ./lendoor
+      args:
+        AGENT_USER: agent
+    container_name: baqueano-lendoor
+    restart: unless-stopped
+    env_file: ./lendoor/.env
+    volumes:
+      - lendoor-logs:/home/agent/.openclaw/logs
+      - lendoor-whatsapp:/home/agent/.openclaw/credentials/whatsapp
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "openclaw"]
+      interval: 5m
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  marcos-logs:
+  marcos-state:
+  lendoor-logs:
+  lendoor-whatsapp:

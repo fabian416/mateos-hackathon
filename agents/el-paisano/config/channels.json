@@ -1,0 +1,10 @@
+{
+  "agent_type": "el-paisano",
+  "display_name": "El Paisano — Agente Custom",
+  "description": "Template en blanco para armar el agente que necesites. Lo definimos juntos.",
+  "required_channels": ["telegram"],
+  "optional_channels": ["email", "whatsapp", "sheets", "calendar", "twitter"],
+  "default_channels": ["telegram"],
+  "trust_level": 2,
+  "notes": "Todos los canales son opcionales excepto Telegram (comunicación con operador). Activá solo los que necesite el agente."
+}

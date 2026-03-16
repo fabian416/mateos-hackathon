@@ -1,0 +1,78 @@
+# === Gaucho Solutions — Production Stack (EC2) ===
+# Frontend (Next.js) + Caddy (HTTPS) + Agents
+#
+# Deploy:
+#   1. Push to main → GitHub Actions builds images → GHCR
+#   2. On EC2: docker compose -f docker-compose.yml pull && docker compose -f docker-compose.yml up -d
+
+services:
+
+  # --- Caddy (Reverse Proxy + HTTPS) ---
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+  # --- Frontend (Next.js) ---
+  frontend:
+    image: ghcr.io/fabian416/gaucho-solutions/frontend:latest
+    container_name: frontend
+    restart: unless-stopped
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # --- Marcos CEO (Gaucho Solutions — Twitter) ---
+  marcos-ceo:
+    image: ghcr.io/fabian416/gaucho-agents/el-ceo:latest
+    container_name: marcos-ceo
+    restart: unless-stopped
+    env_file: ./gaucho-solutions/.env
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        echo "=== Marcos CEO — Tweet Scheduler ==="
+        while true; do
+          python3 /tmp/scripts/tweet-scheduler.py 2>&1 || true
+          sleep 120
+        done
+    volumes:
+      - marcos-state:/home/agent/.openclaw/workspace
+      - ./gaucho-solutions/tweet-scheduler.py:/tmp/scripts/tweet-scheduler.py:ro
+
+  # --- El Baqueano (Lendoor — WhatsApp Support) ---
+  baqueano-lendoor:
+    image: ghcr.io/fabian416/gaucho-agents/el-baqueano:latest
+    container_name: baqueano-lendoor
+    restart: unless-stopped
+    env_file: ./lendoor/.env
+    volumes:
+      - lendoor-logs:/home/agent/.openclaw/logs
+      - lendoor-whatsapp:/home/agent/.openclaw/credentials/whatsapp
+      - ./lendoor/workspace:/home/agent/.openclaw/workspace
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "openclaw"]
+      interval: 5m
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  caddy-data:
+  caddy-config:
+  marcos-state:
+  lendoor-logs:
+  lendoor-whatsapp:

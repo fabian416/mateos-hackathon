@@ -1,0 +1,27 @@
+{
+  "agent_type": "el-ceo",
+  "display_name": "Marcos — CEO de Gaucho Solutions",
+  "description": "CEO y cara pública. Postea en Twitter/X, representa la marca, genera contenido sobre los agentes que vendemos.",
+  "required_channels": ["telegram"],
+  "optional_channels": ["twitter"],
+  "default_channels": ["telegram", "twitter"],
+  "trust_level": 1,
+  "twitter": {
+    "api_tier": "free",
+    "monthly_tweet_limit": 1500,
+    "skill": "opentweet-x-poster",
+    "scheduling": {
+      "mode": "proactive",
+      "slots_art": ["09:00", "11:00", "13:00", "16:00", "19:00", "21:00"],
+      "suggestions_per_day": 6,
+      "auto_discard_on_new_slot": true
+    },
+    "content_types_rotation": [
+      "caso_de_uso",
+      "educativo_ia",
+      "presentacion_agente",
+      "opinion",
+      "dato"
+    ]
+  }
+}

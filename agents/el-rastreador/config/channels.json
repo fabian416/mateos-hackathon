@@ -1,0 +1,15 @@
+{
+  "agent_type": "el-rastreador",
+  "display_name": "El Rastreador — Soporte Tecnico Nivel 1",
+  "description": "Lee las huellas del problema y lo resuelve. Diagnostica, guia paso a paso y escala lo que no puede resolver.",
+  "required_channels": ["telegram"],
+  "optional_channels": ["email", "whatsapp"],
+  "default_channels": ["telegram", "whatsapp", "email"],
+  "trust_level": 2,
+  "sla": {
+    "whatsapp_first_response_minutes": 15,
+    "email_first_response_hours": 4,
+    "escalation_minutes": 30,
+    "critical_response_minutes": 30
+  }
+}
