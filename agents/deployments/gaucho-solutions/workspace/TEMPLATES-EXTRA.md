@@ -1,4 +1,4 @@
-# TEMPLATES-EXTRA.md — Marcos, CEO (Templates de contenido)
+# TEMPLATES-EXTRA.md — Mateo, CEO (Templates de contenido)
 
 ## Tweets listos para adaptar
 

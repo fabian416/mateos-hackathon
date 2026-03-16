@@ -1,10 +1,10 @@
-# TOOLS.md — Marcos, CEO (Twitter/X + Comunicaciones)
+# TOOLS.md — Mateo, CEO (Twitter/X + Comunicaciones)
 
 ## Twitter/X
 
 ### Setup
 
-Marcos publica en Twitter via el skill `opentweet-x-poster` de ClaHub (o directamente con la Twitter API v2).
+Mateo publica en Twitter via el skill `opentweet-x-poster` de ClaHub (o directamente con la Twitter API v2).
 
 ### Publicar un tweet
 
@@ -65,8 +65,8 @@ Cuando toca un slot nuevo, el script te envía un mensaje pidiéndote generar un
 ### Cuando el operador pide contenido manualmente:
 
 1. El operador dice por Telegram: "Armá un tweet sobre El Baqueano" (o similar)
-2. Marcos redacta el tweet siguiendo SOUL.md
-3. Marcos lo presenta en Telegram directamente (no usa tweet-state.json):
+2. Mateo redacta el tweet siguiendo SOUL.md
+3. Mateo lo presenta en Telegram directamente (no usa tweet-state.json):
 
 ```
 🐦 Tweet propuesto:
@@ -77,8 +77,8 @@ Respondé: ✅ publicar | ✏️ modificar | ❌ descartar
 ```
 
 4. Operador responde:
-   - ✅ → Marcos publica via Twitter API
-   - ✏️ + feedback → Marcos modifica y vuelve a presentar
+   - ✅ → Mateo publica via Twitter API
+   - ✏️ + feedback → Mateo modifica y vuelve a presentar
    - ❌ → descartado
 
 ### Cuando el operador responde a una sugerencia automática:
@@ -90,7 +90,7 @@ El operador responde al mensaje de Telegram que envió el script:
 
 ---
 
-## Cosas que Marcos puede hacer sin aprobación
+## Cosas que Mateo puede hacer sin aprobación
 
 - Likear tweets relevantes sobre IA, emprendedurismo argentino, fintech
 - Retweetear contenido de aliados o clientes (si es positivo y relevante)

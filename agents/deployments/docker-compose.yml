@@ -4,18 +4,18 @@
 
 services:
 
-  # --- Marcos CEO (Gaucho Solutions) ---
+  # --- Mateo CEO (Gaucho Solutions) ---
   # Tweet scheduler standalone (Python, sin OpenClaw)
   # Genera ~6 sugerencias/día, las manda a Telegram, postea con aprobación
-  marcos-ceo:
+  mateo-ceo:
     build:
       context: ./gaucho-solutions
-    container_name: marcos-ceo
+    container_name: mateo-ceo
     restart: unless-stopped
     env_file: ./gaucho-solutions/.env
     volumes:
       - marcos-logs:/home/agent/app/logs
-      - marcos-state:/home/agent/app
+      - mateo-state:/home/agent/app
     healthcheck:
       test: ["CMD", "pgrep", "-f", "tweet-scheduler"]
       interval: 5m
@@ -45,6 +45,6 @@ services:
 
 volumes:
   marcos-logs:
-  marcos-state:
+  mateo-state:
   lendoor-logs:
   lendoor-whatsapp:

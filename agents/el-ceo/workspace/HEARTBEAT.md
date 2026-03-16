@@ -1,4 +1,4 @@
-# HEARTBEAT.md — Marcos, CEO
+# HEARTBEAT.md — Mateo, CEO
 
 ## Heartbeat
 

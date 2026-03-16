@@ -11,9 +11,7 @@
       "workspace": "${HOME}/.openclaw/workspace",
       "heartbeat": {
         "target": "last"
-      },
-      "maxConcurrent": 4,
-      "subagents": { "maxConcurrent": 8 }
+      }
     }
   },
   "commands": {
@@ -63,22 +61,13 @@
     }
   },
   "hooks": {
-    "enabled": true,
-    "token": "${GATEWAY_AUTH_TOKEN}",
-    "internal": {
-      "enabled": true,
-      "entries": {
-        "boot-md": { "enabled": true },
-        "command-logger": { "enabled": true },
-        "session-memory": { "enabled": true }
-      }
-    }
+    "enabled": true
   },
   "skills": {
     "install": {
       "nodeManager": "bun"
     },
-    "allowBundled": ["himalaya", "gog"]
+    "allowBundled": ["himalaya"]
   },
   "plugins": {
     "entries": {

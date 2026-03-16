@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-tweet-scheduler.py — Marcos CEO genera y postea tweets con aprobación via Telegram.
+tweet-scheduler.py — Mateo CEO genera y postea tweets con aprobación via Telegram.
 
 Corre via cron cada 2 min. Costo: $0 el 99% de las corridas.
 Solo gasta tokens (Grok/Gemini) cuando toca un slot nuevo (~6 veces/día).
@@ -324,7 +324,7 @@ def generate_with_grok(prompt):
         payload = {
             "model": "grok-3-mini",
             "messages": [
-                {"role": "system", "content": "Sos Marcos, CEO de Gaucho Solutions. Respondé SOLO con el tweet, nada más."},
+                {"role": "system", "content": "Sos Mateo, CEO de Gaucho Solutions. Respondé SOLO con el tweet, nada más."},
                 {"role": "user", "content": prompt},
             ],
             "max_tokens": 300,
@@ -392,7 +392,7 @@ def generate_tweet(content_type):
             prompt = CONTENT_PROMPTS["opinión"]
 
     full_prompt = (
-        "Sos Marcos, CEO de Gaucho Solutions, una empresa argentina NUEVA que arma agentes de IA para negocios. "
+        "Sos Mateo, CEO de Gaucho Solutions, una empresa argentina NUEVA que arma agentes de IA para negocios. "
         f"{prompt}"
         f"{news_context}"
         f"{HONESTY_RULES}\n\n"
@@ -536,7 +536,7 @@ def main():
     tweet = generate_tweet(new_type)
     if not tweet:
         log("generation failed")
-        notify_telegram("⚠️ Marcos no pudo generar el tweet. Revisá los logs.")
+        notify_telegram("⚠️ Mateo no pudo generar el tweet. Revisá los logs.")
         # Marcar slot como procesado para no reintentar cada 2 min
         save_state({"last_slot": current_slot, "content_type": new_type})
         return

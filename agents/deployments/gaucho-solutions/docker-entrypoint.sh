@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-echo "=== Marcos CEO — Gaucho Solutions ==="
+echo "=== Mateo CEO — Gaucho Solutions ==="
 
 # Validate required env vars
 for var in TELEGRAM_BOT_TOKEN TELEGRAM_OWNER_ID; do

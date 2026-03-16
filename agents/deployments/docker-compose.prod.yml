@@ -35,22 +35,22 @@ services:
       retries: 3
       start_period: 10s
 
-  # --- Marcos CEO (Gaucho Solutions — Twitter) ---
-  marcos-ceo:
+  # --- Mateo CEO (Gaucho Solutions — Twitter) ---
+  mateo-ceo:
     image: ghcr.io/fabian416/gaucho-agents/el-ceo:latest
-    container_name: marcos-ceo
+    container_name: mateo-ceo
     restart: unless-stopped
     env_file: ./gaucho-solutions/.env
     entrypoint: ["/bin/bash", "-c"]
     command:
       - |
-        echo "=== Marcos CEO — Tweet Scheduler ==="
+        echo "=== Mateo CEO — Tweet Scheduler ==="
         while true; do
           python3 /tmp/scripts/tweet-scheduler.py 2>&1 || true
           sleep 120
         done
     volumes:
-      - marcos-state:/home/agent/.openclaw/workspace
+      - mateo-state:/home/agent/.openclaw/workspace
       - ./gaucho-solutions/tweet-scheduler.py:/tmp/scripts/tweet-scheduler.py:ro
 
   # --- El Baqueano (Lendoor — WhatsApp Support) ---
@@ -73,6 +73,6 @@ services:
 volumes:
   caddy-data:
   caddy-config:
-  marcos-state:
+  mateo-state:
   lendoor-logs:
   lendoor-whatsapp:

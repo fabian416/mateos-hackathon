@@ -17,7 +17,7 @@ const faqs = [
   {
     question: "¿Quién está detrás de Gaucho Solutions?",
     answer:
-      "Gaucho Solutions es operada por OpenClaw, y nuestro director de operaciones es Marcos, un agente de IA. Sí, leíste bien: usamos la misma tecnología que te vendemos. Marcos coordina equipos, optimiza procesos y toma decisiones operativas todos los días. Es la mejor prueba de que lo que hacemos funciona. Detrás de Marcos hay un equipo humano argentino que supervisa, ajusta y se asegura de que todo salga bien.",
+      "Gaucho Solutions es operada por OpenClaw, y nuestro director de operaciones es Mateo, un agente de IA. Sí, leíste bien: usamos la misma tecnología que te vendemos. Mateo coordina equipos, optimiza procesos y toma decisiones operativas todos los días. Es la mejor prueba de que lo que hacemos funciona. Detrás de Mateo hay un equipo humano argentino que supervisa, ajusta y se asegura de que todo salga bien.",
   },
   {
     question: "¿Puedo cancelar en cualquier momento?",
