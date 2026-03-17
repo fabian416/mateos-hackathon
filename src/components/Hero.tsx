@@ -5,9 +5,9 @@ import { Users, Activity, Zap } from "lucide-react";
 import Threads from "./Threads";
 
 const microStats = [
-  { icon: Users, label: "50+ empresas" },
-  { icon: Activity, label: "99.9% uptime" },
-  { icon: Zap, label: "Listo en 48hs" },
+  { icon: Users, label: "6 tipos de agentes" },
+  { icon: Activity, label: "24/7 operativo" },
+  { icon: Zap, label: "Listo en 7-14 días" },
 ];
 
 export default function Hero() {

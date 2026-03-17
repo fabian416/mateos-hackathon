@@ -11,9 +11,9 @@ const items = [
   },
   {
     icon: Lock,
-    title: "Encriptación de punta a punta",
+    title: "Conexión segura (HTTPS)",
     description:
-      "Toda tu información viaja y se guarda encriptada. El mismo nivel de seguridad que usa tu banco.",
+      "Toda la comunicación viaja encriptada por HTTPS. Cada agente corre en su propio container aislado.",
   },
   {
     icon: Server,

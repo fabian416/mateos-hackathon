@@ -12,7 +12,7 @@ const faqs = [
   {
     question: "¿Mis datos están seguros?",
     answer:
-      "Tu información se almacena en infraestructura aislada y encriptada. Solo vos y nuestro equipo técnico asignado tienen acceso. Cumplimos con la Ley 25.326 de Protección de Datos Personales.",
+      "Tu información se almacena en infraestructura aislada. Cada agente corre en su propio container dedicado con conexión HTTPS. Solo vos y nuestro equipo técnico asignado tienen acceso.",
   },
   {
     question: "¿Quién está detrás de MateOS?",
@@ -37,7 +37,7 @@ const faqs = [
   {
     question: "¿Se integra con mis herramientas actuales?",
     answer:
-      "Sí. WhatsApp Business, Google Workspace, CRMs, plataformas de e-commerce, redes sociales y más.",
+      "Sí. WhatsApp, Telegram, Google Sheets, Google Calendar y email. Integraciones con CRMs y e-commerce próximamente.",
   },
   {
     question: "¿Qué pasa si responde algo mal?",
