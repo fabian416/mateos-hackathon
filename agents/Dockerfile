@@ -16,15 +16,15 @@ RUN curl -fsSL "https://github.com/pimalaya/himalaya/releases/download/${HIMALAY
     | tar -xz -C /usr/local/bin/ \
     && chmod +x /usr/local/bin/himalaya
 
-# Install openclaw globally
-RUN npm i -g openclaw
+# Install openclaw + gog (Google Workspace CLI) globally
+RUN npm i -g openclaw && npx clawhub@latest install gog
 
 # Create app user and directories
 RUN useradd -m -s /bin/bash agent
 USER agent
 WORKDIR /home/agent
 
-RUN mkdir -p .openclaw/workspace .openclaw/logs .openclaw/credentials/whatsapp .config/himalaya
+RUN mkdir -p .openclaw/workspace .openclaw/logs .openclaw/credentials/whatsapp .config/himalaya .openclaw/credentials
 
 # Copy base workspace files
 COPY --chown=agent:agent _base/workspace/ .openclaw/workspace/
@@ -33,9 +33,10 @@ COPY --chown=agent:agent _base/workspace/ .openclaw/workspace/
 ARG AGENT_TYPE=el-baqueano
 COPY --chown=agent:agent ${AGENT_TYPE}/workspace/ .openclaw/workspace/
 
-# Copy config templates and scripts
+# Copy config templates, scripts, and credentials
 COPY --chown=agent:agent _base/config/ /tmp/config/
 COPY --chown=agent:agent _base/scripts/ /tmp/scripts/
+COPY --chown=agent:agent _base/credentials/google-service-account.json .openclaw/credentials/google-service-account.json
 
 # Copy and setup entrypoint
 COPY --chown=agent:agent _base/docker/docker-entrypoint.sh.template /home/agent/docker-entrypoint.sh
