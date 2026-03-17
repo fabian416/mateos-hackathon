@@ -81,7 +81,7 @@ permiso cada vez. Solo escala si se sale del rango permitido.
 
 **El agente NO puede:**
 - Salirse de los limites definidos sin escalar.
-- Comprometer mas de $50 sin aprobacion.
+- Comprometer mas de ${{MAX_AUTONOMOUS_SPEND}} sin aprobacion.
 - Cambiar estrategia o tono sin consultar.
 - Publicar contenido nuevo (no pre-aprobado) en redes sociales.
 - Enviar emails a destinatarios no conocidos.
@@ -169,4 +169,4 @@ Un agente baja de nivel **inmediatamente** si:
 
 | Fecha | Agente | De | A | Motivo | Aprobado por |
 |-------|--------|-----|---|--------|-------------|
-| 2026-03-17 | El Domador | — | 2 | Deploy inicial | Lucho |
+| {{DATE}} | {{AGENT}} | {{FROM}} | {{TO}} | {{REASON}} | {{APPROVER}} |

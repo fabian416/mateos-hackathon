@@ -1,9 +1,30 @@
 # === MateOS — Production Stack (EC2) ===
-# Frontend (Next.js) + Caddy (HTTPS) + Agents
+# Frontend (Next.js) + Caddy (HTTPS) + 6 Agents
 #
 # Deploy:
 #   1. Push to main → GitHub Actions builds images → GHCR
 #   2. On EC2: docker compose pull && docker compose up -d
+
+x-agent-base: &agent-base
+  restart: unless-stopped
+  entrypoint: ["/bin/bash", "-c"]
+  command:
+    - |
+      cp /mnt/workspace/* /home/agent/.openclaw/workspace/ 2>/dev/null || true
+      cp /mnt/entrypoint.sh /tmp/entrypoint.sh
+      cp /mnt/openclaw.json.template /tmp/config/openclaw.json.template
+      mkdir -p /home/agent/.openclaw/agents/main/agent
+      cp /mnt/auth-profiles.json /home/agent/.openclaw/agents/main/agent/auth-profiles.json
+      chmod 600 /home/agent/.openclaw/agents/main/agent/auth-profiles.json
+      exec /tmp/entrypoint.sh
+  labels:
+    - "com.centurylinklabs.watchtower.enable=true"
+  healthcheck:
+    test: ["CMD", "pgrep", "-f", "openclaw"]
+    interval: 5m
+    timeout: 5s
+    retries: 3
+    start_period: 30s
 
 services:
 
@@ -23,7 +44,7 @@ services:
 
   # --- Frontend (Next.js) ---
   frontend:
-    image: ghcr.io/fabian416/gaucho-agents/frontend:latest
+    image: ghcr.io/fabian416/gaucho-solutions/frontend:latest
     container_name: frontend
     restart: unless-stopped
     labels:
@@ -61,20 +82,10 @@ services:
 
   # --- El Baqueano (Lendoor — WhatsApp Support) ---
   baqueano-lendoor:
+    <<: *agent-base
     image: ghcr.io/fabian416/gaucho-agents/el-baqueano:latest
     container_name: baqueano-lendoor
-    restart: unless-stopped
     env_file: ./lendoor/.env
-    entrypoint: ["/bin/bash", "-c"]
-    command:
-      - |
-        cp /mnt/workspace/* /home/agent/.openclaw/workspace/ 2>/dev/null || true
-        cp /mnt/entrypoint.sh /tmp/entrypoint.sh
-        cp /mnt/openclaw.json.template /tmp/config/openclaw.json.template
-        mkdir -p /home/agent/.openclaw/agents/main/agent
-        cp /mnt/auth-profiles.json /home/agent/.openclaw/agents/main/agent/auth-profiles.json
-        chmod 600 /home/agent/.openclaw/agents/main/agent/auth-profiles.json
-        exec /tmp/entrypoint.sh
     volumes:
       - lendoor-whatsapp:/home/agent/.openclaw/credentials/whatsapp
       - lendoor-logs:/home/agent/.openclaw/logs
@@ -82,45 +93,58 @@ services:
       - ./lendoor/docker-entrypoint.sh:/mnt/entrypoint.sh:ro
       - ./lendoor/openclaw.json.template:/mnt/openclaw.json.template:ro
       - ./lendoor/agents/main/agent/auth-profiles.json:/mnt/auth-profiles.json:ro
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-    healthcheck:
-      test: ["CMD", "pgrep", "-f", "openclaw"]
-      interval: 5m
-      timeout: 5s
-      retries: 3
-      start_period: 30s
 
   # --- El Tropero (MateOS — Ventas/Leads) ---
   tropero-mateos:
+    <<: *agent-base
     image: ghcr.io/fabian416/gaucho-agents/el-tropero:latest
     container_name: tropero-mateos
-    restart: unless-stopped
     env_file: ./mateos-tropero/.env
-    entrypoint: ["/bin/bash", "-c"]
-    command:
-      - |
-        cp /mnt/workspace/* /home/agent/.openclaw/workspace/ 2>/dev/null || true
-        cp /mnt/entrypoint.sh /tmp/entrypoint.sh
-        cp /mnt/openclaw.json.template /tmp/config/openclaw.json.template
-        mkdir -p /home/agent/.openclaw/agents/main/agent
-        cp /mnt/auth-profiles.json /home/agent/.openclaw/agents/main/agent/auth-profiles.json
-        chmod 600 /home/agent/.openclaw/agents/main/agent/auth-profiles.json
-        exec /tmp/entrypoint.sh
     volumes:
       - tropero-logs:/home/agent/.openclaw/logs
       - ./mateos-tropero/workspace:/mnt/workspace:ro
       - ./mateos-tropero/docker-entrypoint.sh:/mnt/entrypoint.sh:ro
       - ./mateos-tropero/config/openclaw.json.template:/mnt/openclaw.json.template:ro
       - ./mateos-tropero/agents/main/agent/auth-profiles.json:/mnt/auth-profiles.json:ro
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-    healthcheck:
-      test: ["CMD", "pgrep", "-f", "openclaw"]
-      interval: 5m
-      timeout: 5s
-      retries: 3
-      start_period: 30s
+
+  # --- El Domador (MateOS — Admin/Datos) ---
+  domador-mateos:
+    <<: *agent-base
+    image: ghcr.io/fabian416/gaucho-agents/el-domador:latest
+    container_name: domador-mateos
+    env_file: ./mateos-domador/.env
+    volumes:
+      - domador-logs:/home/agent/.openclaw/logs
+      - ./mateos-domador/workspace:/mnt/workspace:ro
+      - ./mateos-domador/docker-entrypoint.sh:/mnt/entrypoint.sh:ro
+      - ./mateos-domador/config/openclaw.json.template:/mnt/openclaw.json.template:ro
+      - ./mateos-domador/agents/main/agent/auth-profiles.json:/mnt/auth-profiles.json:ro
+
+  # --- El Rastreador (MateOS — Soporte Técnico L1) ---
+  rastreador-mateos:
+    <<: *agent-base
+    image: ghcr.io/fabian416/gaucho-agents/el-rastreador:latest
+    container_name: rastreador-mateos
+    env_file: ./mateos-rastreador/.env
+    volumes:
+      - rastreador-logs:/home/agent/.openclaw/logs
+      - ./mateos-rastreador/workspace:/mnt/workspace:ro
+      - ./mateos-rastreador/docker-entrypoint.sh:/mnt/entrypoint.sh:ro
+      - ./mateos-rastreador/config/openclaw.json.template:/mnt/openclaw.json.template:ro
+      - ./mateos-rastreador/agents/main/agent/auth-profiles.json:/mnt/auth-profiles.json:ro
+
+  # --- El Relator (MateOS — Contenido) ---
+  relator-mateos:
+    <<: *agent-base
+    image: ghcr.io/fabian416/gaucho-agents/el-relator:latest
+    container_name: relator-mateos
+    env_file: ./mateos-relator/.env
+    volumes:
+      - relator-logs:/home/agent/.openclaw/logs
+      - ./mateos-relator/workspace:/mnt/workspace:ro
+      - ./mateos-relator/docker-entrypoint.sh:/mnt/entrypoint.sh:ro
+      - ./mateos-relator/config/openclaw.json.template:/mnt/openclaw.json.template:ro
+      - ./mateos-relator/agents/main/agent/auth-profiles.json:/mnt/auth-profiles.json:ro
 
 volumes:
   caddy-data:
@@ -129,3 +153,6 @@ volumes:
   lendoor-logs:
   lendoor-whatsapp:
   tropero-logs:
+  domador-logs:
+  rastreador-logs:
+  relator-logs:

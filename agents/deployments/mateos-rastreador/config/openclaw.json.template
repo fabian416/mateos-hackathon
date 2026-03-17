@@ -6,7 +6,8 @@
       },
       "models": {
         "anthropic/claude-haiku-4-5": {},
-        "anthropic/claude-sonnet-4-6": {}
+        "anthropic/claude-sonnet-4-6": {},
+        "google/gemini-2.5-flash": {}
       },
       "workspace": "${HOME}/.openclaw/workspace",
       "heartbeat": {
@@ -34,19 +35,6 @@
         "autoSelectFamily": false,
         "dnsResultOrder": "ipv4first"
       }
-    },
-    "whatsapp": {
-      "enabled": ${WHATSAPP_ENABLED},
-      "dmPolicy": "${WHATSAPP_DM_POLICY}",
-      "allowFrom": [${WHATSAPP_ALLOW_FROM}],
-      "groupPolicy": "disabled",
-      "sendReadReceipts": true,
-      "mediaMaxMb": 50,
-      "accounts": {
-        "default": {
-          "enabled": true
-        }
-      }
     }
   },
   "gateway": {
@@ -64,7 +52,7 @@
   },
   "hooks": {
     "enabled": true,
-    "token": "b7c8d9e0f1a2345678901234abcdef567890abcdef012345",
+    "token": "c8d9e0f1a2b3456789012345cdef01234567890abcdef1234",
     "internal": {
       "enabled": true,
       "entries": {

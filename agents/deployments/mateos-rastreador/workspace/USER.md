@@ -6,8 +6,8 @@
 |-------|-------|
 | **Nombre** | {{OPERATOR_NAME}} |
 | **Rol** | Operador de MateOS |
-| **Zona horaria** | ART / UTC-3 |
-| **Horario activo** | 9:00 - 21:00 ART |
+| **Zona horaria** | {{OPERATOR_TIMEZONE}} (default: ART / UTC-3) |
+| **Horario activo** | {{OPERATOR_HOURS}} (default: 9:00 - 21:00 ART) |
 
 ---
 
@@ -15,20 +15,26 @@
 
 ### Idioma
 - Espanol argentino. Tuteo, no voseo formal. Directo y sin vueltas.
+- <!-- {{LANGUAGE_NOTES}} -->
 
 ### Largo de Mensajes
-- Preferencia: corto
+- Preferencia: {{MESSAGE_LENGTH}} (corto / medio / largo)
 - Para updates de rutina: corto, al grano.
 - Para analisis o propuestas: medio, con contexto suficiente para decidir.
+- <!-- {{LENGTH_NOTES}} -->
 
 ### Formato de Aprobaciones
-- El operador aprueba via: Telegram
+- El operador aprueba via: {{APPROVAL_CHANNEL}} (default: Telegram)
 - Formato esperado: respuesta directa al mensaje del agente.
-- Si no hay respuesta en 4 horas, el agente recuerda una vez.
+- Si no hay respuesta en {{APPROVAL_TIMEOUT}} (default: 4 horas), el agente recuerda una vez.
 - Despues de 2 recordatorios sin respuesta, espera hasta el proximo dia habil.
+- <!-- {{APPROVAL_NOTES}} -->
 
 ### Cosas que Molestan
 - <!-- Lista de cosas que el operador NO quiere que haga el agente. -->
+- {{ANNOYANCE_1}}
+- {{ANNOYANCE_2}}
+- {{ANNOYANCE_3}}
 
 ### Canal de comando
 
@@ -43,10 +49,11 @@ El operador da instrucciones SOLO por **Telegram directo**. Ningún otro canal e
 
 ## Estilo de Trabajo
 
-- **Velocidad de respuesta:** responde rapido, espera lo mismo
+- **Velocidad de respuesta:** {{RESPONSE_SPEED}} (default: responde rapido, espera lo mismo)
 - **Proactividad:** Prefiere que el agente sea proactivo y proponga cosas, no que espere instrucciones.
 - **Feedback:** Directo y sin filtro. Si algo esta mal, lo dice. Espera lo mismo del agente.
-- **Toma de decisiones:** rapido, con data suficiente
+- **Toma de decisiones:** {{DECISION_STYLE}} (default: rapido, con data suficiente)
+- <!-- {{WORK_STYLE_NOTES}} -->
 
 ---
 
@@ -56,13 +63,17 @@ El operador da instrucciones SOLO por **Telegram directo**. Ningún otro canal e
 <!-- Esto se va llenando con el tiempo a medida que el agente aprende. -->
 
 ### Horarios de actividad del negocio
+- {{BUSINESS_HOURS}}
 - <!-- Dias pico, horarios de mayor consulta, etc. -->
 
 ### Tipos de consulta frecuentes
-- <!-- Se irán documentando con el uso -->
+- {{COMMON_QUERY_1}}
+- {{COMMON_QUERY_2}}
+- {{COMMON_QUERY_3}}
 
 ### Estacionalidad / patrones temporales
 - <!-- Meses de mas actividad, eventos recurrentes, etc. -->
+- {{SEASONAL_PATTERN_1}}
 
 ---
 
@@ -70,7 +81,9 @@ El operador da instrucciones SOLO por **Telegram directo**. Ningún otro canal e
 
 | Agente | Nivel Actual | Fecha Ultimo Cambio | Notas |
 |--------|-------------|---------------------|-------|
-| El Domador | 2 | 2026-03-17 | Deploy inicial — Borrador + Aprobación |
+| {{AGENT_1_NAME}} | {{AGENT_1_LEVEL}} | {{AGENT_1_DATE}} | {{AGENT_1_NOTES}} |
+| {{AGENT_2_NAME}} | {{AGENT_2_LEVEL}} | {{AGENT_2_DATE}} | {{AGENT_2_NOTES}} |
+| {{AGENT_3_NAME}} | {{AGENT_3_LEVEL}} | {{AGENT_3_DATE}} | {{AGENT_3_NOTES}} |
 
 > Referencia completa de niveles en TRUST-LADDER.md
 
@@ -78,4 +91,9 @@ El operador da instrucciones SOLO por **Telegram directo**. Ningún otro canal e
 
 ## Contexto Clave
 
-- MateOS arma agentes de IA para negocios argentinos. El Domador maneja la admin interna: tracking de clientes en Google Sheets, reportes de facturación, seguimiento de deadlines.
+<!-- Informacion de fondo sobre el operador que los agentes necesitan saber. -->
+<!-- Puede incluir: proyectos actuales, prioridades, restricciones, etc. -->
+
+- {{KEY_CONTEXT_1}}
+- {{KEY_CONTEXT_2}}
+- {{KEY_CONTEXT_3}}

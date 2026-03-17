@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-echo "=== El Domador — MateOS ==="
+echo "=== El Rastreador — MateOS ==="
 
 # Validate required env vars
 REQUIRED=(TELEGRAM_BOT_TOKEN TELEGRAM_OWNER_ID GATEWAY_AUTH_TOKEN)
@@ -28,10 +28,18 @@ export TELEGRAM_DM_POLICY="${TELEGRAM_DM_POLICY:-allowlist}"
 export TELEGRAM_GROUP_POLICY="${TELEGRAM_GROUP_POLICY:-disabled}"
 export GATEWAY_PORT="${GATEWAY_PORT:-18789}"
 export PRIMARY_MODEL="${PRIMARY_MODEL:-anthropic/claude-haiku-4-5}"
-export GMAIL_DISPLAY_NAME="${GMAIL_DISPLAY_NAME:-MateOS Bot}"
+export GMAIL_DISPLAY_NAME="${GMAIL_DISPLAY_NAME:-{{CLIENT_NAME}} Bot}"
 export WHATSAPP_ENABLED="${WHATSAPP_ENABLED:-false}"
 export WHATSAPP_DM_POLICY="${WHATSAPP_DM_POLICY:-open}"
-export WHATSAPP_ALLOW_FROM="${WHATSAPP_ALLOW_FROM:-}"
+# WHATSAPP_ALLOW_FROM needs to be valid JSON array content for envsubst
+# e.g. * becomes "*", 549111234 becomes "549111234"
+_WA_RAW="${WHATSAPP_ALLOW_FROM:-}"
+if [ -n "$_WA_RAW" ]; then
+  # Quote each comma-separated value for JSON
+  export WHATSAPP_ALLOW_FROM=$(echo "$_WA_RAW" | sed 's/[^,]*/"&"/g')
+else
+  export WHATSAPP_ALLOW_FROM=""
+fi
 export AGENT_NAME="${AGENT_NAME:-agent}"
 
 # Generate configs from templates
@@ -51,17 +59,6 @@ fi
   done
 ) &
 echo "Channel checker loop started (every 60s)"
-
-# Start tweet-scheduler loop (if Twitter enabled and script exists)
-if [ "${TWITTER_ENABLED:-false}" = "true" ] && [ -f ~/tweet-scheduler.py ]; then
-  (
-    while true; do
-      ~/tweet-scheduler.py >> ~/.openclaw/logs/tweet-scheduler.log 2>&1 || true
-      sleep 60
-    done
-  ) &
-  echo "Tweet scheduler loop started (every 60s)"
-fi
 
 # Start openclaw gateway (foreground)
 echo "Starting openclaw gateway..."

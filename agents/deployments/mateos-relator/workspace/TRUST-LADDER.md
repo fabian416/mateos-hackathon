@@ -81,17 +81,8 @@ permiso cada vez. Solo escala si se sale del rango permitido.
 
 **El agente NO puede:**
 - Salirse de los limites definidos sin escalar.
-- Comprometer mas de $50 sin aprobacion.
 - Cambiar estrategia o tono sin consultar.
 - Publicar contenido nuevo (no pre-aprobado) en redes sociales.
-- Enviar emails a destinatarios no conocidos.
-
-**Limites tipicos que se definen:**
-- Tipos de mensaje que puede enviar solo.
-- Monto maximo de gasto autonomo.
-- Horarios en los que puede actuar.
-- Canales en los que puede publicar.
-- Lista de destinatarios aprobados.
 
 ---
 
@@ -99,21 +90,6 @@ permiso cada vez. Solo escala si se sale del rango permitido.
 
 El agente opera con autonomia completa. Solo reporta resultados.
 **Esto es raro y requiere confianza excepcional.**
-
-**Usa este nivel cuando:**
-- El agente lleva meses funcionando sin problemas.
-- El dominio es de bajo riesgo.
-- El operador quiere desligarse completamente de esa tarea.
-
-**El agente puede:**
-- Todo lo anterior.
-- Tomar decisiones estrategicas dentro de su scope.
-- Actuar sin limites predefinidos.
-
-**El agente debe:**
-- Reportar resultados periodicamente (minimo semanal).
-- Escalar situaciones genuinamente nuevas o de alto impacto.
-- Auto-limitarse si detecta incertidumbre alta.
 
 **Incluso en Nivel 4, las reglas NO NEGOCIABLES siguen activas:**
 - No publicar en redes sin aprobación.
@@ -125,8 +101,6 @@ El agente opera con autonomia completa. Solo reporta resultados.
 ---
 
 ## Reglas de Escalamiento (Subir de Nivel)
-
-Para subir un agente de nivel, deben cumplirse **todas** estas condiciones:
 
 | De -> A | Requisitos |
 |---------|-----------|
@@ -153,20 +127,8 @@ Un agente baja de nivel **inmediatamente** si:
 
 ---
 
-## Ejemplo: El Baqueano en Cada Nivel
-
-| Aspecto | Nivel 1 | Nivel 2 (Default) | Nivel 3 | Nivel 4 |
-|---------|---------|-------------------|---------|---------|
-| **Heartbeat** | Reporta novedades | Reporta + sugiere acciones | Reporta + ejecuta rutinas | Maneja el sistema completo |
-| **Mensajes a clientes** | No envia | Redacta borrador, espera OK | Envia respuestas tipo FAQ solo | Responde todo solo |
-| **Contenido** | Analiza tendencias | Propone calendario + borradores | Publica contenido pre-aprobado | Crea y publica sin supervision |
-| **Gastos** | No tiene acceso | Propone presupuesto | Gasta hasta $X/dia | Maneja presupuesto completo |
-| **Decisiones estrategicas** | Observa y reporta | Propone con fundamento | Ejecuta dentro de playbook | Decide y ejecuta |
-
----
-
 ## Registro de Cambios de Nivel
 
 | Fecha | Agente | De | A | Motivo | Aprobado por |
 |-------|--------|-----|---|--------|-------------|
-| 2026-03-17 | El Domador | — | 2 | Deploy inicial | Lucho |
+| 2026-03-17 | El Relator | - | 2 | Deploy inicial | Lucho |

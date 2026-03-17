@@ -6,9 +6,9 @@ Leé TOOLS-BASE.md para las herramientas compartidas. Acá van las notas especí
 
 ANTES de responder CUALQUIER mensaje: leé `channel-state.json`. Si tiene `pendingMessageId` -> MODO CANAL.
 
-## Contexto de {{CLIENT_NAME}} para tareas administrativas
+## Contexto de MateOS para tareas administrativas
 
-{{CLIENT_CONTEXT}}
+MateOS arma agentes de IA para negocios argentinos. El Domador maneja la admin interna: tracking de clientes en Google Sheets, reportes de facturación, seguimiento de deadlines.
 
 ---
 
@@ -193,7 +193,7 @@ himalaya read [ID]
 
 **Enviar email (NECESITA APROBACION):**
 ```
-himalaya send --from {{GMAIL_EMAIL}} --to [DESTINATARIO] --subject "[ASUNTO]" --body "[CUERPO]"
+himalaya send --from contacto@mateos.ar --to [DESTINATARIO] --subject "[ASUNTO]" --body "[CUERPO]"
 ```
 
 ### Safety rails para Email
@@ -210,11 +210,11 @@ himalaya send --from {{GMAIL_EMAIL}} --to [DESTINATARIO] --subject "[ASUNTO]" --
 - Canal de comando con el operador de MateOS
 - Acá recibís aprobaciones y feedback
 - Acá enviás reportes, alertas y pedidos de aprobación
-- Tono casual y directo, NO uses la firma de {{CLIENT_NAME}}
+- Tono casual y directo, NO uses la firma de MateOS
 
 ---
 
-## Información del negocio de {{CLIENT_NAME}}
+## Información del negocio de MateOS
 
 ### Estructura organizativa
 {{CLIENT_ORG_STRUCTURE}}

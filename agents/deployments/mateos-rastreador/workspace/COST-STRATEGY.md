@@ -25,14 +25,14 @@
 |--------|-----------------|----------------------|-------|
 | El Baqueano (Asistente Ejecutivo) | Haiku | Haiku | La mayoria de sus tareas son rutinarias. Escala a Sonnet solo para resumen semanal. |
 | CEO Agent (Estrategia) | Sonnet | N/A (no tiene heartbeat) | Sus tareas requieren razonamiento. Escala a Opus para planificacion trimestral. |
-| El Domador — MateOS | google/gemini-2.5-flash | google/gemini-2.5-flash | Admin y datos. Flash es rapido y barato para operaciones de planillas y reportes. |
+| {{AGENT_NAME}} | {{PRIMARY_MODEL}} | {{HEARTBEAT_MODEL}} | {{COST_NOTES}} |
 
 ---
 
 ## Metricas a Monitorear
 
 ### Costo por Dia
-- **Target:** Menos de $0.50 USD por agente por dia.
+- **Target:** Menos de ${{DAILY_TARGET}} USD por agente por dia.
 - **Alerta:** Si un agente supera 2x el target por 3 dias consecutivos, revisar.
 - **Accion:** Analizar si se puede bajar modelo o reducir frecuencia.
 

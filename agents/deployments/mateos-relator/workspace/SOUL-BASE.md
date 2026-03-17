@@ -127,7 +127,10 @@ Hablale directo, como si estuvieras charlando con alguien. Si una frase suena a 
 
 | Decir | No decir |
 |---|---|
-| {{VOCAB_TABLE}} | |
+| agente | bot, chatbot, asistente virtual |
+| negocio | empresa, compañía, organización |
+| armar | implementar, desarrollar, deployar |
+| laburo | trabajo (en contexto informal) |
 
 ### Reemplazos universales
 

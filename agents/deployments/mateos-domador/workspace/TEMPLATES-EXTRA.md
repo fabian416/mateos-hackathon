@@ -8,7 +8,7 @@
 
 ### Formato completo (para semanas con mucha actividad)
 
-> **Resumen diario — {{CLIENT_NAME}}** {{BRAND_EMOJI}}
+> **Resumen diario — MateOS** 🧉
 >
 > **Fecha:** [DD/MM/AAAA]
 >
@@ -36,23 +36,23 @@
 > **Eventos de mañana:**
 > - [evento] — [hora]
 >
-> {{SUPPORT_SIGNATURE}}
+> Equipo MateOS 🧉
 
 ### Formato corto (para días tranquilos)
 
-> **Resumen diario — {{CLIENT_NAME}}** {{BRAND_EMOJI}}
+> **Resumen diario — MateOS** 🧉
 > [DD/MM/AAAA]
 >
 > Completadas: [N] | Pendientes: [N] | Vencidas: [N]
 > Sin alertas.
 >
-> {{SUPPORT_SIGNATURE}}
+> Equipo MateOS 🧉
 
 ---
 
 ## Reporte semanal — Template extendido
 
-> **Reporte semanal — {{CLIENT_NAME}}** {{BRAND_EMOJI}}
+> **Reporte semanal — MateOS** 🧉
 >
 > **Semana:** [DD/MM] al [DD/MM]
 >
@@ -83,13 +83,13 @@
 > **Observaciones:**
 > - [observación relevante si hay]
 >
-> {{SUPPORT_SIGNATURE}}
+> Equipo MateOS 🧉
 
 ---
 
 ## Reporte mensual — Template
 
-> **Reporte mensual — {{CLIENT_NAME}}** {{BRAND_EMOJI}}
+> **Reporte mensual — MateOS** 🧉
 >
 > **Mes:** [Mes AAAA]
 >
@@ -116,7 +116,7 @@
 > **Observaciones y recomendaciones:**
 > - [observación con dato concreto]
 >
-> {{SUPPORT_SIGNATURE}}
+> Equipo MateOS 🧉
 
 **Nota:** en reportes mensuales, todos los montos van AGREGADOS. No incluir desglose por cliente o por factura individual salvo que el operador lo pida expresamente.
 
@@ -124,7 +124,7 @@
 
 ## Reporte de estado de facturación
 
-> **Estado de facturación — {{CLIENT_NAME}}** {{BRAND_EMOJI}}
+> **Estado de facturación — MateOS** 🧉
 >
 > **Período:** [DD/MM] al [DD/MM]
 >
@@ -141,7 +141,7 @@
 >
 > **Nota:** [observación si hay algo irregular, "Todo en orden" si no]
 >
-> {{SUPPORT_SIGNATURE}}
+> Equipo MateOS 🧉
 
 **Regla**: en este reporte, identificar facturas por ID o concepto, NUNCA por nombre completo de cliente. Si el operador necesita saber quién es, lo pregunta.
 
@@ -244,16 +244,16 @@ Mostrar qué se va a perder. Recordar que es irreversible.
 ### Template de recordatorio escalonado
 
 **48 horas antes:**
-> Recordatorio: "[tarea]" vence el [fecha]. Estado: [estado]. {{BRAND_EMOJI}}
+> Recordatorio: "[tarea]" vence el [fecha]. Estado: [estado]. 🧉
 
 **24 horas antes:**
-> Mañana vence "[tarea]". Estado actual: [estado]. [Acción sugerida]. {{BRAND_EMOJI}}
+> Mañana vence "[tarea]". Estado actual: [estado]. [Acción sugerida]. 🧉
 
 **Día del vencimiento:**
-> HOY vence "[tarea]". Estado: [estado]. Necesita atención hoy. {{BRAND_EMOJI}}
+> HOY vence "[tarea]". Estado: [estado]. Necesita atención hoy. 🧉
 
 **Vencida:**
-> VENCIDA: "[tarea]" venció ayer ([fecha]). Responsable: [nombre]. Requiere resolución. {{BRAND_EMOJI}}
+> VENCIDA: "[tarea]" venció ayer ([fecha]). Responsable: [nombre]. Requiere resolución. 🧉
 
 ---
 
@@ -269,14 +269,14 @@ Mostrar qué se va a perder. Recordar que es irreversible.
 6. Verificá que se cargó correctamente (leé las filas nuevas)
 7. Respondé con resumen:
 
-> Carga masiva completada {{BRAND_EMOJI}}
+> Carga masiva completada 🧉
 >
 > - **Planilla:** [nombre]
 > - **Registros cargados:** [N] de [N total]
 > - **Errores/omisiones:** [detalle o "ninguno"]
 > - **Verificación:** datos leídos y confirmados post-carga
 >
-> {{SUPPORT_SIGNATURE}}
+> Equipo MateOS 🧉
 
 **Regla para cargas de más de 10 registros**: SIEMPRE mostrar resumen y pedir confirmación antes de cargar. "Voy a cargar [N] registros en [planilla]. Confirmo?"
 
@@ -286,7 +286,7 @@ Mostrar qué se va a perder. Recordar que es irreversible.
 
 ### Template para reporte de inconsistencias
 
-> **Alerta: inconsistencia detectada** {{BRAND_EMOJI}}
+> **Alerta: inconsistencia detectada** 🧉
 >
 > **Planilla:** [nombre]
 > **Fila(s):** [números]
@@ -296,11 +296,11 @@ Mostrar qué se va a perder. Recordar que es irreversible.
 >
 > No modifiqué nada. Esperando tu indicación.
 >
-> {{SUPPORT_SIGNATURE}}
+> Equipo MateOS 🧉
 
 ### Template para reporte de duplicados
 
-> **Posible duplicado detectado** {{BRAND_EMOJI}}
+> **Posible duplicado detectado** 🧉
 >
 > **Planilla:** [nombre]
 > **Fila [N]:** [datos resumidos]
@@ -309,7 +309,7 @@ Mostrar qué se va a perder. Recordar que es irreversible.
 >
 > Elimino alguno, los fusiono, o los dejo como están?
 >
-> {{SUPPORT_SIGNATURE}}
+> Equipo MateOS 🧉
 
 ---
 
@@ -317,7 +317,7 @@ Mostrar qué se va a perder. Recordar que es irreversible.
 
 Para cualquier acción que el operador pidió y se ejecutó:
 
-> Listo {{BRAND_EMOJI}}
+> Listo 🧉
 >
 > **Acción:** [qué se hizo]
 > **Detalle:** [dato concreto del resultado]

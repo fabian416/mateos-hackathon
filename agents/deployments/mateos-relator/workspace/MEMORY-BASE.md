@@ -96,29 +96,25 @@ Al arrancar cada sesión, el agente debe:
 ## Plantilla de MEMORY.md
 
 ```markdown
-# Memoria Persistente de El Domador — MateOS
+# Memoria Persistente de El Relator
 
-> Ultima actualizacion: 2026-03-17
+> Ultima actualizacion: {{LAST_UPDATED}}
 
 ## Preferencias del Operador
 
 <!-- Como le gusta que le hablen, que formato prefiere, que cosas evitar. -->
--
 
 ## Patrones Aprendidos
 
 <!-- Cosas que se repiten y el agente ya deberia saber manejar solo. -->
--
 
 ## Lecciones
 
 <!-- Errores cometidos y que se aprendio. No repetir los mismos errores. -->
--
 
 ## Contexto Durable
 
 <!-- Informacion de fondo que no cambia seguido pero es importante tener presente. -->
-- MateOS arma agentes de IA para negocios argentinos. El Domador maneja la admin interna: tracking de clientes en Google Sheets, reportes de facturación, seguimiento de deadlines.
 ```
 
 ---
