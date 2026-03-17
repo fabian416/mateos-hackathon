@@ -67,10 +67,12 @@ export default function Header() {
             handleNavClick("#inicio");
           }}
           className={`font-extrabold text-xl lg:text-2xl shrink-0 transition-colors duration-300 flex items-center gap-2 ${scrolled ? "text-text" : "text-white"}`}
-          style={{ fontFamily: "var(--font-playfair)" }}
         >
           <MateLogo size={36} />
-          MateOS
+          <span>
+            <span style={{ fontFamily: "var(--font-playfair)" }}>Mate</span>
+            <span style={{ fontFamily: "var(--font-jetbrains-mono)", opacity: 0.9 }}>OS</span>
+          </span>
         </a>
 
         {/* Desktop Nav */}
