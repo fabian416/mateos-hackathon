@@ -33,10 +33,9 @@ COPY --chown=agent:agent _base/workspace/ .openclaw/workspace/
 ARG AGENT_TYPE=el-baqueano
 COPY --chown=agent:agent ${AGENT_TYPE}/workspace/ .openclaw/workspace/
 
-# Copy config templates, scripts, and credentials
+# Copy config templates and scripts
 COPY --chown=agent:agent _base/config/ /tmp/config/
 COPY --chown=agent:agent _base/scripts/ /tmp/scripts/
-COPY --chown=agent:agent _base/credentials/google-service-account.json .openclaw/credentials/google-service-account.json
 
 # Copy and setup entrypoint
 COPY --chown=agent:agent _base/docker/docker-entrypoint.sh.template /home/agent/docker-entrypoint.sh
