@@ -51,6 +51,7 @@ jobs:
           - el-ceo
           - el-domador
           - el-paisano
+          - el-relator
           - el-rastreador
           - el-tropero
     steps:
