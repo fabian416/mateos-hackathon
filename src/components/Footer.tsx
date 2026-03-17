@@ -81,11 +81,11 @@ export default function Footer() {
             <ul className="space-y-3">
               <li>
                 <a
-                  href="mailto:contacto@gauchosolutions.com"
+                  href="mailto:contacto@mateos.ar"
                   className="text-slate-300 hover:text-text-inverse transition text-sm flex items-center gap-2 break-all"
                 >
                   <Mail size={16} className="flex-shrink-0" />
-                  contacto@gauchosolutions.com
+                  contacto@mateos.ar
                 </a>
               </li>
               <li className="text-slate-300 text-sm flex items-center gap-2">

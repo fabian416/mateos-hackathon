@@ -74,7 +74,7 @@ export default function Hero() {
                     "linear-gradient(135deg, #8B2F1C 0%, #6E2416 100%)",
                 }}
               >
-                Quiero mi Agente Gaucho
+                Quiero mi Agente MateOS
               </a>
               <a
                 href="#proceso"

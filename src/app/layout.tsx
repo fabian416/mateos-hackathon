@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    url: "https://gauchosolutions.com/",
+    url: "https://mateos.ar/",
     title: "Empleados de IA para tu Empresa | MateOS",
     description:
       "Agentes de IA personalizados que trabajan 24/7 por tu empresa. Automatizá ventas, atención al cliente y operaciones. 100% a medida para empresas argentinas.",

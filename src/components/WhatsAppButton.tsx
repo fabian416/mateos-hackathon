@@ -62,7 +62,7 @@ export default function WhatsAppButton() {
 
       {/* WhatsApp button */}
       <a
-        href="https://wa.me/5491100000000?text=Hola%2C%20quiero%20info%20sobre%20agentes%20de%20IA%20de%20Gaucho%20Solutions%20para%20mi%20empresa"
+        href="https://wa.me/5491168861403?text=Hola%2C%20quiero%20info%20sobre%20agentes%20de%20IA%20de%20MateOS%20para%20mi%20empresa"
         target="_blank"
         rel="noopener noreferrer"
         className="flex items-center justify-center w-16 h-16 rounded-full shadow-lg hover:scale-110 hover:shadow-xl transition-all duration-300"

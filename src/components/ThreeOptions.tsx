@@ -174,7 +174,7 @@ export default function ThreeOptions() {
                         href="#contacto"
                         className="block w-full bg-accent hover:bg-accent-dark text-text-inverse font-bold py-4 rounded-xl mt-4 text-center transition-colors"
                       >
-                        Quiero mi Agente Gaucho
+                        Quiero mi Agente MateOS
                       </a>
                     </div>
                   )}

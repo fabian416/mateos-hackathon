@@ -85,7 +85,7 @@ export default function Comparison() {
                     Empleado Tradicional
                   </th>
                   <th className="bg-emerald-50 text-success font-semibold text-center py-4 px-6">
-                    Agente Gaucho
+                    Agente MateOS
                   </th>
                 </tr>
               </thead>
@@ -140,10 +140,10 @@ export default function Comparison() {
               </ul>
             </div>
 
-            {/* Gaucho Card */}
+            {/* MateOS Card */}
             <div className="border-l-4 border-success rounded-lg bg-emerald-50/50 p-5">
               <h3 className="font-semibold text-success mb-4">
-                Agente Gaucho
+                Agente MateOS
               </h3>
               <ul className="space-y-3">
                 {comparisonData.map((row, index) => (
