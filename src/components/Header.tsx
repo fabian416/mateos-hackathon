@@ -69,9 +69,9 @@ export default function Header() {
           className={`font-extrabold text-xl lg:text-2xl shrink-0 transition-colors duration-300 flex items-center gap-2 ${scrolled ? "text-text" : "text-white"}`}
         >
           <MateLogo size={36} />
-          <span>
-            <span style={{ fontFamily: "var(--font-playfair)" }}>Mate</span>
-            <span style={{ fontFamily: "var(--font-jetbrains-mono)", opacity: 0.9 }}>OS</span>
+          <span style={{ display: "inline-flex", alignItems: "baseline" }}>
+            <span style={{ fontFamily: "var(--font-playfair)", fontWeight: 800, letterSpacing: "-0.02em" }}>Mate</span>
+            <span style={{ fontFamily: "var(--font-jetbrains-mono)", fontWeight: 500, fontSize: "0.85em", color: "#C4A35A", letterSpacing: "0.05em" }}>OS</span>
           </span>
         </a>
 

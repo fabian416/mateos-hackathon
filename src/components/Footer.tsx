@@ -19,9 +19,9 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
           {/* Col 1: Logo + description */}
           <div className="col-span-2 md:col-span-1">
-            <span className="text-text-inverse font-bold text-xl">
-              <span style={{ fontFamily: "var(--font-playfair)" }}>Mate</span>
-              <span style={{ fontFamily: "var(--font-jetbrains-mono)", opacity: 0.9 }}>OS</span>
+            <span className="text-text-inverse font-bold text-xl" style={{ display: "inline-flex", alignItems: "baseline" }}>
+              <span style={{ fontFamily: "var(--font-playfair)", fontWeight: 800, letterSpacing: "-0.02em" }}>Mate</span>
+              <span style={{ fontFamily: "var(--font-jetbrains-mono)", fontWeight: 500, fontSize: "0.85em", color: "#C4A35A", letterSpacing: "0.05em" }}>OS</span>
             </span>
             <p className="text-slate-300 text-sm mt-4">
               Agentes de IA para empresas argentinas.
