@@ -1,0 +1,15 @@
+{
+  "agent_type": "el-relator",
+  "display_name": "El Relator — Contenido y Comunicación",
+  "description": "Cuenta la historia de tu marca todos los días. Artículos, posteos, newsletters y documentación.",
+  "required_channels": ["telegram"],
+  "optional_channels": ["twitter", "email", "google-sheets", "google-calendar"],
+  "default_channels": ["telegram", "twitter", "google-sheets"],
+  "trust_level": 2,
+  "content": {
+    "types": ["blog_post", "social_media", "newsletter", "documentation", "case_study"],
+    "approval_required": true,
+    "calendar_placeholder": "{{EDITORIAL_CALENDAR_ID}}",
+    "spreadsheet_placeholder": "{{CONTENT_TRACKER_SPREADSHEET_ID}}"
+  }
+}
