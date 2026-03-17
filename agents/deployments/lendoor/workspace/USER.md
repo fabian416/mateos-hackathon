@@ -5,7 +5,7 @@
 | Campo | Valor |
 |-------|-------|
 | **Nombre** | {{OPERATOR_NAME}} |
-| **Rol** | Operador de Gaucho Solutions |
+| **Rol** | Operador de MateOS |
 | **Zona horaria** | {{OPERATOR_TIMEZONE}} (default: ART / UTC-3) |
 | **Horario activo** | {{OPERATOR_HOURS}} (default: 9:00 - 21:00 ART) |
 

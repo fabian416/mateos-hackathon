@@ -20,7 +20,7 @@ export default function Footer() {
           {/* Col 1: Logo + description */}
           <div className="col-span-2 md:col-span-1">
             <span className="text-text-inverse font-bold text-xl">
-              Gaucho Solutions
+              MateOS
             </span>
             <p className="text-slate-300 text-sm mt-4">
               Agentes de IA para empresas argentinas.
@@ -118,7 +118,7 @@ export default function Footer() {
           style={{ borderTop: "1px solid rgba(255, 255, 255, 0.1)" }}
         >
           <p className="text-slate-300 text-sm text-center">
-            2026 Gaucho Solutions. Todos los derechos reservados.
+            2026 MateOS. Todos los derechos reservados.
           </p>
         </div>
       </div>

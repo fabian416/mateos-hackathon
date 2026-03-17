@@ -1,0 +1,24 @@
+{
+  "agent_type": "el-domador",
+  "display_name": "El Domador — Asistente Administrativo",
+  "description": "Toma las tareas salvajes del día a día y las pone en orden. Carga de datos, reportes, recordatorios y seguimiento.",
+  "required_channels": ["telegram"],
+  "optional_channels": ["email", "google-sheets", "google-calendar"],
+  "default_channels": ["telegram", "google-sheets", "google-calendar", "email"],
+  "trust_level": 2,
+  "schedules": {
+    "daily_summary_hour": "09:00",
+    "weekly_report_day": "monday",
+    "weekly_report_hour": "09:00",
+    "heartbeat_interval_minutes": 15
+  },
+  "sheets": {
+    "tareas": "{{SHEET_ID_TAREAS}}",
+    "facturacion": "{{SHEET_ID_FACTURACION}}",
+    "contactos": "{{SHEET_ID_CONTACTOS}}"
+  },
+  "calendars": {
+    "principal": "{{CALENDAR_ID_PRINCIPAL}}",
+    "deadlines": "{{CALENDAR_ID_DEADLINES}}"
+  }
+}

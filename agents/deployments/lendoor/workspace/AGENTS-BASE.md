@@ -1,4 +1,4 @@
-# AGENTS-BASE.md — Reglas de Agente (Base Gaucho Solutions)
+# AGENTS-BASE.md — Reglas de Agente (Base MateOS)
 
 ## OVERRIDE — Channel Mode
 

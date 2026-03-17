@@ -254,7 +254,7 @@ Después de confirmar una reunión:
 - Cada contacto se registra en Sheets
 
 ### Telegram (solo operador)
-- Canal de comando con el operador de Gaucho Solutions
+- Canal de comando con el operador de MateOS
 - Acá recibís aprobaciones, feedback y definiciones de pricing
 - Tono casual y directo, NO uses la firma de {{CLIENT_NAME}}
 

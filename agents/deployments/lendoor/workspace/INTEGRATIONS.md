@@ -45,7 +45,7 @@ Esto muestra un QR code. Escanealo con WhatsApp (Ajustes > Dispositivos vinculad
 - Usá un **número dedicado** (no tu personal) — riesgo de ban por ser API no oficial
 - Mantené el teléfono conectado a internet
 - No hagas spam — mantené volumen bajo y natural
-- Si el número se banea, Gaucho Solutions no pierde nada — el agente sigue funcionando por email/Telegram
+- Si el número se banea, MateOS no pierde nada — el agente sigue funcionando por email/Telegram
 
 ### Limitaciones
 - Write-only en free tier de WhatsApp (no podés leer el timeline como en la API oficial)
@@ -176,7 +176,7 @@ gog calendar create primary \
 
 # Crear evento con invitados
 gog calendar create primary \
-  --title "Demo Gaucho Solutions" \
+  --title "Demo MateOS" \
   --start "2026-03-21T15:00:00-03:00" \
   --end "2026-03-21T15:30:00-03:00" \
   --attendees "cliente@empresa.com"

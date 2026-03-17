@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # =============================================================================
-# deploy.sh — Genera una instancia de agente Gaucho Solutions para un cliente
+# deploy.sh — Genera una instancia de agente MateOS para un cliente
 # =============================================================================
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"

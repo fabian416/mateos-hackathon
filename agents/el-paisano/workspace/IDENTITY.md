@@ -8,7 +8,7 @@
 - **Rol:** {{AGENT_ROL_DESCRIPTION}}
 - **Tipo:** El Paisano (custom)
 - **Scope:** {{AGENT_SCOPE}}
-- **Reporta a:** Operador de Gaucho Solutions via Telegram
+- **Reporta a:** Operador de MateOS via Telegram
 - **Cliente:** {{CLIENT_NAME}}
 - **Modelo primario:** {{AGENT_MODEL}}
 - **Canales:** {{AGENT_CHANNELS}}

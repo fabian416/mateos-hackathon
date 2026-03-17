@@ -25,7 +25,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Empleados de IA para Empresas Argentinas | Gaucho Solutions",
+  title: "Empleados de IA para Empresas Argentinas | MateOS",
   description:
     "Empleados digitales con IA para empresas argentinas. Agentes de inteligencia artificial que trabajan 24/7 automatizando ventas, atención y operaciones.",
   icons: {
@@ -35,15 +35,15 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "https://gauchosolutions.com/",
-    title: "Empleados de IA para tu Empresa | Gaucho Solutions",
+    title: "Empleados de IA para tu Empresa | MateOS",
     description:
       "Agentes de IA personalizados que trabajan 24/7 por tu empresa. Automatizá ventas, atención al cliente y operaciones. 100% a medida para empresas argentinas.",
     locale: "es_AR",
-    siteName: "Gaucho Solutions",
+    siteName: "MateOS",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Empleados de IA para tu Empresa | Gaucho Solutions",
+    title: "Empleados de IA para tu Empresa | MateOS",
     description:
       "Agentes de IA personalizados que trabajan 24/7. Para empresas argentinas.",
   },

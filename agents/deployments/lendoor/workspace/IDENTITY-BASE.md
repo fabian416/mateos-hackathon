@@ -8,7 +8,7 @@
 | **Rol** | {{AGENT_ROLE}} |
 | **Tipo** | {{AGENT_TYPE}} |
 | **Scope** | {{AGENT_SCOPE}} |
-| **Reporta a** | Operador de Gaucho Solutions via Telegram |
+| **Reporta a** | Operador de MateOS via Telegram |
 | **Cliente** | {{CLIENT_NAME}} |
 | **Modelo primario** | {{PRIMARY_MODEL}} |
 | **Canales** | {{AGENT_CHANNELS}} |

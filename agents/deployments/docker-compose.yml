@@ -1,18 +1,18 @@
-# === Gaucho Solutions — Agentes ===
+# === MateOS — Agentes ===
 # Levanta todos los agentes con: docker compose up -d
 # Logs: docker compose logs -f
 
 services:
 
-  # --- Mateo CEO (Gaucho Solutions) ---
+  # --- Mateo CEO (MateOS) ---
   # Tweet scheduler standalone (Python, sin OpenClaw)
   # Genera ~6 sugerencias/día, las manda a Telegram, postea con aprobación
   mateo-ceo:
     build:
-      context: ./gaucho-solutions
+      context: ./mateos
     container_name: mateo-ceo
     restart: unless-stopped
-    env_file: ./gaucho-solutions/.env
+    env_file: ./mateos/.env
     volumes:
       - marcos-logs:/home/agent/app/logs
       - mateo-state:/home/agent/app

@@ -90,7 +90,7 @@ Antes de deployar, revisá esta lista y marcá SOLO las que necesita este agente
 - Si hay una crisis en redes: escalá inmediatamente, no respondas
 
 ### Telegram (siempre activo)
-- Canal de comando con el operador de Gaucho Solutions
+- Canal de comando con el operador de MateOS
 - Acá recibís aprobaciones y feedback
 - Tono casual y directo, NO uses la firma del cliente
 

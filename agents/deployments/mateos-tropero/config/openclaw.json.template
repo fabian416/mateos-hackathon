@@ -1,0 +1,78 @@
+{
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "${PRIMARY_MODEL}"
+      },
+      "models": {
+        "anthropic/claude-haiku-4-5": {},
+        "anthropic/claude-sonnet-4-6": {},
+        "google/gemini-2.5-flash": {}
+      },
+      "workspace": "${HOME}/.openclaw/workspace",
+      "heartbeat": {
+        "target": "last"
+      },
+      "maxConcurrent": 4,
+      "subagents": { "maxConcurrent": 8 }
+    }
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true,
+    "ownerDisplay": "raw"
+  },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "dmPolicy": "${TELEGRAM_DM_POLICY}",
+      "allowFrom": ["${TELEGRAM_OWNER_ID}"],
+      "botToken": "${TELEGRAM_BOT_TOKEN}",
+      "groupPolicy": "${TELEGRAM_GROUP_POLICY}",
+      "streaming": "partial",
+      "network": {
+        "autoSelectFamily": false,
+        "dnsResultOrder": "ipv4first"
+      }
+    }
+  },
+  "gateway": {
+    "port": ${GATEWAY_PORT},
+    "mode": "local",
+    "bind": "loopback",
+    "auth": {
+      "mode": "token",
+      "token": "${GATEWAY_AUTH_TOKEN}"
+    },
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    }
+  },
+  "hooks": {
+    "enabled": true,
+    "token": "1068ba6f986d34f480bf02f75ccb4e0a16e8e5ce20820e6f",
+    "internal": {
+      "enabled": true,
+      "entries": {
+        "boot-md": { "enabled": true },
+        "command-logger": { "enabled": true },
+        "session-memory": { "enabled": true }
+      }
+    }
+  },
+  "skills": {
+    "install": {
+      "nodeManager": "bun"
+    },
+    "allowBundled": ["himalaya", "gog"]
+  },
+  "plugins": {
+    "entries": {
+      "telegram": {
+        "enabled": true
+      }
+    }
+  }
+}

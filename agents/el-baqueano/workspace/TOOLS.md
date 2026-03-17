@@ -49,7 +49,7 @@ Usá siempre el **mínimo nivel de acceso necesario** para completar una tarea. 
 - Siempre usar himalaya para enviar (ver TOOLS-BASE.md)
 
 ### Telegram (solo operador)
-- Canal de comando con el operador de Gaucho Solutions
+- Canal de comando con el operador de MateOS
 - Acá recibís aprobaciones y feedback
 - Tono casual y directo, NO uses la firma de {{CLIENT_NAME}}
 

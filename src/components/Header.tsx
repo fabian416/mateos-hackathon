@@ -70,7 +70,7 @@ export default function Header() {
           style={{ fontFamily: "var(--font-playfair)" }}
         >
           <MateLogo size={36} />
-          Gaucho Solutions
+          MateOS
         </a>
 
         {/* Desktop Nav */}

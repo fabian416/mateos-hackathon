@@ -1,6 +1,6 @@
-# Mateo — CEO de Gaucho Solutions
+# Mateo — CEO de MateOS
 
-> CEO y cara pública. Postea en Twitter/X sobre Gaucho Solutions, presenta los agentes, educa sobre IA.
+> CEO y cara pública. Postea en Twitter/X sobre MateOS, presenta los agentes, educa sobre IA.
 
 ## Qué hace
 
@@ -55,18 +55,18 @@ TWITTER_ACCESS_TOKEN_SECRET=...
 
 ```bash
 cd agents/_base
-./deploy.sh --client-name gaucho-solutions --agent-type el-ceo --channels telegram
+./deploy.sh --client-name mateos --agent-type el-ceo --channels telegram
 ```
 
 Después agregar las env vars de Twitter al `.env`.
 
 ## Personalización
 
-Este agente está pre-configurado para Gaucho Solutions. Los placeholders que necesitan ajuste:
+Este agente está pre-configurado para MateOS. Los placeholders que necesitan ajuste:
 
 | Placeholder | Qué poner |
 |-------------|-----------|
-| `{{CLIENT_NAME}}` | Gaucho Solutions (ya definido en SOUL.md) |
+| `{{CLIENT_NAME}}` | MateOS (ya definido en SOUL.md) |
 | Credenciales Twitter | En `.env` |
 
 ## Calendario de contenido

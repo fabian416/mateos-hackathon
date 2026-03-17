@@ -4,7 +4,7 @@
 
 ## Qué es
 
-El Paisano es el template base de Gaucho Solutions para agentes personalizados. No viene con un rol predefinido -- vos definís qué hace, cómo habla, y qué herramientas usa.
+El Paisano es el template base de MateOS para agentes personalizados. No viene con un rol predefinido -- vos definís qué hace, cómo habla, y qué herramientas usa.
 
 Ejemplos de lo que podés armar:
 - Agente de agendamiento de turnos

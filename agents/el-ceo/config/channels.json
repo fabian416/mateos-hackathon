@@ -1,6 +1,6 @@
 {
   "agent_type": "el-ceo",
-  "display_name": "Mateo — CEO de Gaucho Solutions",
+  "display_name": "Mateo — CEO de MateOS",
   "description": "CEO y cara pública. Postea en Twitter/X, representa la marca, genera contenido sobre los agentes que vendemos.",
   "required_channels": ["telegram"],
   "optional_channels": ["twitter"],

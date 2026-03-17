@@ -29,7 +29,7 @@ const cards = [
     note: "Ideal para: algo rápido y básico",
   },
   {
-    title: "Gaucho Solutions",
+    title: "MateOS",
     tag: "TODO INCLUIDO",
     highlighted: true,
     items: [

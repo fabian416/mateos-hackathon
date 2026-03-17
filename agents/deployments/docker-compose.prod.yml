@@ -1,9 +1,9 @@
-# === Gaucho Solutions — Production Stack (EC2) ===
+# === MateOS — Production Stack (EC2) ===
 # Frontend (Next.js) + Caddy (HTTPS) + Agents
 #
 # Deploy:
 #   1. Push to main → GitHub Actions builds images → GHCR
-#   2. On EC2: docker compose -f docker-compose.yml pull && docker compose -f docker-compose.yml up -d
+#   2. On EC2: docker compose pull && docker compose up -d
 
 services:
 
@@ -23,7 +23,7 @@ services:
 
   # --- Frontend (Next.js) ---
   frontend:
-    image: ghcr.io/fabian416/gaucho-solutions/frontend:latest
+    image: ghcr.io/fabian416/gaucho-agents/frontend:latest
     container_name: frontend
     restart: unless-stopped
     labels:
@@ -35,23 +35,29 @@ services:
       retries: 3
       start_period: 10s
 
-  # --- Mateo CEO (Gaucho Solutions — Twitter) ---
+  # --- Mateo CEO (MateOS — Twitter) ---
   mateo-ceo:
     image: ghcr.io/fabian416/gaucho-agents/el-ceo:latest
     container_name: mateo-ceo
     restart: unless-stopped
-    env_file: ./gaucho-solutions/.env
+    user: root
+    env_file: ./mateos/.env
     entrypoint: ["/bin/bash", "-c"]
     command:
       - |
+        apt-get update -qq && apt-get install -y -qq python3-pip > /dev/null 2>&1
+        pip3 install --break-system-packages requests requests-oauthlib > /dev/null 2>&1
         echo "=== Mateo CEO — Tweet Scheduler ==="
+        cd /home/agent/.openclaw/workspace
         while true; do
           python3 /tmp/scripts/tweet-scheduler.py 2>&1 || true
           sleep 120
         done
     volumes:
       - mateo-state:/home/agent/.openclaw/workspace
-      - ./gaucho-solutions/tweet-scheduler.py:/tmp/scripts/tweet-scheduler.py:ro
+      - ./mateos/tweet-scheduler.py:/tmp/scripts/tweet-scheduler.py:ro
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
 
   # --- El Baqueano (Lendoor — WhatsApp Support) ---
   baqueano-lendoor:
@@ -59,10 +65,56 @@ services:
     container_name: baqueano-lendoor
     restart: unless-stopped
     env_file: ./lendoor/.env
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        cp /mnt/workspace/* /home/agent/.openclaw/workspace/ 2>/dev/null || true
+        cp /mnt/entrypoint.sh /tmp/entrypoint.sh
+        cp /mnt/openclaw.json.template /tmp/config/openclaw.json.template
+        mkdir -p /home/agent/.openclaw/agents/main/agent
+        cp /mnt/auth-profiles.json /home/agent/.openclaw/agents/main/agent/auth-profiles.json
+        chmod 600 /home/agent/.openclaw/agents/main/agent/auth-profiles.json
+        exec /tmp/entrypoint.sh
     volumes:
-      - lendoor-logs:/home/agent/.openclaw/logs
       - lendoor-whatsapp:/home/agent/.openclaw/credentials/whatsapp
-      - ./lendoor/workspace:/home/agent/.openclaw/workspace
+      - lendoor-logs:/home/agent/.openclaw/logs
+      - ./lendoor/workspace:/mnt/workspace:ro
+      - ./lendoor/docker-entrypoint.sh:/mnt/entrypoint.sh:ro
+      - ./lendoor/openclaw.json.template:/mnt/openclaw.json.template:ro
+      - ./lendoor/agents/main/agent/auth-profiles.json:/mnt/auth-profiles.json:ro
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "openclaw"]
+      interval: 5m
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+  # --- El Tropero (MateOS — Ventas/Leads) ---
+  tropero-mateos:
+    image: ghcr.io/fabian416/gaucho-agents/el-tropero:latest
+    container_name: tropero-mateos
+    restart: unless-stopped
+    env_file: ./mateos-tropero/.env
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        cp /mnt/workspace/* /home/agent/.openclaw/workspace/ 2>/dev/null || true
+        cp /mnt/entrypoint.sh /tmp/entrypoint.sh
+        cp /mnt/openclaw.json.template /tmp/config/openclaw.json.template
+        mkdir -p /home/agent/.openclaw/agents/main/agent
+        cp /mnt/auth-profiles.json /home/agent/.openclaw/agents/main/agent/auth-profiles.json
+        chmod 600 /home/agent/.openclaw/agents/main/agent/auth-profiles.json
+        exec /tmp/entrypoint.sh
+    volumes:
+      - tropero-logs:/home/agent/.openclaw/logs
+      - ./mateos-tropero/workspace:/mnt/workspace:ro
+      - ./mateos-tropero/docker-entrypoint.sh:/mnt/entrypoint.sh:ro
+      - ./mateos-tropero/config/openclaw.json.template:/mnt/openclaw.json.template:ro
+      - ./mateos-tropero/agents/main/agent/auth-profiles.json:/mnt/auth-profiles.json:ro
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
     healthcheck:
       test: ["CMD", "pgrep", "-f", "openclaw"]
       interval: 5m
@@ -76,3 +128,4 @@ volumes:
   mateo-state:
   lendoor-logs:
   lendoor-whatsapp:
+  tropero-logs:
