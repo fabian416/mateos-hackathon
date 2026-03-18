@@ -75,15 +75,6 @@
         "paisano": { "enabled": true, "botToken": "${TG_TOKEN_PAISANO}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"] },
         "baqueano": { "enabled": true, "botToken": "${TG_TOKEN_BAQUEANO}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"] }
       },
-      "routes": [
-        { "accountId": "mateo-ceo", "agentId": "mateo-ceo" },
-        { "accountId": "tropero", "agentId": "tropero" },
-        { "accountId": "domador", "agentId": "domador" },
-        { "accountId": "rastreador", "agentId": "rastreador" },
-        { "accountId": "relator", "agentId": "relator" },
-        { "accountId": "paisano", "agentId": "paisano" },
-        { "accountId": "baqueano", "agentId": "baqueano" }
-      ],
       "groupPolicy": "disabled",
       "streaming": "partial",
       "network": { "autoSelectFamily": false, "dnsResultOrder": "ipv4first" }
