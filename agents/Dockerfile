@@ -17,6 +17,7 @@ RUN curl -fsSL "https://github.com/pimalaya/himalaya/releases/download/${HIMALAY
     && chmod +x /usr/local/bin/himalaya
 
 # Install gog (Google Workspace CLI for Sheets, Calendar, Gmail, Drive, etc.)
+# cache-bust: v2
 ARG GOG_VERSION=0.12.0
 RUN curl -fsSL "https://github.com/steipete/gogcli/releases/download/v${GOG_VERSION}/gogcli_${GOG_VERSION}_linux_amd64.tar.gz" \
     | tar -xz -C /usr/local/bin/ gog \
