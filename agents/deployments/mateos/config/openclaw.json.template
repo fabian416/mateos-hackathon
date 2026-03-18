@@ -32,13 +32,13 @@
     "telegram": {
       "enabled": true,
       "accounts": {
-        "mateo-ceo": { "enabled": true, "botToken": "${TG_TOKEN_MATEO_CEO}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"], "agentId": "mateo-ceo" },
-        "tropero": { "enabled": true, "botToken": "${TG_TOKEN_TROPERO}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"], "agentId": "tropero" },
-        "domador": { "enabled": true, "botToken": "${TG_TOKEN_DOMADOR}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"], "agentId": "domador" },
-        "rastreador": { "enabled": true, "botToken": "${TG_TOKEN_RASTREADOR}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"], "agentId": "rastreador" },
-        "relator": { "enabled": true, "botToken": "${TG_TOKEN_RELATOR}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"], "agentId": "relator" },
-        "paisano": { "enabled": true, "botToken": "${TG_TOKEN_PAISANO}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"], "agentId": "paisano" },
-        "baqueano": { "enabled": true, "botToken": "${TG_TOKEN_BAQUEANO}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"], "agentId": "baqueano" }
+        "mateo-ceo": { "enabled": true, "botToken": "${TG_TOKEN_MATEO_CEO}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"] },
+        "tropero": { "enabled": true, "botToken": "${TG_TOKEN_TROPERO}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"] },
+        "domador": { "enabled": true, "botToken": "${TG_TOKEN_DOMADOR}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"] },
+        "rastreador": { "enabled": true, "botToken": "${TG_TOKEN_RASTREADOR}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"] },
+        "relator": { "enabled": true, "botToken": "${TG_TOKEN_RELATOR}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"] },
+        "paisano": { "enabled": true, "botToken": "${TG_TOKEN_PAISANO}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"] },
+        "baqueano": { "enabled": true, "botToken": "${TG_TOKEN_BAQUEANO}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"] }
       },
       "groupPolicy": "disabled",
       "streaming": "partial",
