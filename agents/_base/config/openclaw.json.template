@@ -1,76 +1,104 @@
 {
   "agents": {
     "defaults": {
-      "model": {
-        "primary": "${PRIMARY_MODEL}"
-      },
+      "model": { "primary": "${PRIMARY_MODEL}" },
       "models": {
-        "anthropic/claude-haiku-4-5": { "alias": "haiku" },
-        "anthropic/claude-sonnet-4-6": { "alias": "sonnet" },
-        "anthropic/claude-opus-4-6": { "alias": "opus" },
-        "google/gemini-2.5-flash": { "alias": "flash" }
+        "google/gemini-2.5-flash": {},
+        "anthropic/claude-haiku-4-5": {},
+        "anthropic/claude-sonnet-4-6": {}
       },
-      "workspace": "${HOME}/.openclaw/workspace",
-      "heartbeat": {
-        "target": "last"
-      },
+      "heartbeat": { "target": "last" },
       "maxConcurrent": 4,
       "subagents": { "maxConcurrent": 8 }
+    },
+    "list": [
+      {
+        "id": "mateo-ceo",
+        "workspace": "${HOME}/.openclaw/workspaces/mateo-ceo",
+        "model": "google/gemini-2.5-flash",
+        "identity": { "name": "Mateo", "theme": "CEO y voz pública de MateOS", "emoji": "🧉" }
+      },
+      {
+        "id": "tropero",
+        "workspace": "${HOME}/.openclaw/workspaces/tropero",
+        "model": "google/gemini-2.5-flash",
+        "identity": { "name": "El Tropero", "theme": "Ventas y leads", "emoji": "🐎" }
+      },
+      {
+        "id": "domador",
+        "workspace": "${HOME}/.openclaw/workspaces/domador",
+        "model": "google/gemini-2.5-flash",
+        "identity": { "name": "El Domador", "theme": "Admin y datos", "emoji": "📊" }
+      },
+      {
+        "id": "rastreador",
+        "workspace": "${HOME}/.openclaw/workspaces/rastreador",
+        "model": "google/gemini-2.5-flash",
+        "identity": { "name": "El Rastreador", "theme": "Soporte técnico L1", "emoji": "🔍" }
+      },
+      {
+        "id": "relator",
+        "workspace": "${HOME}/.openclaw/workspaces/relator",
+        "model": "google/gemini-2.5-flash",
+        "identity": { "name": "El Relator", "theme": "Contenido y comunicación", "emoji": "✍️" }
+      },
+      {
+        "id": "paisano",
+        "workspace": "${HOME}/.openclaw/workspaces/paisano",
+        "model": "google/gemini-2.5-flash",
+        "identity": { "name": "El Paisano", "theme": "Agente custom", "emoji": "🤠" }
+      },
+      {
+        "id": "baqueano",
+        "workspace": "${HOME}/.openclaw/workspaces/baqueano",
+        "model": "google/gemini-2.5-flash",
+        "identity": { "name": "El Baqueano", "theme": "Soporte al cliente", "emoji": "🧭" }
+      }
+    ]
+  },
+  "tools": {
+    "agentToAgent": {
+      "enabled": true,
+      "allow": ["mateo-ceo", "tropero", "domador", "rastreador", "relator", "paisano", "baqueano"]
     }
   },
-  "commands": {
-    "native": "auto",
-    "nativeSkills": "auto",
-    "restart": true,
-    "ownerDisplay": "raw"
-  },
+  "commands": { "native": "auto", "nativeSkills": "auto", "restart": true, "ownerDisplay": "raw" },
   "channels": {
     "telegram": {
       "enabled": true,
-      "dmPolicy": "${TELEGRAM_DM_POLICY}",
-      "allowFrom": ["${TELEGRAM_OWNER_ID}"],
-      "botToken": "${TELEGRAM_BOT_TOKEN}",
-      "groupPolicy": "${TELEGRAM_GROUP_POLICY}",
-      "streaming": "partial",
-      "network": {
-        "autoSelectFamily": false,
-        "dnsResultOrder": "ipv4first"
-      }
-    },
-    "whatsapp": {
-      "enabled": ${WHATSAPP_ENABLED},
-      "dmPolicy": "${WHATSAPP_DM_POLICY}",
-      "allowFrom": [${WHATSAPP_ALLOW_FROM}],
-      "groupPolicy": "disabled",
-      "sendReadReceipts": true,
-      "mediaMaxMb": 50,
       "accounts": {
-        "default": {
-          "enabled": true
-        }
-      }
+        "mateo-ceo": { "enabled": true, "botToken": "${TG_TOKEN_MATEO_CEO}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"] },
+        "tropero": { "enabled": true, "botToken": "${TG_TOKEN_TROPERO}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"] },
+        "domador": { "enabled": true, "botToken": "${TG_TOKEN_DOMADOR}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"] },
+        "rastreador": { "enabled": true, "botToken": "${TG_TOKEN_RASTREADOR}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"] },
+        "relator": { "enabled": true, "botToken": "${TG_TOKEN_RELATOR}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"] },
+        "paisano": { "enabled": true, "botToken": "${TG_TOKEN_PAISANO}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"] },
+        "baqueano": { "enabled": true, "botToken": "${TG_TOKEN_BAQUEANO}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"] }
+      },
+      "routes": [
+        { "accountId": "mateo-ceo", "agentId": "mateo-ceo" },
+        { "accountId": "tropero", "agentId": "tropero" },
+        { "accountId": "domador", "agentId": "domador" },
+        { "accountId": "rastreador", "agentId": "rastreador" },
+        { "accountId": "relator", "agentId": "relator" },
+        { "accountId": "paisano", "agentId": "paisano" },
+        { "accountId": "baqueano", "agentId": "baqueano" }
+      ],
+      "groupPolicy": "disabled",
+      "streaming": "partial",
+      "network": { "autoSelectFamily": false, "dnsResultOrder": "ipv4first" }
     }
   },
   "gateway": {
     "port": ${GATEWAY_PORT},
     "mode": "local",
     "bind": "lan",
-    "auth": {
-      "mode": "token",
-      "token": "${GATEWAY_AUTH_TOKEN}"
-    },
-    "http": {
-      "endpoints": {
-        "chatCompletions": { "enabled": true }
-      }
-    },
-    "tailscale": {
-      "mode": "off",
-      "resetOnExit": false
-    }
+    "auth": { "mode": "token", "token": "${GATEWAY_AUTH_TOKEN}" },
+    "tailscale": { "mode": "off", "resetOnExit": false }
   },
   "hooks": {
     "enabled": true,
+    "token": "${HOOKS_TOKEN}",
     "internal": {
       "enabled": true,
       "entries": {
@@ -80,17 +108,6 @@
       }
     }
   },
-  "skills": {
-    "install": {
-      "nodeManager": "bun"
-    },
-    "allowBundled": ["himalaya", "gog", "browser", "search"]
-  },
-  "plugins": {
-    "entries": {
-      "telegram": {
-        "enabled": true
-      }
-    }
-  }
+  "skills": { "install": { "nodeManager": "bun" }, "allowBundled": ["himalaya", "gog", "browser", "search"] },
+  "plugins": { "entries": { "telegram": { "enabled": true } } }
 }

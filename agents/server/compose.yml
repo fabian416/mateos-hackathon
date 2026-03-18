@@ -1,0 +1,79 @@
+# === MateOS — Production Stack (EC2) ===
+# 1 OpenClaw container with 7 agents + Frontend + Caddy
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    container_name: caddy
+    restart: unless-stopped
+    mem_limit: 256m
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+  frontend:
+    image: ghcr.io/fabian416/mateos/frontend:latest
+    container_name: frontend
+    restart: unless-stopped
+    mem_limit: 512m
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  mateos-agents:
+    image: ghcr.io/fabian416/mateos/agents:latest
+    container_name: mateos-agents
+    restart: unless-stopped
+    user: root
+    mem_limit: 4g
+    env_file: ./mateos/.env
+    environment:
+      - NODE_OPTIONS=--max-old-space-size=3072
+      - GOG_KEYRING_PASSWORD=mateos2026
+      - GOG_ACCOUNT=squary.pay@gmail.com
+      - HOME=/home/agent
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        chown -R agent:agent /home/agent/.openclaw /home/agent/.config 2>/dev/null || true
+        cp /mnt/entrypoint.sh /tmp/run.sh && chmod +x /tmp/run.sh
+        cp /mnt/config/openclaw.json.template /tmp/config/openclaw.json.template
+        apt-get update -qq && apt-get install -y -qq python3-pip > /dev/null 2>&1; pip3 install --break-system-packages requests requests-oauthlib > /dev/null 2>&1
+        exec su agent -c "/tmp/run.sh"
+    volumes:
+      - mateos-logs:/home/agent/.openclaw/logs
+      - mateos-data:/home/agent/.openclaw/agents
+      - mateos-gogcli:/home/agent/.config/gogcli
+      - ./mateos/workspaces:/mnt/workspaces:ro
+      - ./mateos/docker-entrypoint.sh:/mnt/entrypoint.sh:ro
+      - ./mateos/config/openclaw.json.template:/mnt/config/openclaw.json.template:ro
+      - ./mateos/agents/main/agent/auth-profiles.json:/mnt/auth-profiles.json:ro
+      - ./mateos/tweet-scheduler.py:/mnt/tweet-scheduler.py:ro
+      - ./mateos/channel-checker.py:/home/agent/channel-checker.py:ro
+      - ./mateos/tweet.py:/home/agent/tweet.py:ro
+      - ./mateos/google-service-account.json:/home/agent/.openclaw/credentials/google-service-account.json:ro
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "openclaw"]
+      interval: 5m
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  caddy-data:
+  caddy-config:
+  mateos-logs:
+  mateos-data:
+  mateos-gogcli:
