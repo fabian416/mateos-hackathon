@@ -15,16 +15,26 @@ for agent in mateo-ceo tropero domador rastreador relator paisano baqueano; do
   mkdir -p ~/.openclaw/workspaces/$agent
   cp /mnt/workspaces/$agent/*.md ~/.openclaw/workspaces/$agent/ 2>/dev/null || true
   [ -f ~/.openclaw/workspaces/$agent/channel-state.json ] || echo "{}" > ~/.openclaw/workspaces/$agent/channel-state.json
-  # Replace placeholders
   sed -i "s/{{GOG_ACCOUNT}}/${GOG_ACCOUNT:-not-configured}/g" ~/.openclaw/workspaces/$agent/*.md 2>/dev/null || true
   sed -i "s/{{CLIENT_NAME}}/${CLIENT_NAME:-MateOS}/g" ~/.openclaw/workspaces/$agent/*.md 2>/dev/null || true
   sed -i "s/{{GMAIL_EMAIL}}/${GMAIL_EMAIL:-}/g" ~/.openclaw/workspaces/$agent/*.md 2>/dev/null || true
 done
 
-# Auth profiles
+# Auth profiles — copy to main and each agent
 mkdir -p ~/.openclaw/agents/main/agent
 cp /mnt/auth-profiles.json ~/.openclaw/agents/main/agent/auth-profiles.json
 chmod 600 ~/.openclaw/agents/main/agent/auth-profiles.json
+for agent in mateo-ceo tropero domador rastreador relator paisano baqueano; do
+  mkdir -p ~/.openclaw/agents/$agent/agent
+  cp /mnt/auth-profiles.json ~/.openclaw/agents/$agent/agent/auth-profiles.json
+  chmod 600 ~/.openclaw/agents/$agent/agent/auth-profiles.json
+done
+
+# Bind each Telegram bot account to its agent
+for agent in mateo-ceo tropero domador rastreador relator paisano baqueano; do
+  openclaw agents bind --agent "$agent" --bind "telegram:$agent" 2>/dev/null || true
+done
+echo "Agent bindings configured"
 
 # Tweet scheduler (background, for Mateo CEO)
 if [ "${TWITTER_ENABLED:-false}" = "true" ] && [ -f /mnt/tweet-scheduler.py ]; then
