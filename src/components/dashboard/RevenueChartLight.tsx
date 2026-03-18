@@ -21,15 +21,15 @@ export default function RevenueChartLight() {
     <div className="p-5">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-[11px] text-white/35 uppercase tracking-wider">Revenue</h3>
+          <h3 className="text-[11px] text-white/50 uppercase tracking-wider">Revenue</h3>
           <div className="flex items-baseline gap-2 mt-1">
             <span className="text-2xl font-bold text-emerald-400">${total.toLocaleString()}</span>
-            <span className="text-[11px] text-white/30">USDC (16d)</span>
+            <span className="text-[11px] text-white/40">USDC (16d)</span>
           </div>
         </div>
         <div className="text-right">
           <div className="text-[11px] text-emerald-400/80 font-medium">+18.4%</div>
-          <div className="text-[10px] text-white/25">vs prev period</div>
+          <div className="text-[10px] text-white/35">vs prev period</div>
         </div>
       </div>
 
@@ -67,8 +67,8 @@ export default function RevenueChartLight() {
           { label: "Token Fees", value: "$340" },
         ].map((s) => (
           <div key={s.label} className="bg-white/[0.03] border border-white/[0.04] rounded-lg p-2.5">
-            <div className="text-[9px] text-white/30">{s.label}</div>
-            <div className="text-[13px] font-bold text-white/60 mt-0.5">{s.value}</div>
+            <div className="text-[9px] text-white/40">{s.label}</div>
+            <div className="text-[13px] font-bold text-white/70 mt-0.5">{s.value}</div>
           </div>
         ))}
       </div>

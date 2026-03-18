@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { BackgroundGradientAnimation } from "@/components/ui/background-gradient-animation";
-import AgentNetworkLight from "@/components/dashboard/AgentNetworkLight";
+import AgentNetworkVisual from "@/components/dashboard/AgentNetworkVisual";
 import StarField from "@/components/dashboard/StarField";
 import ActivityFeedLight from "@/components/dashboard/ActivityFeedLight";
 import RevenueChartLight from "@/components/dashboard/RevenueChartLight";
@@ -63,12 +63,12 @@ export default function DashboardPage() {
             { label: "UPTIME", value: "99.7%", sub: "30d average", color: "#34D399" },
           ].map((s) => (
             <div key={s.label} className="px-6 py-4 border-r border-white/[0.04] last:border-r-0">
-              <div className="text-[10px] text-white/25 uppercase tracking-wider mb-1">{s.label}</div>
+              <div className="text-[10px] text-white/45 uppercase tracking-wider mb-1">{s.label}</div>
               <div className="flex items-baseline gap-2">
-                <span className="text-xl font-bold" style={{ color: s.color }}>{s.value}</span>
+                <span className="text-2xl font-bold" style={{ color: s.color }}>{s.value}</span>
                 {s.change && <span className="text-[11px] text-emerald-400/70">{s.change}</span>}
               </div>
-              <div className="text-[10px] text-white/15 mt-0.5">{s.sub}</div>
+              <div className="text-[11px] text-white/35 mt-0.5">{s.sub}</div>
             </div>
           ))}
         </div>
@@ -79,11 +79,11 @@ export default function DashboardPage() {
         {/* Network 2/3 */}
         <div className="flex-[2] min-w-0 relative">
           <div className="px-5 py-3 shrink-0">
-            <h2 className="text-[11px] text-white/25 uppercase tracking-wider">Agent Network</h2>
+            <h2 className="text-[11px] text-white/45 uppercase tracking-wider">Agent Network</h2>
             <p className="text-[10px] text-white/10 mt-0.5">Click an agent to inspect</p>
           </div>
           <div className="absolute inset-0 top-12">
-            <AgentNetworkLight />
+            <AgentNetworkVisual />
           </div>
         </div>
 
