@@ -28,9 +28,9 @@ Si da error de permisos: el sheet no está compartido con el service account. Av
 
 | Planilla | Sheet ID | Uso | Permisos |
 |----------|----------|-----|----------|
-| Tareas | 1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE | Seguimiento de tareas y deadlines | Lectura + Escritura |
-| Facturación | 1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE | Registro de facturas y pagos | Lectura + Escritura |
-| Contactos | 1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE | Base de datos de contactos | Lectura (escritura con aprobación) |
+| Tareas | 1SJ2JuFoKtOaFS2ve73fwKafLZuASZTfvacqP5KxIAM4 | Seguimiento de tareas y deadlines | Lectura + Escritura |
+| Facturación | 1SJ2JuFoKtOaFS2ve73fwKafLZuASZTfvacqP5KxIAM4 | Registro de facturas y pagos | Lectura + Escritura |
+| Contactos | 1SJ2JuFoKtOaFS2ve73fwKafLZuASZTfvacqP5KxIAM4 | Base de datos de contactos | Lectura (escritura con aprobación) |
 
 ### Comandos de Sheets
 

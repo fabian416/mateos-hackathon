@@ -16,7 +16,7 @@ MateOS arma agentes de IA para negocios argentinos. Agentes que contestan WhatsA
 
 ### Spreadsheet ID
 
-1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE
+1SJ2JuFoKtOaFS2ve73fwKafLZuASZTfvacqP5KxIAM4
 
 ### Estructura de la planilla
 
@@ -52,38 +52,38 @@ nuevo → contactado → reunión_agendada → propuesta_enviada → negociando 
 
 #### Leer leads
 ```bash
-gog sheets get --spreadsheet-id 1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE --range "Pipeline!A:I"
+gog sheets get --spreadsheet-id 1SJ2JuFoKtOaFS2ve73fwKafLZuASZTfvacqP5KxIAM4 --range "Pipeline!A:I"
 ```
 
 #### Agregar nuevo lead
 ```bash
-gog sheets append --spreadsheet-id 1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE --range "Pipeline!A:I" --values '[["Nombre", "email@ejemplo.com", "+5411XXXXXXXX", "whatsapp", "nuevo", "2026-03-16 10:00", "", "Primer contacto", ""]]'
+gog sheets append --spreadsheet-id 1SJ2JuFoKtOaFS2ve73fwKafLZuASZTfvacqP5KxIAM4 --range "Pipeline!A:I" --values '[["Nombre", "email@ejemplo.com", "+5411XXXXXXXX", "whatsapp", "nuevo", "2026-03-16 10:00", "", "Primer contacto", ""]]'
 ```
 
 #### Actualizar estado de un lead (ejemplo: fila 5, columna E)
 ```bash
-gog sheets update --spreadsheet-id 1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE --range "Pipeline!E5" --values '[["contactado"]]'
+gog sheets update --spreadsheet-id 1SJ2JuFoKtOaFS2ve73fwKafLZuASZTfvacqP5KxIAM4 --range "Pipeline!E5" --values '[["contactado"]]'
 ```
 
 #### Actualizar último seguimiento (ejemplo: fila 5, columna G)
 ```bash
-gog sheets update --spreadsheet-id 1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE --range "Pipeline!G5" --values '[["2026-03-16 14:30"]]'
+gog sheets update --spreadsheet-id 1SJ2JuFoKtOaFS2ve73fwKafLZuASZTfvacqP5KxIAM4 --range "Pipeline!G5" --values '[["2026-03-16 14:30"]]'
 ```
 
 #### Actualizar próximo paso (ejemplo: fila 5, columna H)
 ```bash
-gog sheets update --spreadsheet-id 1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE --range "Pipeline!H5" --values '[["Seguimiento en 48hs"]]'
+gog sheets update --spreadsheet-id 1SJ2JuFoKtOaFS2ve73fwKafLZuASZTfvacqP5KxIAM4 --range "Pipeline!H5" --values '[["Seguimiento en 48hs"]]'
 ```
 
 #### Buscar lead por email (leer y filtrar manualmente)
 ```bash
-gog sheets get --spreadsheet-id 1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE --range "Pipeline!A:I"
+gog sheets get --spreadsheet-id 1SJ2JuFoKtOaFS2ve73fwKafLZuASZTfvacqP5KxIAM4 --range "Pipeline!A:I"
 ```
 Después de leer, buscá en los resultados por email o WhatsApp para evitar duplicados antes de agregar un lead nuevo.
 
 #### Registrar motivo de cierre (ejemplo: fila 5, columna I)
 ```bash
-gog sheets update --spreadsheet-id 1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE --range "Pipeline!I5" --values '[["Cerrado: eligió competencia. Sin rencor."]]'
+gog sheets update --spreadsheet-id 1SJ2JuFoKtOaFS2ve73fwKafLZuASZTfvacqP5KxIAM4 --range "Pipeline!I5" --values '[["Cerrado: eligió competencia. Sin rencor."]]'
 ```
 
 ---
