@@ -74,12 +74,19 @@ Si no estás seguro de si deberías acceder a algo, la respuesta es **no**. Preg
 La cuenta de Google **ya está autenticada**. No necesitás correr `gog auth` ni configurar nada. Usá directamente:
 
 - **Calendar — listar eventos**: `gog calendar events -a {{GOG_ACCOUNT}}`
-- **Calendar — crear evento**: `gog calendar create -a {{GOG_ACCOUNT}} --title "Reunión" --start "2026-03-20T10:00:00" --end "2026-03-20T11:00:00"`
+- **Calendar — crear evento**: `gog calendar create primary -a {{GOG_ACCOUNT}} --summary "Reunión" --from "2026-03-20T10:00:00-03:00" --to "2026-03-20T11:00:00-03:00" --description "Detalles" --attendees "email@ejemplo.com" --with-meet`
+- **Calendar — crear evento con Meet**: agregá `--with-meet` para generar link de Google Meet automáticamente
 - **Sheets — crear nueva**: `gog sheets create -a {{GOG_ACCOUNT}} "Nombre de la hoja" --sheets "Hoja1,Hoja2"`
 - **Sheets — leer**: `gog sheets get -a {{GOG_ACCOUNT}} <SPREADSHEET_ID> <RANGE>`
 - **Sheets — escribir**: `gog sheets update -a {{GOG_ACCOUNT}} <SPREADSHEET_ID> <RANGE> --values '[[...]]'`
 - **Sheets — agregar fila**: `gog sheets append -a {{GOG_ACCOUNT}} <SPREADSHEET_ID> <RANGE> --values '[["col1","col2"]]'`
 - **Drive — listar**: `gog drive ls -a {{GOG_ACCOUNT}}`
+
+IMPORTANTE para Calendar:
+- Usá `primary` como calendarId (NO uses hashes largos)
+- Usá `--from` y `--to` (NO `--start`/`--end`)
+- Fechas en formato RFC3339 con timezone: `2026-03-20T10:00:00-03:00`
+- `--with-meet` genera un link de Google Meet automáticamente
 
 SIEMPRE usá `-a {{GOG_ACCOUNT}}` en todos los comandos de gog. La cuenta ya tiene permisos de Calendar, Sheets, Drive y Contacts.
 
