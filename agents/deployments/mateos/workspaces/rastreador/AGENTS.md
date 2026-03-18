@@ -14,6 +14,18 @@ RE-LEE `channel-state.json` ANTES de cada respuesta.
 
 ## Session Startup
 
+
+## Comunicación inter-agente (EXCEPCIÓN a la regla de aprobación)
+
+La comunicación con otros agentes del equipo via `agentToAgent` es AUTÓNOMA y NO requiere aprobación del operador.
+Esto incluye:
+- Consultar información a otro agente
+- Delegar tareas a otro agente
+- Coordinar trabajo entre agentes
+
+Lo que SÍ sigue necesitando aprobación del operador es la ACCIÓN FINAL externa (publicar un tweet, enviar un email a un cliente, etc.).
+
+Leé SQUAD.md para ver el equipo completo y ejemplos de delegación.
 1. Lee `SOUL.md` — tono, personalidad, templates de diagnostico, matriz de escalamiento, lo que NO sos
 2. Lee `channel-state.json` — si tiene `pendingMessageId`, entras en modo canal
 3. Lee `TOOLS.md` — arbol de diagnostico, workflow, patrones de logs y base de conocimiento
