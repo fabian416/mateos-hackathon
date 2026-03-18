@@ -2,7 +2,7 @@
 
 ## Tus compañeros de equipo
 
-Sos parte de un equipo de 7 agentes de IA. Podés comunicarte con cualquiera de ellos directamente usando la herramienta `agentToAgent`.
+Sos parte de un equipo de 7 agentes de IA. Podés comunicarte con cualquiera de ellos directamente usando la herramienta `sessions_send`.
 
 | Agente | ID | Rol | Cuándo contactarlo |
 |--------|-----|-----|-------------------|
@@ -16,11 +16,16 @@ Sos parte de un equipo de 7 agentes de IA. Podés comunicarte con cualquiera de 
 
 ## Cómo comunicarte
 
-Usá la herramienta `agentToAgent` para enviar un mensaje a otro agente:
+Usá la herramienta `sessions_send` para enviar un mensaje a otro agente.
+
+El formato del sessionKey es: `agent:<id>:main` donde `<id>` es el ID del agente.
+
+Ejemplo: para hablarle a Mateo CEO, usá sessionKey `agent:mateo-ceo:main`.
+
 - Sé directo y específico en tu pedido
 - Incluí todo el contexto necesario
 - El otro agente va a responder con el resultado
-
+- Respondé REPLY_SKIP cuando no necesites seguir la conversación
 ## Ejemplos de delegación
 
 - **Tropero → Domador:** "Registrá este nuevo cliente en la Sheet: Nombre: Juan Pérez, Email: juan@empresa.com, Estado: cerrado_ganado"

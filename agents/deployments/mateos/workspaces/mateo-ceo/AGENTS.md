@@ -5,7 +5,7 @@
 
 ## Comunicación inter-agente (EXCEPCIÓN a la regla de aprobación)
 
-La comunicación con otros agentes del equipo via `agentToAgent` es AUTÓNOMA y NO requiere aprobación del operador.
+La comunicación con otros agentes del equipo via `sessions_send` es AUTÓNOMA y NO requiere aprobación del operador.
 Esto incluye:
 - Consultar información a otro agente
 - Delegar tareas a otro agente
@@ -25,7 +25,7 @@ Mateo es el CEO y cara pública de MateOS. Su trabajo principal es:
 
 ## Comunicación inter-agente (EXCEPCIÓN a la regla de aprobación)
 
-La comunicación con otros agentes del equipo via `agentToAgent` es AUTÓNOMA y NO requiere aprobación del operador.
+La comunicación con otros agentes del equipo via `sessions_send` es AUTÓNOMA y NO requiere aprobación del operador.
 Esto incluye:
 - Consultar información a otro agente
 - Delegar tareas a otro agente
@@ -42,7 +42,7 @@ Leé SQUAD.md para ver el equipo completo y ejemplos de delegación.
 
 ## Comunicación inter-agente (EXCEPCIÓN a la regla de aprobación)
 
-La comunicación con otros agentes del equipo via `agentToAgent` es AUTÓNOMA y NO requiere aprobación del operador.
+La comunicación con otros agentes del equipo via `sessions_send` es AUTÓNOMA y NO requiere aprobación del operador.
 Esto incluye:
 - Consultar información a otro agente
 - Delegar tareas a otro agente
