@@ -1,512 +1,302 @@
-# MateOS Agents -- Operations Guide
+# MateOS -- Operations Guide
 
-Server: `54.160.120.210`
-Compose file: `agents/deployments/docker-compose.prod.yml`
+> Last updated: 2026-03-18
+
+Server: `54.160.120.210` (ec2-user, key `~/.ssh/lendoor_keys`)
+Path: `/opt/docker/mateos/`
+Systemd: `docker-compose@mateos.service`
 
 ---
 
-## 1. Daily Operations
+## 1. CRITICAL RULES
 
-### Checking Agent Health
+- **NEVER** use `--force-recreate` on the `mateos-agents` container -- it loses WhatsApp session.
+- Use `docker compose restart mateos-agents` instead.
+- `NODE_OPTIONS=--max-old-space-size=3072` is required for OpenClaw in the container.
+- DNS for `mateos.zk-access.xyz` must point to `54.160.120.210`.
 
-```bash
-# SSH into the server
-ssh ubuntu@54.160.120.210
+---
 
-# See all containers and their status
-docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+## 2. Daily Operations
 
-# Check healthcheck status for a specific agent
-docker inspect --format='{{.State.Health.Status}}' baqueano-mateos
-```
-
-Each agent container runs a healthcheck (`pgrep -f openclaw`) every 5 minutes with 3 retries and a 30s start period. A healthy agent shows `(healthy)` in `docker ps`.
-
-The Agent Router has its own healthcheck hitting `http://localhost:8080/health` every 30s.
-
-### Reviewing Logs
+### Checking Health
 
 ```bash
-# Live logs for a specific agent
-docker logs -f baqueano-mateos --tail 100
+ssh -i ~/.ssh/lendoor_keys ec2-user@54.160.120.210
 
-# Channel checker log (inside the container)
-docker exec baqueano-mateos cat /home/agent/.openclaw/logs/channel-checker.log
+# All containers
+docker ps --format "table {{.Names}}\t{{.Status}}"
 
-# All agents at once
-docker compose -f docker-compose.prod.yml logs --tail 50
+# Agent container logs
+docker logs -f mateos-agents --tail 100
 
-# Filter by time
-docker logs --since 1h baqueano-mateos
+# Frontend
+curl -I https://mateos.zk-access.xyz
+
+# Memory usage
+docker stats --no-stream
 ```
-
-The channel-checker writes to `~/.openclaw/logs/channel-checker.log` inside each container. Log lines are timestamped in ISO format.
 
 ### Telegram Approval Queue
 
-All agents at Trust Level 2 (the default) use a draft-and-approve workflow:
+All agents at Trust Level 2 (default) use draft-and-approve:
 
-1. `channel-checker.py` detects a new message (email or WhatsApp).
-2. It saves the message to `channel-state.json` and triggers the agent via `openclaw gateway call chat.send`.
-3. The agent reads the message, drafts a response, and writes it to the `draft` field in `channel-state.json`.
-4. On the next 60s cycle, `channel-checker.py` detects the draft and sends a formatted proposal to Telegram.
-5. The operator replies in Telegram: approve, modify, discard, or forget.
-6. The agent processes the decision, marks the state as `completed`, and the checker clears it on the next cycle.
+1. Agent receives a message (WhatsApp, email, inter-agent).
+2. Agent drafts a response.
+3. Draft is sent to operator via Telegram for approval.
+4. Operator replies: approve / modify / discard.
+5. Agent sends the approved response.
 
-If a message stays pending for more than 30 minutes, the checker clears it automatically and notifies via Telegram.
-
-### Monitoring the Agent Router
-
-```bash
-# Health check
-curl http://localhost:8080/health
-
-# From outside (if exposed)
-curl http://54.160.120.210:8080/health
-
-# List active tasks
-curl -H "Authorization: Bearer $SQUAD_AUTH_TOKEN" http://localhost:8080/tasks
-```
-
-The router runs as `agent-router` on port 8080 (internal Docker network). All agents connect to it via `http://agent-router:8080` and authenticate with the shared `SQUAD_AUTH_TOKEN`.
+If a draft stays pending > 30 minutes, it is auto-cleared with a Telegram notification.
 
 ---
 
-## 2. Channel Management
+## 3. Channel Management
 
 ### WhatsApp
 
-WhatsApp credentials persist in the `baqueano-whatsapp` Docker volume.
+WhatsApp session is inside the `mateos-agents` container.
 
 ```bash
-# Initial QR scan (first time or after credential expiry)
-docker exec -it baqueano-mateos openclaw channels login --channel whatsapp
+# Initial QR scan (first time or after session expiry)
+docker exec -it mateos-agents openclaw channels login --channel whatsapp
 
-# Check if WhatsApp is connected
-docker logs baqueano-mateos 2>&1 | grep -i whatsapp
-
-# Volume location
-docker volume inspect baqueano-whatsapp
+# Check connection
+docker logs mateos-agents 2>&1 | grep -i whatsapp
 ```
 
-**Reconnection:** If WhatsApp disconnects (phone changed, session expired), re-run the QR login command. The volume preserves credentials across container restarts, but not across session revocations from the phone.
+**Reconnection:** If WhatsApp disconnects, re-run the QR login command. NEVER recreate the container.
 
-**Relevant env vars:**
-- `WHATSAPP_ENABLED` -- `true`/`false`
-- `WHATSAPP_DM_POLICY` -- `open` (anyone) or `allowlist`
-- `WHATSAPP_ALLOW_FROM` -- comma-separated phone numbers (when using allowlist)
+**Env vars:**
+- `WHATSAPP_ENABLED` -- true/false
+- `WHATSAPP_DM_POLICY` -- open / allowlist
+- `WHATSAPP_ALLOW_FROM` -- comma-separated phone numbers
 
 ### Email (himalaya)
 
-Email uses himalaya with Gmail app passwords. Config is generated from `himalaya.config.toml.template` at container startup via `envsubst`.
-
 ```bash
-# Test email access from inside the container
-docker exec baqueano-mateos himalaya envelope list --folder INBOX -o json
+# Test email access
+docker exec mateos-agents himalaya envelope list --folder INBOX -o json
 
-# Check himalaya config
-docker exec baqueano-mateos cat ~/.config/himalaya/config.toml
+# Check config
+docker exec mateos-agents cat ~/.config/himalaya/config.toml
 ```
 
-**Polling cycle:** `channel-checker.py` runs every 60 seconds. It calls `himalaya envelope list` to check for unread emails. If none exist, no LLM call is made -- cost is $0.
+Polling: every 60 seconds. No LLM call if no new emails ($0 when idle).
 
-**Relevant env vars:**
-- `EMAIL_ENABLED` -- `true`/`false`
-- `GMAIL_EMAIL` -- the Gmail address
-- `GMAIL_APP_PASSWORD` -- a Gmail App Password (not the account password)
-- `GMAIL_DISPLAY_NAME` -- sender display name
-
-**App password setup:** Google Account > Security > 2-Step Verification > App passwords. Generate one for "Mail" and paste it into `GMAIL_APP_PASSWORD`.
+**Env vars:**
+- `EMAIL_ENABLED` -- true/false
+- `GMAIL_EMAIL` -- Gmail address
+- `GMAIL_APP_PASSWORD` -- App Password (not account password)
+- `GMAIL_DISPLAY_NAME` -- sender name
 
 ### Telegram
 
-Every agent requires Telegram. It is the operator's control channel.
+Every agent has its own Telegram bot. Operator control channel.
 
-**Relevant env vars:**
-- `TELEGRAM_BOT_TOKEN` -- from @BotFather
-- `TELEGRAM_OWNER_ID` -- the operator's numeric chat ID
-- `TELEGRAM_DM_POLICY` -- `allowlist` (default, only owner) or `open`
-- `TELEGRAM_GROUP_POLICY` -- `disabled` (default)
-
-**DM policy:** With `allowlist`, only the `TELEGRAM_OWNER_ID` can interact. This is the recommended setting for production.
-
-**Getting your chat ID:** Send `/start` to `@userinfobot` on Telegram.
+**Env vars (per agent):**
+- `TELEGRAM_BOT_TOKEN` -- from @BotFather (7 different tokens)
+- `TELEGRAM_OWNER_ID` -- operator's numeric chat ID
+- `TELEGRAM_DM_POLICY` -- allowlist (default, only owner)
 
 ### Google Workspace
 
-Google Workspace access (Sheets, Calendar) uses a service account JSON key mounted at runtime.
-
 ```bash
-# Mount the SA key as a volume (not baked into the image)
-# In docker-compose, the key is mounted to the expected path
-docker exec baqueano-mateos gog sheets list  # test access
+# Test Sheets access
+docker exec mateos-agents gog sheets list
 ```
 
-The service account must be granted access to the specific Sheets/Calendars it needs. Share the spreadsheet or calendar with the service account email address.
+Service Account: `gaucho@signup-workroom-1667850088701.iam.gserviceaccount.com`
+Sheet ID: `1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE`
+Calendar ID: `945cbda6...@group.calendar.google.com`
+
+Share Sheets/Calendars with the service account email.
 
 ---
 
-## 3. Cost Management
+## 4. Cost Management
 
-### Model Selection Strategy
+### Model Selection
 
-| Model | Approx. Cost/Message | Use For |
-|-------|---------------------|---------|
-| Haiku | ~$0.001 | Heartbeats, templates, classification, tagging |
-| Sonnet | ~$0.01 | Content creation, summarization, data extraction |
-| Opus | ~$0.05 | Complex reasoning, strategy, multi-variable analysis |
+| Model | ~Cost/Message | Use For |
+|-------|--------------|---------|
+| Haiku | ~$0.001 | Heartbeats, templates, classification |
+| Sonnet | ~$0.01 | Content creation, summarization |
+| Opus | ~$0.05 | Complex reasoning, strategy |
 
-Default model for agents: `anthropic/claude-haiku-4-5` (set via `PRIMARY_MODEL` in `.env`).
+Default: `anthropic/claude-haiku-4-5`. If a task runs > 2x/day, use the cheapest viable model.
 
-Rule: if a task runs more than 2 times per day, use the cheapest model that can handle it. Escalate per-task, never change the agent's default model.
+### $0 When Idle
 
-### Heartbeat Frequency and Cost Impact
+The channel checker is pure Python -- no LLM. If there are no new messages, no agent call is made. Cost is zero when idle.
 
-| Frequency | Estimated Daily Cost (Haiku) |
-|-----------|------------------------------|
-| Every 5 min | ~$4.00 |
-| Every 15 min | ~$1.50 |
-| Every 30 min | ~$0.75 |
-| Every 1 hour | ~$0.40 |
-| Every 4 hours | ~$0.10 |
-| Once per day | ~$0.02 |
-
-Default: every 30 minutes for operational agents, every 4 hours for monitoring agents.
-
-If more than 50% of heartbeats are empty (no new data to report), reduce the frequency.
-
-### channel-checker.py: $0 When Idle
-
-The channel checker is a pure Python script -- no LLM involved. It polls email via himalaya and checks `channel-state.json`. If there are no new messages, no agent call is made and the cost is zero. The LLM is only invoked when there is an actual message to process.
-
-### Monitoring Daily Spend
-
-Check your Anthropic dashboard or OpenClaw billing for per-agent token usage. Target: less than $1/agent/day for Haiku-based agents under normal load.
-
-If an agent exceeds 2x the daily target for 3 consecutive days, review heartbeat frequency and model assignments.
+Target: < $1/agent/day for Haiku-based agents under normal load.
 
 ---
 
-## 4. Memory System
+## 5. Memory System
 
-### Layer 1: MEMORY.md (Persistent)
+### MEMORY.md (Persistent)
 
-Location: `workspace/MEMORY.md` inside each agent container.
+Per-agent file in workspace. Read at session start. Contains operator preferences, patterns, lessons. Keep under 200 lines.
 
-Read at the start of every session. Contains:
-- Operator preferences
-- Business patterns
-- Lessons learned from past errors
-- Durable context
+### Daily Notes
 
-Keep it under 200 lines. Distill, don't accumulate.
+`workspace/memory/YYYY-MM-DD.md` -- one per day per agent.
 
-### Layer 2: Daily Notes
+### Temperature (Decay)
 
-Location: `workspace/memory/YYYY-MM-DD.md`
-
-One file per day. Each entry follows:
-```
-## HH:MM - Brief title
-- What happened
-- What the agent decided
-- Result
-- Operator feedback (if any)
-```
-
-### Temperature (Decay Rules)
-
-| Category | Age | Behavior |
-|----------|-----|----------|
-| Hot | 0-7 days | Loaded automatically at session start. Active context. |
-| Warm | 8-30 days | Not loaded automatically. Consulted only when the current topic requires it. |
-| Cold | 30+ days | Not loaded. Only searched on explicit request. Candidate for compression. |
-
-**Transitions:**
-- Day 8: Hot to Warm. Anything important should already be distilled into MEMORY.md.
-- Day 31: Warm to Cold. Can be compressed into a weekly summary.
-- Day 90+: Cold to Archive (`workspace/memory/archive/`). Never delete.
-
-### Weekly Distillation Checklist
-
-1. Did anything repeat 3+ times? Add as a pattern to MEMORY.md.
-2. Did the operator correct something? Add as a lesson to MEMORY.md.
-3. Is there context needed in 2 weeks? Add as durable context.
-4. Did anything change permanently (new policy, new product)? Update MEMORY.md.
+| Age | Status | Behavior |
+|-----|--------|----------|
+| 0-7 days | Hot | Auto-loaded at session start |
+| 8-30 days | Warm | Consulted only when relevant |
+| 30+ days | Cold | Only on explicit request |
+| 90+ days | Archive | Move to `memory/archive/`, never delete |
 
 ---
 
-## 5. Trust Level Management
-
-### Trust Levels
+## 6. Trust Level Management
 
 | Level | Name | Description |
 |-------|------|-------------|
-| 1 | Read-Only | Observe, analyze, report. No actions. |
-| 2 | Draft + Approve (DEFAULT) | Drafts proposals, waits for operator approval via Telegram. |
-| 3 | Act Within Bounds | Executes within predefined limits without asking. Escalates if outside bounds. |
-| 4 | Full Autonomy | Operates independently. Reports results. Rare. |
+| 1 | Read-Only | Observe, analyze, report |
+| 2 | Draft & Approve (DEFAULT) | Drafts, operator approves via Telegram |
+| 3 | Act Within Bounds | Autonomous within limits, escalates outside |
+| 4 | Full Autonomy | Independent, reports results |
 
-**Non-negotiable rules at ALL levels:**
-- No social media posts without approval.
-- No money transfers or contract signing.
-- No cross-client data sharing.
-- Email is never a trusted command channel.
-- When in doubt, ask.
+**Upgrade path:** L1->L2 (5+ good interactions) -> L2->L3 (2+ weeks, no errors) -> L3->L4 (1+ month, low-risk).
 
-### How to Upgrade
-
-| From | To | Requirements |
-|------|-----|-------------|
-| 1 | 2 | Agent demonstrated understanding in at least 5 interactions. Operator is satisfied with quality. |
-| 2 | 3 | Minimum 2 weeks at Level 2 with no serious errors. Level 3 bounds are documented. Operator approved explicitly. |
-| 3 | 4 | Minimum 1 month at Level 3 without exceeding bounds. Low-risk domain. Operator approved explicitly. |
-
-Only the operator can promote. The agent can suggest readiness but never self-promote.
-
-### How to Downgrade
-
-Immediate downgrade if:
-- Error impacts a client or causes unauthorized cost.
-- Agent acts outside defined bounds.
-- Operator loses confidence (no justification needed).
-- Significant context change (new client, new domain).
-- Any non-negotiable rule is violated.
-
-Rule: downgrading is cheap and fast; upgrading is expensive and slow. When in doubt, downgrade.
+Only the operator can promote. Downgrade is immediate if: error impacts client, agent exceeds bounds, operator loses confidence, or non-negotiable rule violated.
 
 ---
 
-## 6. Incident Response
+## 7. Incident Response
 
-### Agent Down
-
-```bash
-# Check container status
-docker ps -a | grep mateos
-
-# Check logs for crash reason
-docker logs --tail 200 baqueano-mateos
-
-# Restart the container
-docker restart baqueano-mateos
-
-# If restart fails, recreate
-docker compose -f docker-compose.prod.yml up -d baqueano-mateos
-```
-
-Check `healthcheck` status. If the container is `unhealthy`, the openclaw process likely crashed.
-
-### Channel Disconnected
-
-**WhatsApp disconnected:**
-```bash
-# Re-scan QR code
-docker exec -it baqueano-mateos openclaw channels login --channel whatsapp
-```
-
-**Email not polling:**
-```bash
-# Test himalaya inside the container
-docker exec baqueano-mateos himalaya envelope list --folder INBOX
-
-# If auth fails, check app password in .env and restart
-docker restart baqueano-mateos
-```
-
-**Telegram not responding:**
-- Verify `TELEGRAM_BOT_TOKEN` is correct (test with `curl https://api.telegram.org/bot<TOKEN>/getMe`).
-- Verify `TELEGRAM_OWNER_ID` matches the operator's chat ID.
-- Check if the bot was blocked by the user or revoked via @BotFather.
-
-### High Cost Alert
-
-1. Check heartbeat frequency. Reduce if more than 50% of heartbeats are empty.
-2. Check which model is being used. Ensure the agent is not escalating to Sonnet/Opus for routine tasks.
-3. Review `channel-checker.log` for abnormal trigger frequency (e.g., spam emails triggering the agent repeatedly).
-4. Consider adding email filters to reduce noise before it reaches the agent.
-
-### Inter-Agent Communication Failure
+### Agent Container Down
 
 ```bash
-# Check router health
-docker logs agent-router --tail 50
-curl http://localhost:8080/health
+# Check status
+docker ps -a | grep mateos-agents
 
-# Verify SQUAD_AUTH_TOKEN is consistent across all agents
-docker exec baqueano-mateos printenv SQUAD_AUTH_TOKEN
-docker exec tropero-mateos printenv SQUAD_AUTH_TOKEN
+# Check logs
+docker logs --tail 200 mateos-agents
 
-# Restart the router
-docker restart agent-router
+# Restart (safe for WhatsApp)
+docker compose restart mateos-agents
+
+# If restart fails
+cd /opt/docker/mateos
+docker compose up -d mateos-agents
 ```
 
-All agents depend on `agent-router` being healthy (enforced via `depends_on: condition: service_healthy` in the compose file). If the router goes down, agents that depend on inter-agent communication will be affected.
+### Out of Memory
+
+```bash
+docker stats --no-stream
+free -h
+swapon --show   # Should show 8GB
+```
+
+Container has 4GB limit + `NODE_OPTIONS=--max-old-space-size=3072`.
+
+### WhatsApp Disconnected
+
+```bash
+docker exec -it mateos-agents openclaw channels login --channel whatsapp
+# Scan QR with phone
+```
+
+### Telegram Not Responding
+
+- Verify bot token: `curl https://api.telegram.org/bot<TOKEN>/getMe`
+- Verify `TELEGRAM_OWNER_ID` matches operator's chat ID
+- Check if bot was blocked or revoked via @BotFather
+
+### Tweet Scheduler Issues
+
+```bash
+docker exec mateos-agents ps aux | grep tweet-scheduler
+docker exec mateos-agents tail -100 /path/to/tweet-scheduler.log
+```
 
 ---
 
-## 7. Maintenance
+## 8. Maintenance
 
 ### Updating Workspace Files
 
-Workspace files are mounted as read-only volumes from the host:
-```
-./mateos-baqueano/workspace:/mnt/workspace:ro
-```
-
-At container startup, the entrypoint copies `/mnt/workspace/*` into the agent's working directory. To update:
-
 ```bash
-# Edit the file on the host
-vim /path/to/deployments/mateos-baqueano/workspace/TOOLS.md
-
-# Restart the container to pick up changes
-docker restart baqueano-mateos
+ssh -i ~/.ssh/lendoor_keys ec2-user@54.160.120.210
+cd /opt/docker/mateos/mateos/workspaces/<agent>/
+vi TOOLS.md
+# Restart to pick up changes
+cd /opt/docker/mateos
+docker compose restart mateos-agents
 ```
-
-No rebuild needed -- just restart.
 
 ### Rotating Secrets
 
-Secrets live in `.env` files per agent (e.g., `mateos-baqueano/.env`).
+Edit `/opt/docker/mateos/mateos/.env`, then restart:
 
 ```bash
-# Edit the env file
-vim /path/to/deployments/mateos-baqueano/.env
-
-# Restart to apply
-docker restart baqueano-mateos
+docker compose restart mateos-agents
 ```
 
-Key secrets to rotate periodically:
-- `GATEWAY_AUTH_TOKEN`
-- `SQUAD_AUTH_TOKEN` (must be updated in ALL agents and the router simultaneously)
-- `GMAIL_APP_PASSWORD` (if compromised or expired)
+Secrets to rotate periodically:
+- `GMAIL_APP_PASSWORD` (if compromised)
 - `TELEGRAM_BOT_TOKEN` (only if compromised; revoke via @BotFather)
+- Twitter API keys (if compromised)
 
-### Cleaning Old Logs and Attachments
-
-```bash
-# Attachments are auto-cleaned by channel-checker.py after 2 hours
-# For manual cleanup inside a container:
-docker exec baqueano-mateos rm -rf /home/agent/.openclaw/workspace/attachments/*
-
-# Truncate channel-checker log
-docker exec baqueano-mateos truncate -s 0 /home/agent/.openclaw/logs/channel-checker.log
-
-# Clean old daily notes (cold, 90+ days) -- move to archive, never delete
-docker exec baqueano-mateos bash -c 'mkdir -p ~/.openclaw/workspace/memory/archive && mv ~/.openclaw/workspace/memory/202[0-4]-*.md ~/.openclaw/workspace/memory/archive/ 2>/dev/null || true'
-```
-
-### Docker Volume Management
+### Cleaning Old Data
 
 ```bash
-# List all volumes
-docker volume ls | grep mateos
+# Inside the container
+docker exec mateos-agents bash -c 'rm -rf /home/agent/.openclaw/workspace/attachments/*'
 
-# Inspect a volume
-docker volume inspect baqueano-logs
-
-# Prune unused volumes (careful -- only when agents are running)
-docker volume prune
+# Archive old daily notes (90+ days)
+docker exec mateos-agents bash -c 'mkdir -p ~/.openclaw/workspace/memory/archive && mv ~/.openclaw/workspace/memory/202[0-4]-*.md ~/.openclaw/workspace/memory/archive/ 2>/dev/null || true'
 ```
-
-Named volumes in the stack: `baqueano-whatsapp`, `baqueano-logs`, `tropero-logs`, `domador-logs`, `rastreador-logs`, `relator-logs`, `mateo-state`, `caddy-data`, `caddy-config`.
-
-The `baqueano-whatsapp` volume holds WhatsApp session credentials. Do not prune it unless you want to re-scan the QR code.
 
 ---
 
-## 8. Useful Commands
-
-### Container Management
+## 9. Quick Reference Commands
 
 ```bash
-# Status of all containers
+# SSH
+ssh -i ~/.ssh/lendoor_keys ec2-user@54.160.120.210
+
+# Container status
 docker ps --format "table {{.Names}}\t{{.Status}}"
 
-# Restart a single agent
-docker restart baqueano-mateos
+# Agent logs
+docker logs -f mateos-agents --tail 100
 
-# Restart all agents
-docker compose -f docker-compose.prod.yml restart
+# Restart agents (SAFE for WhatsApp)
+cd /opt/docker/mateos && docker compose restart mateos-agents
 
-# Pull latest images and redeploy
-docker compose -f docker-compose.prod.yml pull
-docker compose -f docker-compose.prod.yml up -d
+# Pull latest and redeploy
+cd /opt/docker/mateos && docker compose pull && docker compose up -d
+
+# Memory usage
+docker stats --no-stream
+
+# WhatsApp re-auth
+docker exec -it mateos-agents openclaw channels login --channel whatsapp
+
+# Test Google Sheets
+docker exec mateos-agents gog sheets list
+
+# Test email
+docker exec mateos-agents himalaya envelope list --folder INBOX -o json
 
 # Stop everything
-docker compose -f docker-compose.prod.yml down
-
-# Stop and remove volumes (DESTRUCTIVE)
-docker compose -f docker-compose.prod.yml down -v
+cd /opt/docker/mateos && docker compose down
 ```
 
-### Logs
+### Active Services (Production)
 
-```bash
-# Follow logs for one agent
-docker logs -f baqueano-mateos
-
-# All agent logs
-docker compose -f docker-compose.prod.yml logs -f
-
-# Channel checker log
-docker exec baqueano-mateos tail -100 /home/agent/.openclaw/logs/channel-checker.log
-```
-
-### Agent Inspection
-
-```bash
-# Check env vars
-docker exec baqueano-mateos printenv | grep -E 'MODEL|TELEGRAM|EMAIL|WHATSAPP|AGENT'
-
-# Check channel state
-docker exec baqueano-mateos cat /home/agent/.openclaw/workspace/channel-state.json
-
-# Check memory
-docker exec baqueano-mateos cat /home/agent/.openclaw/workspace/MEMORY.md
-
-# List daily notes
-docker exec baqueano-mateos ls -la /home/agent/.openclaw/workspace/memory/
-
-# Check openclaw config (redact secrets)
-docker exec baqueano-mateos cat /home/agent/.openclaw/openclaw.json
-```
-
-### Inter-Agent Router
-
-```bash
-# Router health
-curl http://localhost:8080/health
-
-# List tasks
-curl -H "Authorization: Bearer $SQUAD_AUTH_TOKEN" http://localhost:8080/tasks
-
-# Router logs
-docker logs -f agent-router
-```
-
-### New Agent Deployment
-
-```bash
-# From the agents directory
-cd agents/_base
-./deploy.sh --client-name mi-empresa --agent-type el-baqueano --channels telegram,whatsapp,email
-
-# Then edit .env, customize workspace files, and start
-cd ../deployments/mi-empresa
-docker compose up -d
-```
-
-### Active Agents (Production)
-
-| Container | Agent Type | Role |
-|-----------|-----------|------|
-| `mateo-ceo` | CEO Agent | Twitter/strategy |
-| `baqueano-mateos` | El Baqueano | Customer support |
-| `tropero-mateos` | El Tropero | Sales/leads |
-| `domador-mateos` | El Domador | Admin/data |
-| `rastreador-mateos` | El Rastreador | Technical support L1 |
-| `relator-mateos` | El Relator | Content |
-| `agent-router` | Router | Inter-agent communication bus |
+| Container | Role |
+|-----------|------|
+| `mateos-agents` | All 7 agents (single OpenClaw container) |
+| `frontend` | Next.js web app |
+| `caddy` | HTTPS reverse proxy |

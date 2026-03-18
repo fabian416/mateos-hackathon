@@ -1,676 +1,249 @@
-# MateOS Agent Platform -- Deployment Guide
+# MateOS -- Deployment Guide
 
-This document covers the full lifecycle of deploying MateOS agents: from local development through production on EC2, including CI/CD and ongoing maintenance.
-
----
-
-## Table of Contents
-
-1. [Prerequisites](#1-prerequisites)
-2. [Creating a New Agent Instance](#2-creating-a-new-agent-instance)
-3. [Local Development](#3-local-development)
-4. [Production Deployment (EC2)](#4-production-deployment-ec2)
-5. [CI/CD Pipeline](#5-cicd-pipeline)
-6. [Adding a New Agent to Production](#6-adding-a-new-agent-to-production)
-7. [Updating Agents](#7-updating-agents)
-8. [Troubleshooting](#8-troubleshooting)
+> Last updated: 2026-03-18
 
 ---
 
 ## 1. Prerequisites
 
-### Software
+### Server Requirements
 
-- **Docker** >= 24.x and **Docker Compose** v2 (plugin)
-- **Node.js** >= 24 (used inside the agent image; not required on the host unless doing local dev without Docker)
-- **Git** for cloning the repository
-- **Caddy** >= 2.x (production only -- runs as a Docker container)
-- **Python 3** (installed inside agent containers; only needed on host for running scripts outside Docker)
+- EC2 instance (current: 54.160.120.210, ec2-user, key `~/.ssh/lendoor_keys`)
+- At least 4GB RAM (8GB swap configured)
+- Docker >= 24.x and Docker Compose v2
+- Ports 80/443 open (Caddy handles HTTPS)
+- DNS: `mateos.zk-access.xyz` -> 54.160.120.210
 
 ### API Keys and Credentials
 
-| Key | Where to get it | Required? |
-|-----|-----------------|-----------|
-| `TELEGRAM_BOT_TOKEN` | Create a bot via [@BotFather](https://t.me/BotFather) on Telegram | Yes |
-| `TELEGRAM_OWNER_ID` | Send `/start` to [@userinfobot](https://t.me/userinfobot) | Yes |
-| `GATEWAY_AUTH_TOKEN` | Self-generated (see Section 4) | Yes |
-| `SQUAD_AUTH_TOKEN` | Self-generated, shared across all agents (see Section 4) | Yes (production) |
-| `GMAIL_EMAIL` + `GMAIL_APP_PASSWORD` | Google Account > App Passwords | Only if `EMAIL_ENABLED=true` |
-| `TWITTER_API_KEY`, `TWITTER_API_SECRET`, `TWITTER_ACCESS_TOKEN`, `TWITTER_ACCESS_TOKEN_SECRET` | Twitter Developer Portal | Only if `TWITTER_ENABLED=true` |
-| `GOOGLE_SERVICE_ACCOUNT_FILE` | Google Cloud Console > Service Accounts | Only if `GOOGLE_ENABLED=true` |
-
-### Server Requirements (Production)
-
-- EC2 instance (t3.medium or larger recommended)
-- At least 4 GB RAM (each agent container uses ~200-400 MB)
-- 20 GB+ disk space
-- Ports 80 and 443 open (Caddy handles HTTPS)
-- A domain name pointed to the server IP (for automatic TLS via Caddy)
+| Key | Source | Required? |
+|-----|--------|-----------|
+| `TELEGRAM_BOT_TOKEN` (per agent) | @BotFather | Yes (7 tokens, one per agent) |
+| `TELEGRAM_OWNER_ID` | @userinfobot | Yes |
+| `TWITTER_API_KEY/SECRET/ACCESS_TOKEN/ACCESS_TOKEN_SECRET` | Twitter Dev Portal | For Mateo CEO |
+| `GOOGLE_SERVICE_ACCOUNT_FILE` | Google Cloud Console | For Sheets/Calendar agents |
+| `GMAIL_EMAIL` + `GMAIL_APP_PASSWORD` | Google Account > App Passwords | For email-enabled agents |
 
 ---
 
-## 2. Creating a New Agent Instance
+## 2. Production Architecture
 
-### Using deploy.sh (Recommended)
+### 3 Services (compose.yml)
 
-The `deploy.sh` script generates a complete deployment directory for a new client, copying base files, applying the agent-type overlay, and generating an `.env` file with sane defaults.
+| Service | Image | Role | Memory Limit |
+|---------|-------|------|--------------|
+| `caddy` | `caddy:2-alpine` | HTTPS reverse proxy | 256MB |
+| `frontend` | `ghcr.io/fabian416/mateos/frontend` | Next.js web app | 512MB |
+| `mateos-agents` | `ghcr.io/fabian416/mateos/agents` | Single OpenClaw with 7 agents | 4GB |
 
-```bash
-cd agents/_base
-./deploy.sh --client-name <client-name> --agent-type <agent-type> [--channels <channels>]
-```
+All 7 agents run in ONE container. Inter-agent communication uses OpenClaw's `agentToAgent`.
 
-**Parameters:**
+### Key EC2 Paths
 
-| Flag | Description | Example |
-|------|-------------|---------|
-| `--client-name` | Client identifier (lowercase, hyphens) | `panaderia-carlos` |
-| `--agent-type` | Agent archetype directory name | `el-baqueano`, `el-tropero`, `el-domador`, `el-rastreador`, `el-relator`, `el-paisano` |
-| `--channels` | Comma-separated channel list (default: `telegram,whatsapp`) | `telegram,whatsapp,email` |
-
-**Example:**
-
-```bash
-./deploy.sh --client-name panaderia-carlos --agent-type el-baqueano --channels telegram,whatsapp,email
-```
-
-This creates `agents/deployments/panaderia-carlos/` with the following structure:
-
-```
-panaderia-carlos/
-  .env                        # Generated from .env.example with client defaults
-  .env.example                # Reference
-  .gitignore
-  Dockerfile                  # Copied from docker/Dockerfile.template
-  docker-compose.yml          # Copied from docker/docker-compose.yml.template
-  docker-entrypoint.sh        # Entry point with placeholders replaced
-  config/
-    openclaw.json.template    # OpenClaw config template
-    himalaya.config.toml.template  # Email config template
-  workspace/
-    SOUL-BASE.md              # Base personality
-    AGENTS-BASE.md            # Inter-agent awareness
-    HEARTBEAT-BASE.md         # Heartbeat schedule
-    TOOLS-BASE.md             # Tool definitions
-    SOUL.md                   # Agent-type specific personality (overlaid)
-    TOOLS.md                  # Agent-type specific tools (overlaid)
-    ...
-  scripts/
-    channel-checker.py        # Monitors channel health
-    tweet-scheduler.py        # Tweet scheduling (if applicable)
-  memory/
-  logs/
-```
-
-### Manual Setup
-
-If you need to set up a deployment directory without the script:
-
-1. Create the deployment directory:
-   ```bash
-   mkdir -p agents/deployments/<client-name>/{workspace,config,scripts,memory,logs}
-   ```
-
-2. Copy base files:
-   ```bash
-   cp agents/_base/workspace/*-BASE.md agents/deployments/<client-name>/workspace/
-   cp agents/_base/config/*.template agents/deployments/<client-name>/config/
-   cp agents/_base/scripts/channel-checker.py agents/deployments/<client-name>/scripts/
-   cp agents/_base/docker/Dockerfile.template agents/deployments/<client-name>/Dockerfile
-   cp agents/_base/docker/docker-compose.yml.template agents/deployments/<client-name>/docker-compose.yml
-   cp agents/_base/docker/docker-entrypoint.sh.template agents/deployments/<client-name>/docker-entrypoint.sh
-   chmod +x agents/deployments/<client-name>/docker-entrypoint.sh
-   ```
-
-3. Copy agent-type overlay:
-   ```bash
-   cp agents/<agent-type>/workspace/* agents/deployments/<client-name>/workspace/
-   ```
-
-4. Copy the `.env.example` and create your `.env`:
-   ```bash
-   cp agents/_base/.env.example agents/deployments/<client-name>/.env.example
-   cp agents/deployments/<client-name>/.env.example agents/deployments/<client-name>/.env
-   ```
-
-5. Edit `docker-compose.yml` to replace `${SERVICE_NAME}` and `${CONTAINER_NAME}` placeholders.
-
-6. Edit `docker-entrypoint.sh` to replace `{{AGENT_DISPLAY_NAME}}`.
-
-### Customizing Workspace Files
-
-Workspace markdown files define the agent's personality, knowledge, and behavior. After generating a deployment, customize:
-
-- **SOUL.md** -- Brand voice, personality traits, tone guidelines. Replace any remaining `{{CLIENT_NAME}}`, `{{BRAND_MANTRA}}` placeholders.
-- **TOOLS.md** -- Client-specific FAQ, product information, pricing. Replace `{{CLIENT_CONTEXT}}`, `{{CLIENT_FAQ}}` placeholders.
-- **HEARTBEAT-BASE.md** -- Scheduled tasks and their cadence.
-- **TRUST-LADDER.md** -- Authorization levels for autonomous actions.
-
-The `deploy.sh` script replaces common placeholders automatically (`{{CLIENT_NAME}}`, `{{AGENT_NAME}}`, `{{DEPLOY_DATE}}`, etc.), but client-specific content placeholders must be filled in manually.
-
-### Setting Up .env
-
-Copy `.env.example` to `.env` and fill in the required values:
-
-```bash
-cp .env.example .env
-```
-
-At minimum, set:
-
-```
-TELEGRAM_BOT_TOKEN=<your-bot-token>
-TELEGRAM_OWNER_ID=<your-chat-id>
-GATEWAY_AUTH_TOKEN=<generate-a-secure-token>
-```
-
-The `.env` file is git-ignored and must never be committed.
+| Path | Purpose |
+|------|---------|
+| `/opt/docker/mateos/compose.yml` | Docker Compose |
+| `/opt/docker/mateos/Caddyfile` | HTTPS config |
+| `/opt/docker/mateos/mateos/.env` | All tokens and config |
+| `/opt/docker/mateos/mateos/workspaces/{agent}/` | Per-agent workspace MDs |
+| `/opt/docker/mateos/mateos/config/openclaw.json.template` | Multi-agent OpenClaw config |
+| `/opt/docker/mateos/mateos/docker-entrypoint.sh` | Startup script |
+| `/opt/docker/mateos/mateos/tweet-scheduler.py` | Mateo CEO scheduler |
+| `/opt/docker/mateos/mateos/agents/main/agent/auth-profiles.json` | Google API key |
 
 ---
 
-## 3. Local Development
+## 3. CI/CD Pipeline
 
-### Running a Single Agent
+### GitHub Actions
 
-From the agent's deployment directory:
+Only 2 images built (on push to `main`):
+
+| Image | Source |
+|-------|--------|
+| `ghcr.io/fabian416/mateos/frontend` | Next.js app |
+| `ghcr.io/fabian416/mateos/agents` | Single agent image (all 7 agents) |
+
+Uses Docker Buildx with GitHub Actions cache (`type=gha`). Auth via `GITHUB_TOKEN` with `packages: write`.
+
+### Watchtower Auto-Deploy
+
+Watchtower runs on EC2 and monitors GHCR. Full pipeline:
+
+```
+git push main -> GitHub Actions build -> GHCR push -> Watchtower pull -> container restart
+```
+
+No manual SSH needed for routine deployments.
+
+---
+
+## 4. First-Time EC2 Setup
+
+### 1. SSH into the server
 
 ```bash
-cd agents/deployments/<client-name>
+ssh -i ~/.ssh/lendoor_keys ec2-user@54.160.120.210
+```
 
-# Build and start
-docker compose build
+### 2. Verify Docker is installed
+
+```bash
+docker --version
+docker compose version
+```
+
+### 3. Create the directory structure
+
+```bash
+sudo mkdir -p /opt/docker/mateos/mateos
+```
+
+### 4. Copy files to EC2
+
+From your local machine:
+
+```bash
+scp -i ~/.ssh/lendoor_keys compose.yml ec2-user@54.160.120.210:/opt/docker/mateos/
+scp -i ~/.ssh/lendoor_keys Caddyfile ec2-user@54.160.120.210:/opt/docker/mateos/
+scp -ri ~/.ssh/lendoor_keys mateos/ ec2-user@54.160.120.210:/opt/docker/mateos/mateos/
+```
+
+### 5. Configure .env
+
+```bash
+ssh -i ~/.ssh/lendoor_keys ec2-user@54.160.120.210
+cd /opt/docker/mateos/mateos
+vi .env  # Fill in all tokens
+```
+
+### 6. Start the stack
+
+```bash
+cd /opt/docker/mateos
 docker compose up -d
 ```
 
-The local `docker-compose.yml` builds the image from `agents/Dockerfile` with the appropriate `AGENT_TYPE` build arg and mounts volumes for logs and WhatsApp credentials.
-
-### Testing Channels
-
-**Telegram:**
-1. Send `/start` to your bot on Telegram.
-2. The agent should respond. Check logs if it does not.
-
-**WhatsApp (QR scan):**
-1. WhatsApp authentication requires scanning a QR code on first run.
-2. Exec into the container and run the login command:
-   ```bash
-   docker exec -it <container-name> openclaw channels login --channel whatsapp
-   ```
-3. A QR code will appear in the terminal. Scan it with WhatsApp on your phone (Linked Devices > Link a Device).
-4. WhatsApp credentials are persisted in the `whatsapp-creds` volume, so you only need to scan once unless the session expires.
-
-**Email:**
-- Email is handled via himalaya. Ensure `EMAIL_ENABLED=true` and the Gmail app password is set in `.env`.
-- The `channel-checker.py` script polls for new emails every 60 seconds.
-
-### Logs and Debugging
+### 7. Enable systemd service
 
 ```bash
-# Follow all logs
-docker compose logs -f
-
-# Follow only the agent container
-docker compose logs -f <service-name>
-
-# Check channel-checker logs inside the container
-docker exec -it <container-name> tail -f /home/agent/.openclaw/logs/channel-checker.log
-
-# Check tweet-scheduler logs (if Twitter enabled)
-docker exec -it <container-name> tail -f /home/agent/.openclaw/logs/tweet-scheduler.log
-
-# Inspect the generated openclaw.json config
-docker exec -it <container-name> cat /home/agent/.openclaw/openclaw.json
-```
-
-To check if the agent process is running:
-
-```bash
-docker exec -it <container-name> pgrep -fa openclaw
+sudo systemctl enable docker-compose@mateos.service
 ```
 
 ---
 
-## 4. Production Deployment (EC2)
+## 5. Updating Workspace Files (No Rebuild)
 
-### Server Setup
-
-Production server: `54.160.120.210`
-
-1. **Install Docker and Docker Compose:**
-   ```bash
-   sudo apt-get update
-   sudo apt-get install -y docker.io docker-compose-plugin
-   sudo usermod -aG docker $USER
-   # Log out and back in for group changes to take effect
-   ```
-
-2. **Clone the repository:**
-   ```bash
-   git clone <repo-url>
-   cd mateos
-   ```
-
-3. **Caddy** runs as a Docker container defined in `docker-compose.prod.yml`. It handles automatic HTTPS via Let's Encrypt. The `Caddyfile` is mounted as a volume:
-   ```
-   mateos.zk-access.xyz {
-       encode gzip zstd
-       reverse_proxy frontend:3000
-   }
-   ```
-   The domain must have an A record pointing to `54.160.120.210`.
-
-### Environment Variables and Secrets
-
-Each agent has its own `.env` file under `agents/deployments/<agent-name>/.env`. These are referenced via `env_file` in `docker-compose.prod.yml`.
-
-There is also a shared `.env` at the `agents/deployments/` level for stack-wide secrets:
+Workspace files are mounted into the container. To update agent behavior:
 
 ```bash
-# agents/deployments/.env
-SQUAD_AUTH_TOKEN=<shared-token-for-inter-agent-auth>
+ssh -i ~/.ssh/lendoor_keys ec2-user@54.160.120.210
+cd /opt/docker/mateos/mateos/workspaces/<agent>/
+vi TOOLS.md   # Edit as needed
 ```
 
-### SQUAD_AUTH_TOKEN Generation
-
-The `SQUAD_AUTH_TOKEN` is a shared secret that authenticates inter-agent communication through the agent router. All agents and the router must share the same value.
-
-Generate a secure token:
+Then restart the container:
 
 ```bash
-openssl rand -hex 32
+cd /opt/docker/mateos
+docker compose restart mateos-agents
 ```
 
-Set it in `agents/deployments/.env`:
-
-```
-SQUAD_AUTH_TOKEN=<generated-token>
-```
-
-This token is injected into each agent container and the router via the `environment` section in `docker-compose.prod.yml`.
-
-### docker-compose.prod.yml Overview
-
-The production compose file (`agents/deployments/docker-compose.prod.yml`) defines the full stack:
-
-| Service | Image | Role |
-|---------|-------|------|
-| `agent-router` | `ghcr.io/.../agent-router:latest` | FastAPI inter-agent communication bus |
-| `caddy` | `caddy:2-alpine` | Reverse proxy with automatic HTTPS |
-| `frontend` | `ghcr.io/.../frontend:latest` | Next.js web application |
-| `mateo-ceo` | `ghcr.io/.../el-ceo:latest` | Twitter/X tweet scheduler |
-| `baqueano-mateos` | `ghcr.io/.../el-baqueano:latest` | Customer support agent |
-| `tropero-mateos` | `ghcr.io/.../el-tropero:latest` | Sales/leads agent |
-| `domador-mateos` | `ghcr.io/.../el-domador:latest` | Admin/data agent |
-| `rastreador-mateos` | `ghcr.io/.../el-rastreador:latest` | L1 technical support agent |
-| `relator-mateos` | `ghcr.io/.../el-relator:latest` | Content creation agent |
-
-Key architectural details:
-
-- **YAML anchor `x-agent-base`**: All agents inherit from `&agent-base`, which defines the common entrypoint logic, restart policy, Watchtower label, and healthcheck.
-- **Volume mounts**: Workspace files are mounted read-only from the host at `/mnt/workspace` and copied into the container at startup. This allows hot-reloading workspace content without rebuilding images.
-- **Inter-agent communication**: Each agent gets `SQUAD_AUTH_TOKEN`, `ROUTER_URL=http://agent-router:8080`, and its own `AGENT_NAME`. The `delegate.py` script handles sending tasks between agents via the router.
-- **Watchtower labels**: All services have `com.centurylinklabs.watchtower.enable=true` for automatic image updates.
-
-### Starting the Stack
-
-```bash
-cd agents/deployments
-
-# Pull latest images
-docker compose -f docker-compose.prod.yml pull
-
-# Start all services
-docker compose -f docker-compose.prod.yml up -d
-
-# Verify all containers are running
-docker compose -f docker-compose.prod.yml ps
-```
-
-### Verifying Health
-
-```bash
-# Check container status and health
-docker compose -f docker-compose.prod.yml ps
-
-# Verify the agent router is healthy
-curl -s http://localhost:8080/health
-
-# Check individual agent logs
-docker compose -f docker-compose.prod.yml logs -f baqueano-mateos
-
-# Verify a specific agent process is running
-docker exec baqueano-mateos pgrep -fa openclaw
-
-# Check Caddy is serving HTTPS
-curl -I https://mateos.zk-access.xyz
-```
+No image rebuild needed.
 
 ---
 
-## 5. CI/CD Pipeline
+## 6. Agent Template System
 
-### GitHub Actions Workflow
+### Templates (in this repo)
 
-The CI/CD pipeline is defined in `.github/workflows/build-agents.yml`. It triggers on every push to `main`.
+| Path | Purpose |
+|------|---------|
+| `agents/_base/` | Shared workspace files, scripts, Docker templates |
+| `agents/el-{type}/` | Generic agent-type templates with `{{placeholders}}` |
+| `agents/deployments/mateos/` | Unified MateOS deployment with all workspaces filled |
 
-### Image Building
+### Workspace Files Per Agent
 
-The workflow builds three categories of images in parallel:
+| File | Defines |
+|------|---------|
+| `IDENTITY.md` | Name, role, scope, model, channels |
+| `SOUL.md` | Personality, response templates, escalation rules, SLAs |
+| `AGENTS.md` | Autonomy table, inter-agent awareness |
+| `TOOLS.md` | Active integrations, client FAQ, knowledge base |
+| `HEARTBEAT.md` | Periodic tasks and schedules |
 
-1. **Frontend** (1 image):
-   - Context: repository root
-   - Dockerfile: `./Dockerfile`
-   - Tag: `ghcr.io/<owner>/mateos/frontend:latest`
-
-2. **Agent Router** (1 image):
-   - Context: `./agents/router`
-   - Dockerfile: `./agents/router/Dockerfile`
-   - Tag: `ghcr.io/<owner>/gaucho-agents/agent-router:latest`
-
-3. **Agent Types** (7 images via matrix strategy):
-   - Context: `./agents`
-   - Dockerfile: `./agents/Dockerfile`
-   - Build arg: `AGENT_TYPE=<type>`
-   - Tags: `ghcr.io/<owner>/gaucho-agents/<agent-type>:latest`
-
-   The matrix includes:
-   - `el-baqueano`
-   - `el-ceo`
-   - `el-domador`
-   - `el-paisano`
-   - `el-relator`
-   - `el-rastreador`
-   - `el-tropero`
-
-All builds use Docker Buildx with GitHub Actions cache (`type=gha`) for faster rebuilds.
-
-### GHCR Pushing
-
-Images are pushed to GitHub Container Registry (GHCR) automatically after a successful build. Authentication uses `GITHUB_TOKEN` with `packages: write` permission.
-
-### Watchtower Auto-Updates
-
-On the production server, [Watchtower](https://containrrr.dev/watchtower/) monitors GHCR for new image versions. When a new `:latest` image is pushed:
-
-1. Watchtower detects the updated digest.
-2. It pulls the new image.
-3. It recreates the container with the same configuration.
-
-All services in `docker-compose.prod.yml` have the Watchtower label enabled:
-
-```yaml
-labels:
-  - "com.centurylinklabs.watchtower.enable=true"
-```
-
-This means pushing to `main` triggers a fully automated deployment: code push -> GitHub Actions build -> GHCR push -> Watchtower pull -> container restart.
-
----
-
-## 6. Adding a New Agent to Production
-
-Follow these steps to add a new agent type or a new instance of an existing type to the production stack.
-
-### Step 1: Create the Deployment Directory
-
-Use `deploy.sh` or create it manually (see Section 2):
+### Using deploy.sh for new clients
 
 ```bash
 cd agents/_base
-./deploy.sh --client-name <client-name> --agent-type <agent-type> --channels telegram,whatsapp
+./deploy.sh --client-name <name> --agent-type <type> --channels telegram,whatsapp
 ```
 
-### Step 2: Configure the .env
-
-```bash
-cd agents/deployments/<client-name>
-cp .env.example .env
-# Edit .env with real credentials
-```
-
-### Step 3: Customize Workspace Files
-
-Edit the workspace markdown files with client-specific content (FAQ, brand voice, etc.).
-
-### Step 4: If This Is a New Agent Type
-
-If you created a new agent type (not just a new instance of an existing type):
-
-1. Add the type directory under `agents/`:
-   ```
-   agents/<new-agent-type>/
-     workspace/
-       SOUL.md
-       TOOLS.md
-   ```
-
-2. Add the new type to the GitHub Actions matrix in `.github/workflows/build-agents.yml`:
-   ```yaml
-   matrix:
-     agent:
-       - el-baqueano
-       - el-new-type    # Add here
-       ...
-   ```
-
-3. Push to `main` to trigger image builds.
-
-### Step 5: Add to docker-compose.prod.yml
-
-Add the new service to `agents/deployments/docker-compose.prod.yml`:
-
-```yaml
-  <service-name>:
-    <<: *agent-base
-    image: ghcr.io/<owner>/gaucho-agents/<agent-type>:latest
-    container_name: <service-name>
-    hostname: <service-name>
-    env_file: ./<deployment-dir>/.env
-    environment:
-      - SQUAD_AUTH_TOKEN=${SQUAD_AUTH_TOKEN}
-      - ROUTER_URL=http://agent-router:8080
-      - AGENT_NAME=<agent-name>
-    depends_on:
-      agent-router:
-        condition: service_healthy
-    volumes:
-      - <service-name>-logs:/home/agent/.openclaw/logs
-      - ./<deployment-dir>/workspace:/mnt/workspace:ro
-      - ./<deployment-dir>/docker-entrypoint.sh:/mnt/entrypoint.sh:ro
-      - ./<deployment-dir>/config/openclaw.json.template:/mnt/openclaw.json.template:ro
-      - ./<deployment-dir>/agents/main/agent/auth-profiles.json:/mnt/auth-profiles.json:ro
-```
-
-Add the volume to the `volumes:` section at the bottom:
-
-```yaml
-volumes:
-  <service-name>-logs:
-```
-
-### Step 6: Deploy
-
-```bash
-cd agents/deployments
-
-# Pull new images (if applicable)
-docker compose -f docker-compose.prod.yml pull
-
-# Start the new service (without restarting existing ones)
-docker compose -f docker-compose.prod.yml up -d <service-name>
-
-# Verify
-docker compose -f docker-compose.prod.yml ps
-docker compose -f docker-compose.prod.yml logs -f <service-name>
-```
-
-### Step 7: Connect WhatsApp (If Enabled)
-
-```bash
-docker exec -it <container-name> openclaw channels login --channel whatsapp
-# Scan the QR code with your phone
-```
+This creates a deployment directory with all base + agent-type files merged, placeholders partially filled. Client-specific content must be filled manually.
 
 ---
 
-## 7. Updating Agents
-
-### Workspace File Updates (Hot Reload via Volumes)
-
-In production, workspace files are mounted as read-only volumes from the host into the container at `/mnt/workspace`. The container entrypoint copies them to the working directory on startup.
-
-To update workspace content without rebuilding:
-
-1. Edit the workspace files on the host:
-   ```bash
-   cd agents/deployments/<agent-name>/workspace
-   vi TOOLS.md   # Make your changes
-   ```
-
-2. Restart the container to pick up changes:
-   ```bash
-   docker compose -f docker-compose.prod.yml restart <service-name>
-   ```
-
-The container's entrypoint runs `cp /mnt/workspace/* /home/agent/.openclaw/workspace/` on every start, so workspace changes take effect on restart without needing a new image.
-
-### Image Updates (Rebuild + Push)
-
-For changes to the base image (Dockerfile, system dependencies, scripts, base workspace files baked into the image):
-
-1. Make changes to `agents/Dockerfile`, `agents/_base/`, or `agents/<agent-type>/`.
-2. Push to `main`.
-3. GitHub Actions builds and pushes new images to GHCR.
-4. Watchtower automatically pulls the new image and restarts affected containers.
-
-To manually trigger an update on the server:
+## 7. Verifying Health
 
 ```bash
-cd agents/deployments
-docker compose -f docker-compose.prod.yml pull
-docker compose -f docker-compose.prod.yml up -d
+# SSH in
+ssh -i ~/.ssh/lendoor_keys ec2-user@54.160.120.210
+
+# Container status
+docker ps --format "table {{.Names}}\t{{.Status}}"
+
+# Agent container logs
+docker logs -f mateos-agents --tail 100
+
+# Frontend
+curl -I https://mateos.zk-access.xyz
+
+# Check Caddy
+docker logs caddy --tail 50
 ```
-
-### Rolling Updates
-
-Docker Compose does not natively support rolling updates. To minimize downtime when updating multiple agents:
-
-1. Update one agent at a time:
-   ```bash
-   docker compose -f docker-compose.prod.yml pull <service-name>
-   docker compose -f docker-compose.prod.yml up -d <service-name>
-   ```
-
-2. Verify health before proceeding to the next:
-   ```bash
-   docker compose -f docker-compose.prod.yml ps <service-name>
-   ```
-
-3. Repeat for each agent.
-
-Watchtower handles this automatically with a configurable interval, updating containers one at a time.
 
 ---
 
 ## 8. Troubleshooting
 
-### Agent Not Starting
+### Agent container not starting
 
-**Symptoms:** Container exits immediately or enters a restart loop.
+```bash
+docker logs mateos-agents --tail 200
+```
 
-1. Check the container logs:
-   ```bash
-   docker compose -f docker-compose.prod.yml logs <service-name>
-   ```
+Common causes: missing env vars, bad `.env` file, memory limit hit (check `docker stats`).
 
-2. The entrypoint validates required environment variables on startup. If any are missing, you will see:
-   ```
-   Error: TELEGRAM_BOT_TOKEN is not set
-   ```
-   Fix: ensure the `.env` file has all required values set.
+### WhatsApp session expired
 
-3. Check if the image was pulled correctly:
-   ```bash
-   docker images | grep <agent-type>
-   ```
+```bash
+docker exec -it mateos-agents openclaw channels login --channel whatsapp
+# Scan QR code with phone
+```
 
-4. Try running the container interactively to debug:
-   ```bash
-   docker run --rm -it --env-file ./<agent-dir>/.env <image> /bin/bash
-   ```
+IMPORTANT: Never use `--force-recreate` on containers with WhatsApp -- it loses the session. Use `docker compose restart` instead.
 
-### Channel-Checker Issues
+### Email not polling
 
-The `channel-checker.py` script runs in a background loop inside each agent container (every 60 seconds). If channels are not being monitored:
+```bash
+docker exec mateos-agents himalaya envelope list --folder INBOX -o json
+```
 
-1. Check the channel-checker log:
-   ```bash
-   docker exec <container-name> cat /home/agent/.openclaw/logs/channel-checker.log
-   ```
+Check `GMAIL_APP_PASSWORD` in `.env`. Must be a Google App Password, not the account password.
 
-2. Verify the script is running:
-   ```bash
-   docker exec <container-name> ps aux | grep channel-checker
-   ```
+### Out of memory
 
-3. If the script crashed, restart the container:
-   ```bash
-   docker compose -f docker-compose.prod.yml restart <service-name>
-   ```
+```bash
+docker stats --no-stream
+free -h
+```
 
-### WhatsApp QR Expired
+The container has `NODE_OPTIONS=--max-old-space-size=3072` set. If still OOM, check swap: `swapon --show` (should show 8GB).
 
-WhatsApp sessions expire periodically. When this happens:
+### Tweet scheduler not running
 
-1. The agent will stop receiving WhatsApp messages.
-2. Re-authenticate by scanning a new QR code:
-   ```bash
-   docker exec -it <container-name> openclaw channels login --channel whatsapp
-   ```
-3. Scan the QR code displayed in the terminal with WhatsApp on your phone (Settings > Linked Devices > Link a Device).
-
-WhatsApp credentials are stored in a Docker volume (`whatsapp-creds` or `<agent>-whatsapp`). If the volume is deleted, you must scan again.
-
-### Gateway Auth Failures
-
-If requests to the agent gateway return 401/403 errors:
-
-1. Verify `GATEWAY_AUTH_TOKEN` is set in the agent's `.env` and matches what the client is sending.
-2. Check the token was correctly injected into the openclaw config:
-   ```bash
-   docker exec <container-name> cat /home/agent/.openclaw/openclaw.json | grep -i auth
-   ```
-3. Regenerate the token if needed:
-   ```bash
-   openssl rand -hex 32
-   ```
-   Update the `.env` file and restart the container.
-
-### Inter-Agent Communication Issues
-
-Agents communicate through the agent router at `http://agent-router:8080`, authenticated by `SQUAD_AUTH_TOKEN`.
-
-1. **Router not reachable:** Verify the router container is healthy:
-   ```bash
-   docker compose -f docker-compose.prod.yml ps agent-router
-   docker exec agent-router python -c "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"
-   ```
-
-2. **Auth failures between agents:** Ensure all agents and the router share the same `SQUAD_AUTH_TOKEN`. Check the value in:
-   - `agents/deployments/.env` (stack-level)
-   - Each agent's `environment` section in `docker-compose.prod.yml`
-
-   They should all reference `${SQUAD_AUTH_TOKEN}` which resolves from the stack-level `.env`.
-
-3. **Agent not registered with router:** The router discovers agents by hostname. Verify the agent has both `container_name` and `hostname` set in `docker-compose.prod.yml` and that `AGENT_NAME` matches the expected identifier.
-
-4. **Network issues:** All services must be on the same Docker Compose network (the default network created by the compose file). Verify:
-   ```bash
-   docker network ls
-   docker network inspect <network-name>
-   ```
-
-5. **Test delegation manually:**
-   ```bash
-   docker exec <source-agent> python /home/agent/delegate.py <target-agent-name> "test message"
-   ```
+```bash
+docker exec mateos-agents ps aux | grep tweet-scheduler
+docker exec mateos-agents tail -100 /path/to/tweet-scheduler.log
+```
