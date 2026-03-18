@@ -16,7 +16,7 @@ MateOS arma agentes de IA para negocios argentinos. Agentes que contestan WhatsA
 
 ### Spreadsheet ID
 
-{{PIPELINE_SPREADSHEET_ID}}
+1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE
 
 ### Estructura de la planilla
 
@@ -52,38 +52,38 @@ nuevo → contactado → reunión_agendada → propuesta_enviada → negociando 
 
 #### Leer leads
 ```bash
-gog sheets get --spreadsheet-id {{PIPELINE_SPREADSHEET_ID}} --range "Pipeline!A:I"
+gog sheets get --spreadsheet-id 1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE --range "Pipeline!A:I"
 ```
 
 #### Agregar nuevo lead
 ```bash
-gog sheets append --spreadsheet-id {{PIPELINE_SPREADSHEET_ID}} --range "Pipeline!A:I" --values '[["Nombre", "email@ejemplo.com", "+5411XXXXXXXX", "whatsapp", "nuevo", "2026-03-16 10:00", "", "Primer contacto", ""]]'
+gog sheets append --spreadsheet-id 1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE --range "Pipeline!A:I" --values '[["Nombre", "email@ejemplo.com", "+5411XXXXXXXX", "whatsapp", "nuevo", "2026-03-16 10:00", "", "Primer contacto", ""]]'
 ```
 
 #### Actualizar estado de un lead (ejemplo: fila 5, columna E)
 ```bash
-gog sheets update --spreadsheet-id {{PIPELINE_SPREADSHEET_ID}} --range "Pipeline!E5" --values '[["contactado"]]'
+gog sheets update --spreadsheet-id 1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE --range "Pipeline!E5" --values '[["contactado"]]'
 ```
 
 #### Actualizar último seguimiento (ejemplo: fila 5, columna G)
 ```bash
-gog sheets update --spreadsheet-id {{PIPELINE_SPREADSHEET_ID}} --range "Pipeline!G5" --values '[["2026-03-16 14:30"]]'
+gog sheets update --spreadsheet-id 1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE --range "Pipeline!G5" --values '[["2026-03-16 14:30"]]'
 ```
 
 #### Actualizar próximo paso (ejemplo: fila 5, columna H)
 ```bash
-gog sheets update --spreadsheet-id {{PIPELINE_SPREADSHEET_ID}} --range "Pipeline!H5" --values '[["Seguimiento en 48hs"]]'
+gog sheets update --spreadsheet-id 1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE --range "Pipeline!H5" --values '[["Seguimiento en 48hs"]]'
 ```
 
 #### Buscar lead por email (leer y filtrar manualmente)
 ```bash
-gog sheets get --spreadsheet-id {{PIPELINE_SPREADSHEET_ID}} --range "Pipeline!A:I"
+gog sheets get --spreadsheet-id 1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE --range "Pipeline!A:I"
 ```
 Después de leer, buscá en los resultados por email o WhatsApp para evitar duplicados antes de agregar un lead nuevo.
 
 #### Registrar motivo de cierre (ejemplo: fila 5, columna I)
 ```bash
-gog sheets update --spreadsheet-id {{PIPELINE_SPREADSHEET_ID}} --range "Pipeline!I5" --values '[["Cerrado: eligió competencia. Sin rencor."]]'
+gog sheets update --spreadsheet-id 1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE --range "Pipeline!I5" --values '[["Cerrado: eligió competencia. Sin rencor."]]'
 ```
 
 ---
@@ -92,29 +92,29 @@ gog sheets update --spreadsheet-id {{PIPELINE_SPREADSHEET_ID}} --range "Pipeline
 
 ### Calendar ID
 
-{{CALENDAR_ID}}
+945cbda6b9a14d5a7cb6a0bd79ccb3587783bd16f307b0cb2d9da7402f331314@group.calendar.google.com
 
 ### Comandos de Calendar
 
 #### Ver reuniones próximas (próximas 24hs)
 ```bash
-gog calendar events --calendar-id {{CALENDAR_ID}} --time-min "$(date -Iseconds)" --time-max "$(date -d '+24 hours' -Iseconds)" --max-results 10
+gog calendar events --calendar-id 945cbda6b9a14d5a7cb6a0bd79ccb3587783bd16f307b0cb2d9da7402f331314@group.calendar.google.com --time-min "$(date -Iseconds)" --time-max "$(date -d '+24 hours' -Iseconds)" --max-results 10
 ```
 
 #### Ver reuniones de la semana
 ```bash
-gog calendar events --calendar-id {{CALENDAR_ID}} --time-min "$(date -d 'monday' -Iseconds)" --time-max "$(date -d 'next monday' -Iseconds)" --max-results 20
+gog calendar events --calendar-id 945cbda6b9a14d5a7cb6a0bd79ccb3587783bd16f307b0cb2d9da7402f331314@group.calendar.google.com --time-min "$(date -d 'monday' -Iseconds)" --time-max "$(date -d 'next monday' -Iseconds)" --max-results 20
 ```
 
 #### Ver disponibilidad para proponer horarios al prospecto
 ```bash
-gog calendar events --calendar-id {{CALENDAR_ID}} --time-min "$(date -Iseconds)" --time-max "$(date -d '+7 days' -Iseconds)" --max-results 30
+gog calendar events --calendar-id 945cbda6b9a14d5a7cb6a0bd79ccb3587783bd16f307b0cb2d9da7402f331314@group.calendar.google.com --time-min "$(date -Iseconds)" --time-max "$(date -d '+7 days' -Iseconds)" --max-results 30
 ```
 Revisá los huecos entre eventos para proponer 2-3 opciones al lead. Solo proponé horarios en la franja hábil: Lunes a Viernes 9:00-21:00 ART.
 
 #### Crear reunión
 ```bash
-gog calendar create --calendar-id {{CALENDAR_ID}} --summary "Reunión con [nombre]" --start "2026-03-17T10:00:00-03:00" --end "2026-03-17T10:30:00-03:00" --description "Lead: [nombre]. Tema: [tema]." --attendees "[email del lead]"
+gog calendar create --calendar-id 945cbda6b9a14d5a7cb6a0bd79ccb3587783bd16f307b0cb2d9da7402f331314@group.calendar.google.com --summary "Reunión con [nombre]" --start "2026-03-17T10:00:00-03:00" --end "2026-03-17T10:30:00-03:00" --description "Lead: [nombre]. Tema: [tema]." --attendees "[email del lead]"
 ```
 
 **IMPORTANTE:** NUNCA crear reuniones sin aprobación del operador. Siempre redactar el borrador del evento y esperar confirmación.

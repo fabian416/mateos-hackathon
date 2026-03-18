@@ -28,9 +28,9 @@ Si da error de permisos: el sheet no está compartido con el service account. Av
 
 | Planilla | Sheet ID | Uso | Permisos |
 |----------|----------|-----|----------|
-| Tareas | {{SHEET_ID_TAREAS}} | Seguimiento de tareas y deadlines | Lectura + Escritura |
-| Facturación | {{SHEET_ID_FACTURACION}} | Registro de facturas y pagos | Lectura + Escritura |
-| Contactos | {{SHEET_ID_CONTACTOS}} | Base de datos de contactos | Lectura (escritura con aprobación) |
+| Tareas | 1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE | Seguimiento de tareas y deadlines | Lectura + Escritura |
+| Facturación | 1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE | Registro de facturas y pagos | Lectura + Escritura |
+| Contactos | 1s0q07UKWiPyhsf9_o1R3uWMNPbZCJ29c7MAbgZP7ZiE | Base de datos de contactos | Lectura (escritura con aprobación) |
 
 ### Comandos de Sheets
 
@@ -120,8 +120,8 @@ gog calendar events list --calendar-id [CALENDAR_ID] --time-min [AHORA_ISO] --ti
 
 | Calendario | Calendar ID | Uso | Permisos |
 |-----------|------------|-----|----------|
-| Principal | {{CALENDAR_ID_PRINCIPAL}} | Eventos y reuniones | Lectura (escritura con aprobación) |
-| Deadlines | {{CALENDAR_ID_DEADLINES}} | Vencimientos de tareas y pagos | Lectura (escritura con aprobación) |
+| Principal | 945cbda6b9a14d5a7cb6a0bd79ccb3587783bd16f307b0cb2d9da7402f331314@group.calendar.google.com | Eventos y reuniones | Lectura (escritura con aprobación) |
+| Deadlines | 945cbda6b9a14d5a7cb6a0bd79ccb3587783bd16f307b0cb2d9da7402f331314@group.calendar.google.com | Vencimientos de tareas y pagos | Lectura (escritura con aprobación) |
 
 ### Comandos de Calendar
 

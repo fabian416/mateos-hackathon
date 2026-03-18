@@ -16,8 +16,15 @@ RUN curl -fsSL "https://github.com/pimalaya/himalaya/releases/download/${HIMALAY
     | tar -xz -C /usr/local/bin/ \
     && chmod +x /usr/local/bin/himalaya
 
-# Install openclaw + gog (Google Workspace CLI) globally
-RUN npm i -g openclaw && npx clawhub@latest install gog
+# Install gog (Google Workspace CLI for Sheets, Calendar, Gmail, Drive, etc.)
+ARG GOG_VERSION=0.12.0
+RUN curl -fsSL "https://github.com/steipete/gogcli/releases/download/v${GOG_VERSION}/gogcli_${GOG_VERSION}_linux_amd64.tar.gz" \
+    | tar -xz -C /usr/local/bin/ gog \
+    && chmod +x /usr/local/bin/gog
+
+# Install openclaw globally
+# Note: gog skill metadata is bundled in _base/workspace/skills/gog/ (copied later)
+RUN npm i -g openclaw
 
 # Create app user and directories
 RUN useradd -m -s /bin/bash agent
