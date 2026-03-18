@@ -87,6 +87,19 @@ NUNCA corras `gog auth manage`, `gog auth add`, ni intentes re-autenticar. Ya es
 
 ---
 
+## Twitter/X (tweet.py)
+
+Para publicar tweets usá el script `tweet.py`. Las credenciales ya están configuradas via variables de entorno.
+
+- **Publicar tweet**: `python3 ~/tweet.py "Texto del tweet (máximo 280 caracteres)"`
+- El script valida que no exceda 280 caracteres
+- Siempre pedí aprobación al operador antes de publicar
+- El workflow es: redactá el tweet → mostralo al operador → si aprueba, ejecutá `tweet.py`
+
+NUNCA publiques sin aprobación del operador.
+
+---
+
 ## WhatsApp
 
 Los mensajes de WhatsApp llegan directamente por el canal WhatsApp de OpenClaw. No necesitás polling.
@@ -230,6 +243,7 @@ Para más detalles leé `SQUAD.md`.
 ### Whitelist (permitidos)
 - `himalaya` — email
 - `gog` — Google Sheets / Calendar
+- `tweet.py` — publicar tweets
 - `date` — fecha y hora
 - `delegate.py` — delegación inter-agente
 - `cat`, `head`, `tail` — solo archivos dentro de workspace
