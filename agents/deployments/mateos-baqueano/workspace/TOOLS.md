@@ -8,7 +8,7 @@ ANTES de responder CUALQUIER mensaje: lee `channel-state.json`. Si tiene `pendin
 
 ## Contexto de MateOS para respuestas
 
-MateOS es una plataforma de agentes de IA para PyMEs argentinas, creada por Gaucho Solutions. Arma "escuadrones" de agentes especializados que automatizan operaciones del negocio: soporte al cliente, ventas, administracion, contenido, soporte tecnico y mas. Cada agente se despliega en Docker, se conecta por WhatsApp, email y Telegram, y opera sobre el framework OpenClaw. Los negocios contratan agentes individuales o escuadrones completos segun sus necesidades. Sin contrato, se cancela cuando quieras.
+MateOS es una plataforma de agentes de IA para PyMEs argentinas, creada por MateOS. Arma "escuadrones" de agentes especializados que automatizan operaciones del negocio: soporte al cliente, ventas, administracion, contenido, soporte tecnico y mas. Cada agente se despliega en Docker, se conecta por WhatsApp, email y Telegram, y opera sobre el framework OpenClaw. Los negocios contratan agentes individuales o escuadrones completos segun sus necesidades. Sin contrato, se cancela cuando quieras.
 
 ## Canales de soporte
 
@@ -124,7 +124,7 @@ A: Si tu negocio tiene comunicacion con clientes por WhatsApp o email, MateOS pu
 
 - Email soporte: soporte@mateos.xyz
 - Web MateOS: https://mateos.xyz
-- Web Gaucho Solutions: https://gauchosolutions.com
+- Web MateOS: https://mateos.xyz
 - WhatsApp: +54 9 11 6886-1403
 
 ---

@@ -4,7 +4,7 @@ AI agent squads for Argentine SMEs. Autonomous operations, real customers, zero 
 
 ## What is MateOS
 
-MateOS is an AI-powered operations platform built by Gaucho Solutions. It deploys squads of specialized agents that handle sales, support, admin, content, and technical operations for small and medium businesses in Argentina. Each agent runs autonomously on its own Docker container, communicates with teammates through an internal router, and interacts with the outside world via WhatsApp, email, Telegram, Twitter, Google Sheets, and Google Calendar. The system is designed to replace entire operational teams at a fraction of the cost.
+MateOS is an AI-powered operations platform built by MateOS. It deploys squads of specialized agents that handle sales, support, admin, content, and technical operations for small and medium businesses in Argentina. Each agent runs autonomously on its own Docker container, communicates with teammates through an internal router, and interacts with the outside world via WhatsApp, email, Telegram, Twitter, Google Sheets, and Google Calendar. The system is designed to replace entire operational teams at a fraction of the cost.
 
 ## Architecture
 
@@ -70,8 +70,8 @@ MateOS is an AI-powered operations platform built by Gaucho Solutions. It deploy
 ### Clone and Install
 
 ```bash
-git clone https://github.com/fabian416/gaucho-solutions.git
-cd gaucho-solutions
+git clone https://github.com/fabian416/mateos.git
+cd mateos
 npm install
 ```
 
@@ -95,7 +95,7 @@ Each agent requires its own `.env` file. See the `agents/deployments/mateos-*/` 
 ## Project Structure
 
 ```
-gaucho-solutions/
+mateos/
   src/                          # Next.js frontend (app router)
   public/                       # Static assets
   agents/

@@ -38,16 +38,16 @@ Si no estás seguro de si deberías acceder a algo, la respuesta es **no**. Preg
 
 ## Email (himalaya)
 
-- Cuenta: contacto@gauchosolutions.com (MateOS)
+- Cuenta: contacto@mateos.xyz (MateOS)
 - Leer bandeja: `himalaya envelope list --folder INBOX`
 - Leer email: `himalaya message read --no-headers <ID>`
 - Enviar email nuevo:
   ```
-  printf "From: contacto@gauchosolutions.com\r\nTo: destinatario@email.com\r\nSubject: Asunto\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\nPrimer párrafo.\n\nSegundo párrafo.\n\nFirma" | himalaya message send
+  printf "From: contacto@mateos.xyz\r\nTo: destinatario@email.com\r\nSubject: Asunto\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\nPrimer párrafo.\n\nSegundo párrafo.\n\nFirma" | himalaya message send
   ```
 - Responder email (con threading):
   ```
-  printf "From: contacto@gauchosolutions.com\r\nTo: [remitente]\r\nSubject: Re: [asunto]\r\nIn-Reply-To: [Message-ID-original]\r\nReferences: [Message-ID-original]\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\nPrimer párrafo.\n\nSegundo párrafo.\n\nFirma" | himalaya message send
+  printf "From: contacto@mateos.xyz\r\nTo: [remitente]\r\nSubject: Re: [asunto]\r\nIn-Reply-To: [Message-ID-original]\r\nReferences: [Message-ID-original]\r\nMIME-Version: 1.0\r\nContent-Type: text/plain; charset=UTF-8\r\n\r\nPrimer párrafo.\n\nSegundo párrafo.\n\nFirma" | himalaya message send
   ```
 - Para obtener el Message-ID: `himalaya message read -H Message-ID <ID>`
 - IMPORTANTE: siempre usar printf con headers MIME completos y pipear a `himalaya message send`

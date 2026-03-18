@@ -247,12 +247,12 @@ Production server: `54.160.120.210`
 2. **Clone the repository:**
    ```bash
    git clone <repo-url>
-   cd gaucho-solutions
+   cd mateos
    ```
 
 3. **Caddy** runs as a Docker container defined in `docker-compose.prod.yml`. It handles automatic HTTPS via Let's Encrypt. The `Caddyfile` is mounted as a volume:
    ```
-   gauchosolutions.com {
+   mateos.xyz {
        encode gzip zstd
        reverse_proxy frontend:3000
    }
@@ -342,7 +342,7 @@ docker compose -f docker-compose.prod.yml logs -f baqueano-mateos
 docker exec baqueano-mateos pgrep -fa openclaw
 
 # Check Caddy is serving HTTPS
-curl -I https://gauchosolutions.com
+curl -I https://mateos.xyz
 ```
 
 ---
@@ -360,7 +360,7 @@ The workflow builds three categories of images in parallel:
 1. **Frontend** (1 image):
    - Context: repository root
    - Dockerfile: `./Dockerfile`
-   - Tag: `ghcr.io/<owner>/gaucho-solutions/frontend:latest`
+   - Tag: `ghcr.io/<owner>/mateos/frontend:latest`
 
 2. **Agent Router** (1 image):
    - Context: `./agents/router`

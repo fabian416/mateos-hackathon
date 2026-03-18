@@ -1,4 +1,4 @@
-# MateOS / Gaucho Solutions -- Architecture Document
+# MateOS / MateOS -- Architecture Document
 
 > Last updated: 2026-03-18
 
@@ -21,7 +21,7 @@
 
 ### What is MateOS
 
-MateOS is an AI agent platform built by Gaucho Solutions for Argentine SMEs.
+MateOS is an AI agent platform built by MateOS for Argentine SMEs.
 Instead of hiring employees for repetitive operational tasks -- customer support,
 sales follow-up, admin, content creation, tech support -- a business deploys a
 **squad** of specialized AI agents that work 24/7 on WhatsApp, email, Twitter,
@@ -78,7 +78,7 @@ actions queued by the agents.
                                |
               +----------------+----------------+
               |                                 |
-   gauchosolutions.com                    (internal only)
+   mateos.xyz                    (internal only)
               |                                 |
    +--------------------+           +------------------------+
    |     Frontend        |           |    Agent Router        |
@@ -115,7 +115,7 @@ actions queued by the agents.
 | Container          | Image                                  | Port  | Role                          |
 |--------------------|----------------------------------------|-------|-------------------------------|
 | `caddy`            | caddy:2-alpine                         | 80/443| Reverse proxy, auto-HTTPS     |
-| `frontend`         | gaucho-solutions/frontend:latest       | 3000  | Next.js marketing site        |
+| `frontend`         | mateos/frontend:latest       | 3000  | Next.js marketing site        |
 | `agent-router`     | gaucho-agents/agent-router:latest      | 8080  | Inter-agent message bus       |
 | `baqueano-mateos`  | gaucho-agents/el-baqueano:latest       | 18789 | Customer support              |
 | `tropero-mateos`   | gaucho-agents/el-tropero:latest        | 18789 | Sales and leads               |
@@ -691,7 +691,7 @@ interval). The router uses an HTTP health check on `/health`.
 Caddy handles HTTPS termination with automatic Let's Encrypt certificates:
 
 ```
-gauchosolutions.com {
+mateos.xyz {
     encode gzip zstd
 
     header {
@@ -718,7 +718,7 @@ The CI/CD pipeline is defined in `.github/workflows/build-agents.yml`:
 Trigger: push to main branch
 
 Jobs (parallel):
-  1. build_frontend    -> ghcr.io/.../gaucho-solutions/frontend:latest
+  1. build_frontend    -> ghcr.io/.../mateos/frontend:latest
   2. build_router      -> ghcr.io/.../gaucho-agents/agent-router:latest
   3. build_agents      -> Matrix strategy (7 agent types in parallel):
        - el-baqueano   -> ghcr.io/.../gaucho-agents/el-baqueano:latest
@@ -739,7 +739,7 @@ as a build arg, which controls the overlay step.
 All images are pushed to GitHub Container Registry (GHCR):
 
 ```
-ghcr.io/<owner>/gaucho-solutions/frontend:latest
+ghcr.io/<owner>/mateos/frontend:latest
 ghcr.io/<owner>/gaucho-agents/agent-router:latest
 ghcr.io/<owner>/gaucho-agents/el-baqueano:latest
 ghcr.io/<owner>/gaucho-agents/el-tropero:latest
@@ -1027,7 +1027,7 @@ than external messages, but lower than operator commands:
 ## Appendix: Directory Structure
 
 ```
-gaucho-solutions/
+mateos/
 |
 +-- Caddyfile                          Caddy reverse proxy config
 +-- Dockerfile                         Frontend Dockerfile

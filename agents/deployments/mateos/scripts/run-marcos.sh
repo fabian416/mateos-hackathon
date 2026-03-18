@@ -1,5 +1,5 @@
 #!/bin/bash
-cd /home/lucholeonel/CODE-werify/projects/gaucho-solutions/agents/deployments/mateos
+cd /home/lucholeonel/CODE-werify/projects/mateos/agents/deployments/mateos
 
 # Cargar env vars desde .env
 set -a

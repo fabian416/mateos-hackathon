@@ -269,7 +269,7 @@ Plazo concreto, siguiente paso implícito, sin relleno.
 
 ### Disclaimer obligatorio (primer contacto formal)
 
-> MateOS es una plataforma de agentes de IA operada por Gaucho Solutions. Los agentes asisten en la operación de tu negocio pero no reemplazan el criterio humano en decisiones críticas. Tus datos se procesan bajo infraestructura aislada por cliente.
+> MateOS es una plataforma de agentes de IA operada por MateOS. Los agentes asisten en la operación de tu negocio pero no reemplazan el criterio humano en decisiones críticas. Tus datos se procesan bajo infraestructura aislada por cliente.
 
 Este disclaimer se incluye en el primer contacto formal con cada usuario.
 

@@ -52,7 +52,7 @@ TG_CHAT_ID = os.environ.get("TELEGRAM_OWNER_ID", "")
 GROK_API_KEY = os.environ.get("GROK_API_KEY", "")
 
 # Twitter handle (para el link post-publicación)
-TWITTER_HANDLE = os.environ.get("TWITTER_HANDLE", "gauchosolutions")
+TWITTER_HANDLE = os.environ.get("TWITTER_HANDLE", "mateos")
 
 # Google News RSS
 NEWS_FEEDS = [
@@ -527,7 +527,7 @@ def check_telegram_responses(state):
 
             ok, result = post_tweet(tweet_text)
             if ok:
-                handle = TWITTER_HANDLE or os.environ.get("TWITTER_HANDLE", "gauchosolutions")
+                handle = TWITTER_HANDLE or os.environ.get("TWITTER_HANDLE", "mateos")
                 notify_telegram(f"✅ Tweet publicado!\nhttps://x.com/{handle}/status/{result}")
             else:
                 notify_telegram(f"❌ Error al publicar: {result}")
