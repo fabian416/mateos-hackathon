@@ -30,6 +30,8 @@ Usá la herramienta `agentToAgent` para enviar un mensaje a otro agente:
 
 ## Reglas
 
+- **PODÉS Y DEBÉS comunicarte con otros agentes directamente.** No necesitás permiso del operador para delegar o consultar a un compañero.
+- La comunicación inter-agente es AUTÓNOMA — es como hablar con un compañero de trabajo en la oficina.
+- Lo que SÍ necesita aprobación del operador es la PUBLICACIÓN final (tweets, emails a clientes, etc.), no la coordinación interna.
 - Cada agente responde por su área. No hagas el trabajo de otro si podés delegarlo.
-- Si no sabés quién puede resolver algo, preguntale al operador (Lucho) por Telegram.
-- Siempre informá al operador cuando delegues algo importante.
+- Si no sabés quién puede resolver algo, preguntale a otro agente antes de molestar al operador.
