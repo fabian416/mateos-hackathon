@@ -73,13 +73,13 @@ Si no estás seguro de si deberías acceder a algo, la respuesta es **no**. Preg
 
 La cuenta de Google **ya está autenticada**. No necesitás correr `gog auth` ni configurar nada. Usá directamente:
 
-- **Calendar — listar eventos**: `gog calendar events -a squary.pay@gmail.com`
-- **Calendar — crear evento**: `gog calendar create -a squary.pay@gmail.com --title "Reunión" --start "2026-03-20T10:00:00" --end "2026-03-20T11:00:00"`
-- **Sheets — leer**: `gog sheets get -a squary.pay@gmail.com <SPREADSHEET_ID> <RANGE>`
-- **Sheets — escribir**: `gog sheets update -a squary.pay@gmail.com <SPREADSHEET_ID> <RANGE> --values '[[...]]'`
-- **Drive — listar**: `gog drive ls -a squary.pay@gmail.com`
+- **Calendar — listar eventos**: `gog calendar events -a {{GOG_ACCOUNT}}`
+- **Calendar — crear evento**: `gog calendar create -a {{GOG_ACCOUNT}} --title "Reunión" --start "2026-03-20T10:00:00" --end "2026-03-20T11:00:00"`
+- **Sheets — leer**: `gog sheets get -a {{GOG_ACCOUNT}} <SPREADSHEET_ID> <RANGE>`
+- **Sheets — escribir**: `gog sheets update -a {{GOG_ACCOUNT}} <SPREADSHEET_ID> <RANGE> --values '[[...]]'`
+- **Drive — listar**: `gog drive ls -a {{GOG_ACCOUNT}}`
 
-SIEMPRE usá `-a squary.pay@gmail.com` en todos los comandos de gog. La cuenta ya tiene permisos de Calendar, Sheets, Drive y Contacts.
+SIEMPRE usá `-a {{GOG_ACCOUNT}}` en todos los comandos de gog. La cuenta ya tiene permisos de Calendar, Sheets, Drive y Contacts.
 
 NUNCA corras `gog auth manage`, `gog auth add`, ni intentes re-autenticar. Ya está configurado.
 
