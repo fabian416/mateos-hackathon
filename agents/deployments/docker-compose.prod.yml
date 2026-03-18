@@ -31,20 +31,23 @@ services:
       start_period: 10s
 
   mateos-agents:
-    image: ghcr.io/fabian416/gaucho-agents/el-tropero:latest
+    image: ghcr.io/fabian416/mateos/agents:latest
     container_name: mateos-agents
     restart: unless-stopped
+    user: root
     mem_limit: 4g
     env_file: ./mateos/.env
     environment:
       - NODE_OPTIONS=--max-old-space-size=3072
+      - HOME=/home/agent
     entrypoint: ["/bin/bash", "-c"]
     command:
       - |
+        chown -R agent:agent /home/agent/.openclaw 2>/dev/null || true
         cp /mnt/entrypoint.sh /tmp/run.sh && chmod +x /tmp/run.sh
         cp /mnt/config/openclaw.json.template /tmp/config/openclaw.json.template
         pip3 install --break-system-packages requests requests-oauthlib > /dev/null 2>&1
-        exec /tmp/run.sh
+        exec su agent -c "/tmp/run.sh"
     volumes:
       - mateos-logs:/home/agent/.openclaw/logs
       - mateos-data:/home/agent/.openclaw/agents
