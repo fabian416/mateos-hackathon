@@ -1,60 +1,12 @@
 # === MateOS — Production Stack (EC2) ===
-# Frontend (Next.js) + Caddy (HTTPS) + Agent Router + 6 Agents
-#
-# Deploy:
-#   1. Push to main → GitHub Actions builds images → GHCR
-#   2. On EC2: docker compose pull && docker compose up -d
-#
-# Inter-agent communication:
-#   - Agent Router (FastAPI) en agent-router:8080
-#   - Cada agente puede delegar tareas via delegate.py
-#   - SQUAD_AUTH_TOKEN compartido para autenticación inter-agente
-
-x-agent-base: &agent-base
-  restart: unless-stopped
-  entrypoint: ["/bin/bash", "-c"]
-  command:
-    - |
-      cp /mnt/workspace/* /home/agent/.openclaw/workspace/ 2>/dev/null || true
-      cp /mnt/entrypoint.sh /tmp/entrypoint.sh
-      cp /mnt/openclaw.json.template /tmp/config/openclaw.json.template
-      mkdir -p /home/agent/.openclaw/agents/main/agent
-      cp /mnt/auth-profiles.json /home/agent/.openclaw/agents/main/agent/auth-profiles.json
-      chmod 600 /home/agent/.openclaw/agents/main/agent/auth-profiles.json
-      exec /tmp/entrypoint.sh
-  labels:
-    - "com.centurylinklabs.watchtower.enable=true"
-  healthcheck:
-    test: ["CMD", "pgrep", "-f", "openclaw"]
-    interval: 5m
-    timeout: 5s
-    retries: 3
-    start_period: 30s
+# 1 OpenClaw container with 7 agents + Frontend + Caddy
 
 services:
-
-  # --- Agent Router (Inter-Agent Communication Bus) ---
-  agent-router:
-    image: ghcr.io/fabian416/gaucho-agents/agent-router:latest
-    container_name: agent-router
-    restart: unless-stopped
-    environment:
-      - SQUAD_AUTH_TOKEN=${SQUAD_AUTH_TOKEN}
-      - ROUTER_PORT=8080
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-    healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"]
-      interval: 30s
-      timeout: 5s
-      retries: 3
-      start_period: 5s
-
-  # --- Caddy (Reverse Proxy + HTTPS) ---
   caddy:
     image: caddy:2-alpine
     container_name: caddy
     restart: unless-stopped
+    mem_limit: 256m
     ports:
       - "80:80"
       - "443:443"
@@ -64,11 +16,11 @@ services:
       - caddy-data:/data
       - caddy-config:/config
 
-  # --- Frontend (Next.js) ---
   frontend:
-    image: ghcr.io/fabian416/mateos/frontend:latest
+    image: ghcr.io/fabian416/gaucho-solutions/frontend:latest
     container_name: frontend
     restart: unless-stopped
+    mem_limit: 512m
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     healthcheck:
@@ -78,143 +30,41 @@ services:
       retries: 3
       start_period: 10s
 
-  # --- Mateo CEO (MateOS — Twitter) ---
-  mateo-ceo:
-    image: ghcr.io/fabian416/gaucho-agents/el-ceo:latest
-    container_name: mateo-ceo
+  mateos-agents:
+    image: ghcr.io/fabian416/gaucho-agents/el-tropero:latest
+    container_name: mateos-agents
     restart: unless-stopped
-    user: root
+    mem_limit: 4g
     env_file: ./mateos/.env
+    environment:
+      - NODE_OPTIONS=--max-old-space-size=3072
     entrypoint: ["/bin/bash", "-c"]
     command:
       - |
-        apt-get update -qq && apt-get install -y -qq python3-pip > /dev/null 2>&1
+        cp /mnt/entrypoint.sh /tmp/run.sh && chmod +x /tmp/run.sh
+        cp /mnt/config/openclaw.json.template /tmp/config/openclaw.json.template
         pip3 install --break-system-packages requests requests-oauthlib > /dev/null 2>&1
-        echo "=== Mateo CEO — Tweet Scheduler ==="
-        cd /home/agent/.openclaw/workspace
-        while true; do
-          python3 /tmp/scripts/tweet-scheduler.py 2>&1 || true
-          sleep 120
-        done
+        exec /tmp/run.sh
     volumes:
-      - mateo-state:/home/agent/.openclaw/workspace
-      - ./mateos/scripts/tweet-scheduler.py:/tmp/scripts/tweet-scheduler.py:ro
+      - mateos-logs:/home/agent/.openclaw/logs
+      - mateos-data:/home/agent/.openclaw/agents
+      - ./mateos/workspaces:/mnt/workspaces:ro
+      - ./mateos/docker-entrypoint.sh:/mnt/entrypoint.sh:ro
+      - ./mateos/config/openclaw.json.template:/mnt/config/openclaw.json.template:ro
+      - ./mateos/agents/main/agent/auth-profiles.json:/mnt/auth-profiles.json:ro
+      - ./mateos/tweet-scheduler.py:/mnt/tweet-scheduler.py:ro
+      - ./mateos/channel-checker.py:/home/agent/channel-checker.py:ro
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
-
-  # --- El Baqueano (MateOS — Soporte al Cliente) ---
-  baqueano-mateos:
-    <<: *agent-base
-    image: ghcr.io/fabian416/gaucho-agents/el-baqueano:latest
-    container_name: baqueano-mateos
-    hostname: baqueano-mateos
-    env_file: ./mateos-baqueano/.env
-    environment:
-      - SQUAD_AUTH_TOKEN=${SQUAD_AUTH_TOKEN}
-      - ROUTER_URL=http://agent-router:8080
-      - AGENT_NAME=baqueano
-    depends_on:
-      agent-router:
-        condition: service_healthy
-    volumes:
-      - baqueano-whatsapp:/home/agent/.openclaw/credentials/whatsapp
-      - baqueano-logs:/home/agent/.openclaw/logs
-      - ./mateos-baqueano/workspace:/mnt/workspace:ro
-      - ./mateos-baqueano/docker-entrypoint.sh:/mnt/entrypoint.sh:ro
-      - ./mateos-baqueano/config/openclaw.json.template:/mnt/openclaw.json.template:ro
-      - ./mateos-baqueano/agents/main/agent/auth-profiles.json:/mnt/auth-profiles.json:ro
-
-  # --- El Tropero (MateOS — Ventas/Leads) ---
-  tropero-mateos:
-    <<: *agent-base
-    image: ghcr.io/fabian416/gaucho-agents/el-tropero:latest
-    container_name: tropero-mateos
-    hostname: tropero-mateos
-    env_file: ./mateos-tropero/.env
-    environment:
-      - SQUAD_AUTH_TOKEN=${SQUAD_AUTH_TOKEN}
-      - ROUTER_URL=http://agent-router:8080
-      - AGENT_NAME=tropero
-    depends_on:
-      agent-router:
-        condition: service_healthy
-    volumes:
-      - tropero-logs:/home/agent/.openclaw/logs
-      - ./mateos-tropero/workspace:/mnt/workspace:ro
-      - ./mateos-tropero/docker-entrypoint.sh:/mnt/entrypoint.sh:ro
-      - ./mateos-tropero/config/openclaw.json.template:/mnt/openclaw.json.template:ro
-      - ./mateos-tropero/agents/main/agent/auth-profiles.json:/mnt/auth-profiles.json:ro
-
-  # --- El Domador (MateOS — Admin/Datos) ---
-  domador-mateos:
-    <<: *agent-base
-    image: ghcr.io/fabian416/gaucho-agents/el-domador:latest
-    container_name: domador-mateos
-    hostname: domador-mateos
-    env_file: ./mateos-domador/.env
-    environment:
-      - SQUAD_AUTH_TOKEN=${SQUAD_AUTH_TOKEN}
-      - ROUTER_URL=http://agent-router:8080
-      - AGENT_NAME=domador
-    depends_on:
-      agent-router:
-        condition: service_healthy
-    volumes:
-      - domador-logs:/home/agent/.openclaw/logs
-      - ./mateos-domador/workspace:/mnt/workspace:ro
-      - ./mateos-domador/docker-entrypoint.sh:/mnt/entrypoint.sh:ro
-      - ./mateos-domador/config/openclaw.json.template:/mnt/openclaw.json.template:ro
-      - ./mateos-domador/agents/main/agent/auth-profiles.json:/mnt/auth-profiles.json:ro
-
-  # --- El Rastreador (MateOS — Soporte Técnico L1) ---
-  rastreador-mateos:
-    <<: *agent-base
-    image: ghcr.io/fabian416/gaucho-agents/el-rastreador:latest
-    container_name: rastreador-mateos
-    hostname: rastreador-mateos
-    env_file: ./mateos-rastreador/.env
-    environment:
-      - SQUAD_AUTH_TOKEN=${SQUAD_AUTH_TOKEN}
-      - ROUTER_URL=http://agent-router:8080
-      - AGENT_NAME=rastreador
-    depends_on:
-      agent-router:
-        condition: service_healthy
-    volumes:
-      - rastreador-logs:/home/agent/.openclaw/logs
-      - ./mateos-rastreador/workspace:/mnt/workspace:ro
-      - ./mateos-rastreador/docker-entrypoint.sh:/mnt/entrypoint.sh:ro
-      - ./mateos-rastreador/config/openclaw.json.template:/mnt/openclaw.json.template:ro
-      - ./mateos-rastreador/agents/main/agent/auth-profiles.json:/mnt/auth-profiles.json:ro
-
-  # --- El Relator (MateOS — Contenido) ---
-  relator-mateos:
-    <<: *agent-base
-    image: ghcr.io/fabian416/gaucho-agents/el-relator:latest
-    container_name: relator-mateos
-    hostname: relator-mateos
-    env_file: ./mateos-relator/.env
-    environment:
-      - SQUAD_AUTH_TOKEN=${SQUAD_AUTH_TOKEN}
-      - ROUTER_URL=http://agent-router:8080
-      - AGENT_NAME=relator
-    depends_on:
-      agent-router:
-        condition: service_healthy
-    volumes:
-      - relator-logs:/home/agent/.openclaw/logs
-      - ./mateos-relator/workspace:/mnt/workspace:ro
-      - ./mateos-relator/docker-entrypoint.sh:/mnt/entrypoint.sh:ro
-      - ./mateos-relator/config/openclaw.json.template:/mnt/openclaw.json.template:ro
-      - ./mateos-relator/agents/main/agent/auth-profiles.json:/mnt/auth-profiles.json:ro
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "openclaw"]
+      interval: 5m
+      timeout: 5s
+      retries: 3
+      start_period: 60s
 
 volumes:
   caddy-data:
   caddy-config:
-  mateo-state:
-  baqueano-logs:
-  baqueano-whatsapp:
-  tropero-logs:
-  domador-logs:
-  rastreador-logs:
-  relator-logs:
+  mateos-logs:
+  mateos-data:

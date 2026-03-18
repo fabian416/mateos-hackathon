@@ -1,21 +1,45 @@
 #!/bin/bash
 set -euo pipefail
+echo "=== MateOS — 7 Agents, 1 Gateway ==="
 
-echo "=== Mateo CEO — MateOS ==="
+export GATEWAY_PORT="${GATEWAY_PORT:-18789}"
+export PRIMARY_MODEL="${PRIMARY_MODEL:-google/gemini-2.5-flash}"
+export NODE_OPTIONS="${NODE_OPTIONS:---max-old-space-size=2048}"
 
-# Validate required env vars
-for var in TELEGRAM_BOT_TOKEN TELEGRAM_OWNER_ID; do
-  if [ -z "${!var:-}" ]; then
-    echo "Error: $var is not set"
-    exit 1
-  fi
+# Generate config
+envsubst < /tmp/config/openclaw.json.template > ~/.openclaw/openclaw.json
+chmod 600 ~/.openclaw/openclaw.json
+
+# Copy workspaces
+for agent in mateo-ceo tropero domador rastreador relator paisano baqueano; do
+  mkdir -p ~/.openclaw/workspaces/$agent
+  cp /mnt/workspaces/$agent/*.md ~/.openclaw/workspaces/$agent/ 2>/dev/null || true
 done
 
-echo "Tweet scheduler running (every 120s)"
-echo "Slots: ${TWEET_SLOTS:-09:00,11:00,13:00,16:00,19:00,21:00}"
+# Auth profiles
+mkdir -p ~/.openclaw/agents/main/agent
+cp /mnt/auth-profiles.json ~/.openclaw/agents/main/agent/auth-profiles.json
+chmod 600 ~/.openclaw/agents/main/agent/auth-profiles.json
 
-# Loop tweet-scheduler every 2 minutes (foreground)
-while true; do
-  python3 scripts/tweet-scheduler.py >> logs/marcos.log 2>&1 || true
-  sleep 120
-done
+# Tweet scheduler (background, for Mateo CEO)
+if [ "${TWITTER_ENABLED:-false}" = "true" ] && [ -f /mnt/tweet-scheduler.py ]; then
+  (
+    while true; do
+      python3 /mnt/tweet-scheduler.py 2>&1 || true
+      sleep 120
+    done
+  ) &
+  echo "Tweet scheduler started"
+fi
+
+# Channel checker (background)
+(
+  while true; do
+    ~/channel-checker.py >> ~/.openclaw/logs/channel-checker.log 2>&1 || true
+    sleep 60
+  done
+) &
+echo "Channel checker started"
+
+echo "Starting openclaw gateway with 7 agents..."
+exec openclaw gateway
