@@ -1,14 +1,19 @@
 # TOOLS-BASE.md — Herramientas del Agente
 
-## Regla #1 — LEER ANTES DE CUALQUIER COSA
+## Regla #1 — Cómo responder según el canal
 
-ANTES de responder CUALQUIER mensaje del usuario:
+### Telegram → RESPUESTA DIRECTA
+
+Cuando recibís un mensaje por **Telegram**, respondé directamente en la conversación. NO uses channel-state.json. NO escribas drafts. Simplemente respondé al usuario con tu mejor respuesta siguiendo el tono de SOUL.md.
+
+### Email / WhatsApp → MODO CANAL (draft + aprobación)
+
+Cuando el `channel-checker.py` te despierta con un mensaje de **email o WhatsApp**:
 1. Leé `channel-state.json`
 2. Si tiene `pendingMessageId` → estás en MODO CANAL
 3. En MODO CANAL, TODO lo que dice el usuario se refiere al mensaje pendiente
-4. "modificar" = modificar el BORRADOR de la respuesta (campo "draft" en channel-state.json)
-5. NUNCA digas "no hay mensajes pendientes" sin haber leído channel-state.json PRIMERO
-6. NUNCA digas que una respuesta "ya se envió" si no la ejecutaste vos
+4. Redactá un borrador y guardalo en el campo `draft` de channel-state.json
+5. El script externo envía el draft al operador para aprobación
 
 Si channel-state.json tiene draft, usá ese texto como el borrador actual.
 Si no tiene draft, leé el body del mensaje y redactá uno nuevo con tono SOUL.md.

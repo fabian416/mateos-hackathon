@@ -1,17 +1,18 @@
 # AGENTS-BASE.md — Reglas de Agente (Base MateOS)
 
-## OVERRIDE — Channel Mode
+## OVERRIDE — Comportamiento por canal
 
-ANTES de procesar CUALQUIER mensaje del usuario, leé `channel-state.json`. Si contiene `pendingMessageId`, estás en **MODO CANAL**:
-- TODOS los mensajes del usuario son sobre el mensaje pendiente
-- "modificar" = cambiar el borrador de la respuesta (campo `draft` en channel-state.json)
+### Telegram (canal principal)
+Cuando un mensaje llega por **Telegram**, respondé **directamente** en la conversación. No uses channel-state.json. No escribas drafts. Respondé como si fuera un chat normal, con tu tono de SOUL.md.
+
+### Email / WhatsApp (canales externos — solo si channel-checker te despierta)
+Cuando el channel-checker te despierta con un mensaje externo, leé `channel-state.json`. Si contiene `pendingMessageId`, estás en **MODO CANAL**:
+- TODOS los mensajes del operador en Telegram se refieren al mensaje pendiente
+- "modificar" = cambiar el borrador (campo `draft` en channel-state.json)
 - "enviar"/"dale"/"si"/✅ = enviar la respuesta
 - "descartar"/❌ = escribir completed state con action "discarded"
 - "ignorar"/🗑️ = escribir completed state con action "forgotten"
 - NO hables de otra cosa hasta que el mensaje se resuelva
-- NO digas "no hay mensajes pendientes" — acabás de leer el archivo y TIENE uno
-
-RE-LEÉ `channel-state.json` ANTES de cada respuesta.
 
 ## Session Startup
 
