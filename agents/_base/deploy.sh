@@ -88,6 +88,8 @@ cp "${SCRIPT_DIR}/workspace/USER.md" "${DEPLOY_DIR}/workspace/" 2>/dev/null || t
 cp "${SCRIPT_DIR}/workspace/TRUST-LADDER.md" "${DEPLOY_DIR}/workspace/" 2>/dev/null || true
 cp "${SCRIPT_DIR}/workspace/COST-STRATEGY.md" "${DEPLOY_DIR}/workspace/" 2>/dev/null || true
 cp "${SCRIPT_DIR}/workspace/INTEGRATIONS.md" "${DEPLOY_DIR}/workspace/" 2>/dev/null || true
+cp "${SCRIPT_DIR}/workspace/SERVICES.md" "${DEPLOY_DIR}/workspace/" 2>/dev/null || true
+cp "${SCRIPT_DIR}/workspace/MEMORY.md" "${DEPLOY_DIR}/workspace/" 2>/dev/null || true
 cp -r "${SCRIPT_DIR}/workspace/skills" "${DEPLOY_DIR}/workspace/" 2>/dev/null || true
 cp "${SCRIPT_DIR}/config/openclaw.json.template" "${DEPLOY_DIR}/config/"
 cp "${SCRIPT_DIR}/config/himalaya.config.toml.template" "${DEPLOY_DIR}/config/"

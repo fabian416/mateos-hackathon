@@ -6,7 +6,9 @@
 |---|---|---|---|---|
 | **Telegram** | ✅ Activo | Nativo OpenClaw | $0 | Bot token |
 | **Email** | ✅ Activo | himalaya CLI | $0 | Gmail App Password |
-| **Twitter/X** | ✅ Configurado | opentweet-x-poster | $0 (free tier, 1500/mes) | API Key + Access Token |
+| **Twitter/X** | ✅ Configurado | x-api (OAuth 1.0a directo) | $0 (free tier, 1500/mes) | API Key + Access Token |
+| **Web Search** | ✅ Activo | Nativo OpenClaw (search) | $0 | — |
+| **Web Browser** | ✅ Activo | Nativo OpenClaw (browser) | $0 | — |
 | **WhatsApp** | ✅ Configurado | Nativo OpenClaw (Baileys) | $0 | QR code scan |
 | **Google Sheets** | ✅ Configurado | Gog CLI (Google Workspace) | $0 | Service Account JSON |
 | **Google Calendar** | ✅ Configurado | Gog CLI (Google Workspace) | $0 | Service Account JSON |

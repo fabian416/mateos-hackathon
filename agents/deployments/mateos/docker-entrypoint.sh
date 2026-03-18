@@ -21,6 +21,12 @@ mkdir -p ~/.openclaw/agents/main/agent
 cp /mnt/auth-profiles.json ~/.openclaw/agents/main/agent/auth-profiles.json
 chmod 600 ~/.openclaw/agents/main/agent/auth-profiles.json
 
+# Bind each Telegram bot to its agent
+for agent in mateo-ceo tropero domador rastreador relator paisano baqueano; do
+  openclaw agents bind --agent "$agent" --bind "telegram:$agent" 2>/dev/null || true
+done
+echo "Agent bindings configured"
+
 # Tweet scheduler (background, for Mateo CEO)
 if [ "${TWITTER_ENABLED:-false}" = "true" ] && [ -f /mnt/tweet-scheduler.py ]; then
   (

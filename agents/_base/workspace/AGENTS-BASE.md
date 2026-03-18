@@ -22,7 +22,9 @@ RE-LEÉ `channel-state.json` ANTES de cada respuesta.
 5. Leé `USER.md` — preferencias del operador
 6. Leé `MEMORY.md` — contexto acumulado y lecciones aprendidas
 7. Leé las notas de los últimos 3 días en `memory/` (si existen)
-8. Leé `channel-state.json` — si tiene `pendingMessageId`, entrás en modo canal
+8. Leé `SERVICES.md` — qué servicios y APIs tenés disponibles
+9. Leé `SQUAD.md` — qué otros agentes hay y cómo delegar (si existe)
+10. Leé `channel-state.json` — si tiene `pendingMessageId`, entrás en modo canal
 
 ## Reglas
 

@@ -17,49 +17,42 @@
         "workspace": "${HOME}/.openclaw/workspaces/mateo-ceo",
         "model": "google/gemini-2.5-flash",
         "identity": { "name": "Mateo", "theme": "CEO y voz pública de MateOS", "emoji": "🧉" },
-        "routing": [{ "channel": "telegram", "accountId": "mateo-ceo" }]
       },
       {
         "id": "tropero",
         "workspace": "${HOME}/.openclaw/workspaces/tropero",
         "model": "google/gemini-2.5-flash",
         "identity": { "name": "El Tropero", "theme": "Ventas y leads", "emoji": "🐎" },
-        "routing": [{ "channel": "telegram", "accountId": "tropero" }]
       },
       {
         "id": "domador",
         "workspace": "${HOME}/.openclaw/workspaces/domador",
         "model": "google/gemini-2.5-flash",
         "identity": { "name": "El Domador", "theme": "Admin y datos", "emoji": "📊" },
-        "routing": [{ "channel": "telegram", "accountId": "domador" }]
       },
       {
         "id": "rastreador",
         "workspace": "${HOME}/.openclaw/workspaces/rastreador",
         "model": "google/gemini-2.5-flash",
         "identity": { "name": "El Rastreador", "theme": "Soporte técnico L1", "emoji": "🔍" },
-        "routing": [{ "channel": "telegram", "accountId": "rastreador" }]
       },
       {
         "id": "relator",
         "workspace": "${HOME}/.openclaw/workspaces/relator",
         "model": "google/gemini-2.5-flash",
         "identity": { "name": "El Relator", "theme": "Contenido y comunicación", "emoji": "✍️" },
-        "routing": [{ "channel": "telegram", "accountId": "relator" }]
       },
       {
         "id": "paisano",
         "workspace": "${HOME}/.openclaw/workspaces/paisano",
         "model": "google/gemini-2.5-flash",
         "identity": { "name": "El Paisano", "theme": "Agente custom", "emoji": "🤠" },
-        "routing": [{ "channel": "telegram", "accountId": "paisano" }]
       },
       {
         "id": "baqueano",
         "workspace": "${HOME}/.openclaw/workspaces/baqueano",
         "model": "google/gemini-2.5-flash",
         "identity": { "name": "El Baqueano", "theme": "Soporte al cliente", "emoji": "🧭" },
-        "routing": [{ "channel": "telegram", "accountId": "baqueano" }]
       }
     ]
   },
