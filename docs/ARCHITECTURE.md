@@ -78,7 +78,7 @@ actions queued by the agents.
                                |
               +----------------+----------------+
               |                                 |
-   mateos.xyz                    (internal only)
+   mateos.zk-access.xyz                    (internal only)
               |                                 |
    +--------------------+           +------------------------+
    |     Frontend        |           |    Agent Router        |
@@ -691,7 +691,7 @@ interval). The router uses an HTTP health check on `/health`.
 Caddy handles HTTPS termination with automatic Let's Encrypt certificates:
 
 ```
-mateos.xyz {
+mateos.zk-access.xyz {
     encode gzip zstd
 
     header {

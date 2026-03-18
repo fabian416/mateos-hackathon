@@ -122,9 +122,9 @@ A: Si tu negocio tiene comunicacion con clientes por WhatsApp o email, MateOS pu
 
 ### Informacion de contacto
 
-- Email soporte: soporte@mateos.xyz
-- Web MateOS: https://mateos.xyz
-- Web MateOS: https://mateos.xyz
+- Email soporte: soporte@mateos.zk-access.xyz
+- Web MateOS: https://mateos.zk-access.xyz
+- Web MateOS: https://mateos.zk-access.xyz
 - WhatsApp: +54 9 11 6886-1403
 
 ---

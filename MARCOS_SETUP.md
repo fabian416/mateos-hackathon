@@ -35,7 +35,7 @@
 | Docker | Ya tenes | - |
 | Anthropic API Key | **PENDIENTE** | console.anthropic.com |
 | Telegram Bot Token | **PENDIENTE** | @BotFather en Telegram |
-| Email para Marcos | **PENDIENTE** | marcos@mateos.xyz |
+| Email para Marcos | **PENDIENTE** | marcos@mateos.zk-access.xyz |
 | Email de Lendooro | **PENDIENTE** | El inbox que recibe consultas de creditos |
 
 ### 1.1 Anthropic API Key
@@ -89,7 +89,7 @@ sk-ant-api03-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 Tenes varias opciones:
 
 **Opcion A: Google Workspace (recomendado si ya tenes dominio)**
-- Crea `marcos@mateos.xyz`
+- Crea `marcos@mateos.zk-access.xyz`
 - Habilita acceso IMAP
 - Genera una App Password (Google Account > Security > 2FA > App passwords)
 
@@ -329,7 +329,7 @@ cat > workspace/IDENTITY.md << 'IDENTITY_EOF'
 ### MateOS
 - **Tipo:** Empresa de desarrollo de agentes IA
 - **Mercado:** Negocios argentinos (PyMEs y startups)
-- **Email corporativo:** marcos@mateos.xyz
+- **Email corporativo:** marcos@mateos.zk-access.xyz
 - **Rol de Marcos:** CEO operativo - maneja comunicaciones, propuestas, seguimiento de leads
 
 ### Lendooro
@@ -352,7 +352,7 @@ cat > workspace/IDENTITY.md << 'IDENTITY_EOF'
 Marcos
 CEO - MateOS
 Agentes IA para negocios argentinos
-marcos@mateos.xyz
+marcos@mateos.zk-access.xyz
 ```
 
 ## Firma de email - Lendooro
@@ -611,21 +611,21 @@ mkdir -p ~/.config/himalaya
 cat > ~/.config/himalaya/config.toml << 'HIMEOF'
 [accounts.gaucho]
 default = true
-email = "marcos@mateos.xyz"
+email = "marcos@mateos.zk-access.xyz"
 display-name = "Marcos - MateOS"
 # Ajusta estos valores segun tu proveedor de email
 backend.type = "imap"
 backend.host = "imap.gmail.com"
 backend.port = 993
-backend.login = "marcos@mateos.xyz"
-backend.passwd.cmd = "security find-generic-password -a marcos@mateos.xyz -s himalaya-mateos -w"
+backend.login = "marcos@mateos.zk-access.xyz"
+backend.passwd.cmd = "security find-generic-password -a marcos@mateos.zk-access.xyz -s himalaya-mateos -w"
 backend.encryption = "tls"
 
 message.send.backend.type = "smtp"
 message.send.backend.host = "smtp.gmail.com"
 message.send.backend.port = 465
-message.send.backend.login = "marcos@mateos.xyz"
-message.send.backend.passwd.cmd = "security find-generic-password -a marcos@mateos.xyz -s himalaya-mateos -w"
+message.send.backend.login = "marcos@mateos.zk-access.xyz"
+message.send.backend.passwd.cmd = "security find-generic-password -a marcos@mateos.zk-access.xyz -s himalaya-mateos -w"
 message.send.backend.encryption = "tls"
 HIMEOF
 ```
@@ -636,7 +636,7 @@ HIMEOF
 # Esto guarda la app password de forma segura en el keychain
 # Te va a pedir la password de la cuenta de email
 security add-generic-password \
-  -a "marcos@mateos.xyz" \
+  -a "marcos@mateos.zk-access.xyz" \
   -s "himalaya-mateos" \
   -w "TU_APP_PASSWORD_DE_GOOGLE"
 ```
@@ -1680,13 +1680,13 @@ tunnel: TU_TUNNEL_ID
 credentials-file: /root/.cloudflared/TU_TUNNEL_ID.json
 
 ingress:
-  - hostname: marcos.mateos.xyz
+  - hostname: marcos.mateos.zk-access.xyz
     service: http://localhost:3000
   - service: http_status:404
 CFEOF
 
 # Agrega el DNS en Cloudflare
-cloudflared tunnel route dns marcos marcos.mateos.xyz
+cloudflared tunnel route dns marcos marcos.mateos.zk-access.xyz
 
 # Crea servicio de systemd para que arranque solo
 cloudflared service install
@@ -1770,7 +1770,7 @@ openclaw cron test nightly-memory-extraction
 
 ### 10.3 Test de Email - MateOS
 
-1. Desde tu email personal, manda un email a `marcos@mateos.xyz`
+1. Desde tu email personal, manda un email a `marcos@mateos.zk-access.xyz`
 2. Asunto: "Test - Consulta sobre servicios"
 3. Cuerpo: "Hola, me gustaria saber sobre sus servicios de IA"
 4. Espera 5 minutos (el intervalo de chequeo)
@@ -1922,7 +1922,7 @@ Cada semana, dedica 15 minutos a:
 |------|---------------|-------|
 | Anthropic API (Claude) | $5-15 USD/mes | Depende del volumen. Sonnet es mas barato que Opus |
 | Tu plan Claude Pro | $100 USD/mes | Ya lo tenes, es para tu uso personal, no para Marcos |
-| Dominio mateos.xyz | ~$12 USD/ano (~$1/mes) | Si ya lo tenes, $0 |
+| Dominio mateos.zk-access.xyz | ~$12 USD/ano (~$1/mes) | Si ya lo tenes, $0 |
 | Email hosting | $0-7 USD/mes | Gmail gratis o Google Workspace $7/mes |
 | VPS (cuando migres) | $12-25 USD/mes | DigitalOcean $12, Railway ~$20 |
 

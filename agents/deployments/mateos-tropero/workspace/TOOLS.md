@@ -296,7 +296,7 @@ Lunes a Viernes 9:00-21:00 ART
 ## Información de contacto
 
 - WhatsApp: +54 9 11 6886-1403
-- Email: contacto@mateos.xyz
+- Email: contacto@mateos.zk-access.xyz
 - Web: https://mateos.zk-access.xyz
 
 ---

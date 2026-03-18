@@ -252,7 +252,7 @@ Production server: `54.160.120.210`
 
 3. **Caddy** runs as a Docker container defined in `docker-compose.prod.yml`. It handles automatic HTTPS via Let's Encrypt. The `Caddyfile` is mounted as a volume:
    ```
-   mateos.xyz {
+   mateos.zk-access.xyz {
        encode gzip zstd
        reverse_proxy frontend:3000
    }
@@ -342,7 +342,7 @@ docker compose -f docker-compose.prod.yml logs -f baqueano-mateos
 docker exec baqueano-mateos pgrep -fa openclaw
 
 # Check Caddy is serving HTTPS
-curl -I https://mateos.xyz
+curl -I https://mateos.zk-access.xyz
 ```
 
 ---

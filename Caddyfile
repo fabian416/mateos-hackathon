@@ -2,10 +2,10 @@
 # Automatic HTTPS via Let's Encrypt
 
 {
-	email admin@mateos.xyz
+	email admin@mateos.zk-access.xyz
 }
 
-mateos.xyz {
+mateos.zk-access.xyz {
 	encode gzip zstd
 
 	header {
