@@ -113,32 +113,32 @@ Usá la API de Google Calendar via Gog CLI con service account configurada en el
 
 **Verificación de conexión:**
 ```
-gog calendar events list --calendar-id [CALENDAR_ID] --time-min [AHORA_ISO] --time-max [AHORA_ISO+1h] --single-events
+gog calendar events list [CALENDAR_ID] --time-min [AHORA_ISO] --time-max [AHORA_ISO+1h] --single-events
 ```
 
 ### Calendarios activos
 
 | Calendario | Calendar ID | Uso | Permisos |
 |-----------|------------|-----|----------|
-| Principal | 945cbda6b9a14d5a7cb6a0bd79ccb3587783bd16f307b0cb2d9da7402f331314@group.calendar.google.com | Eventos y reuniones | Lectura (escritura con aprobación) |
-| Deadlines | 945cbda6b9a14d5a7cb6a0bd79ccb3587783bd16f307b0cb2d9da7402f331314@group.calendar.google.com | Vencimientos de tareas y pagos | Lectura (escritura con aprobación) |
+| Principal | b694fbc354ab0b2ba98aae421d6461f25beb41cb20931c2a83f32550e7572902@group.calendar.google.com | Eventos y reuniones | Lectura (escritura con aprobación) |
+| Deadlines | b694fbc354ab0b2ba98aae421d6461f25beb41cb20931c2a83f32550e7572902@group.calendar.google.com | Vencimientos de tareas y pagos | Lectura (escritura con aprobación) |
 
 ### Comandos de Calendar
 
 **Listar eventos próximos (autónomo):**
 ```
-gog calendar events list --calendar-id [CALENDAR_ID] --time-min [AHORA_ISO] --time-max [FUTURO_ISO] --order-by startTime --single-events
+gog calendar events list [CALENDAR_ID] --time-min [AHORA_ISO] --time-max [FUTURO_ISO] --order-by startTime --single-events
 ```
 
 **Crear evento (NECESITA APROBACION):**
 ```
-gog calendar events create --calendar-id [CALENDAR_ID] --summary "[TITULO]" --start "[FECHA_HORA_ISO]" --end "[FECHA_HORA_ISO]" --description "[DESCRIPCION]"
+gog calendar events create [CALENDAR_ID] --summary "[TITULO]" --start "[FECHA_HORA_ISO]" --end "[FECHA_HORA_ISO]" --description "[DESCRIPCION]"
 ```
 Antes de ejecutar, mostrar al operador: qué evento, cuándo, en qué calendario. Esperar OK.
 
 **Modificar evento (NECESITA APROBACION):**
 ```
-gog calendar events update --calendar-id [CALENDAR_ID] --event-id [EVENT_ID] --summary "[TITULO]" --start "[FECHA_HORA_ISO]"
+gog calendar events update [CALENDAR_ID] --event-id [EVENT_ID] --summary "[TITULO]" --start "[FECHA_HORA_ISO]"
 ```
 Antes de ejecutar, mostrar: evento actual vs. cambio propuesto. Esperar OK.
 

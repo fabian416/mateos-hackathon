@@ -92,29 +92,29 @@ gog sheets update --spreadsheet-id 1SJ2JuFoKtOaFS2ve73fwKafLZuASZTfvacqP5KxIAM4 
 
 ### Calendar ID
 
-945cbda6b9a14d5a7cb6a0bd79ccb3587783bd16f307b0cb2d9da7402f331314@group.calendar.google.com
+b694fbc354ab0b2ba98aae421d6461f25beb41cb20931c2a83f32550e7572902@group.calendar.google.com
 
 ### Comandos de Calendar
 
 #### Ver reuniones próximas (próximas 24hs)
 ```bash
-gog calendar events --calendar-id 945cbda6b9a14d5a7cb6a0bd79ccb3587783bd16f307b0cb2d9da7402f331314@group.calendar.google.com --time-min "$(date -Iseconds)" --time-max "$(date -d '+24 hours' -Iseconds)" --max-results 10
+gog calendar events b694fbc354ab0b2ba98aae421d6461f25beb41cb20931c2a83f32550e7572902@group.calendar.google.com --time-min "$(date -Iseconds)" --time-max "$(date -d '+24 hours' -Iseconds)" --max-results 10
 ```
 
 #### Ver reuniones de la semana
 ```bash
-gog calendar events --calendar-id 945cbda6b9a14d5a7cb6a0bd79ccb3587783bd16f307b0cb2d9da7402f331314@group.calendar.google.com --time-min "$(date -d 'monday' -Iseconds)" --time-max "$(date -d 'next monday' -Iseconds)" --max-results 20
+gog calendar events b694fbc354ab0b2ba98aae421d6461f25beb41cb20931c2a83f32550e7572902@group.calendar.google.com --time-min "$(date -d 'monday' -Iseconds)" --time-max "$(date -d 'next monday' -Iseconds)" --max-results 20
 ```
 
 #### Ver disponibilidad para proponer horarios al prospecto
 ```bash
-gog calendar events --calendar-id 945cbda6b9a14d5a7cb6a0bd79ccb3587783bd16f307b0cb2d9da7402f331314@group.calendar.google.com --time-min "$(date -Iseconds)" --time-max "$(date -d '+7 days' -Iseconds)" --max-results 30
+gog calendar events b694fbc354ab0b2ba98aae421d6461f25beb41cb20931c2a83f32550e7572902@group.calendar.google.com --time-min "$(date -Iseconds)" --time-max "$(date -d '+7 days' -Iseconds)" --max-results 30
 ```
 Revisá los huecos entre eventos para proponer 2-3 opciones al lead. Solo proponé horarios en la franja hábil: Lunes a Viernes 9:00-21:00 ART.
 
 #### Crear reunión
 ```bash
-gog calendar create --calendar-id 945cbda6b9a14d5a7cb6a0bd79ccb3587783bd16f307b0cb2d9da7402f331314@group.calendar.google.com --summary "Reunión con [nombre]" --start "2026-03-17T10:00:00-03:00" --end "2026-03-17T10:30:00-03:00" --description "Lead: [nombre]. Tema: [tema]." --attendees "[email del lead]"
+gog calendar create b694fbc354ab0b2ba98aae421d6461f25beb41cb20931c2a83f32550e7572902@group.calendar.google.com --summary "Reunión con [nombre]" --start "2026-03-17T10:00:00-03:00" --end "2026-03-17T10:30:00-03:00" --description "Lead: [nombre]. Tema: [tema]." --attendees "[email del lead]"
 ```
 
 **IMPORTANTE:** NUNCA crear reuniones sin aprobación del operador. Siempre redactar el borrador del evento y esperar confirmación.
