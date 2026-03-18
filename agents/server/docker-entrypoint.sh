@@ -16,6 +16,7 @@ for agent in mateo-ceo tropero domador rastreador relator paisano baqueano; do
   cp /mnt/workspaces/$agent/*.md ~/.openclaw/workspaces/$agent/ 2>/dev/null || true
   [ -f ~/.openclaw/workspaces/$agent/channel-state.json ] || echo "{}" > ~/.openclaw/workspaces/$agent/channel-state.json
   sed -i "s/{{GOG_ACCOUNT}}/${GOG_ACCOUNT:-not-configured}/g" ~/.openclaw/workspaces/$agent/*.md 2>/dev/null || true
+  sed -i "s/{{CALENDAR_ID}}/${CALENDAR_ID:-primary}/g" ~/.openclaw/workspaces/$agent/*.md 2>/dev/null || true
   sed -i "s/{{CLIENT_NAME}}/${CLIENT_NAME:-MateOS}/g" ~/.openclaw/workspaces/$agent/*.md 2>/dev/null || true
   sed -i "s/{{GMAIL_EMAIL}}/${GMAIL_EMAIL:-}/g" ~/.openclaw/workspaces/$agent/*.md 2>/dev/null || true
 done
