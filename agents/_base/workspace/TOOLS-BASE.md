@@ -75,8 +75,10 @@ La cuenta de Google **ya está autenticada**. No necesitás correr `gog auth` ni
 
 - **Calendar — listar eventos**: `gog calendar events -a {{GOG_ACCOUNT}}`
 - **Calendar — crear evento**: `gog calendar create -a {{GOG_ACCOUNT}} --title "Reunión" --start "2026-03-20T10:00:00" --end "2026-03-20T11:00:00"`
+- **Sheets — crear nueva**: `gog sheets create -a {{GOG_ACCOUNT}} "Nombre de la hoja" --sheets "Hoja1,Hoja2"`
 - **Sheets — leer**: `gog sheets get -a {{GOG_ACCOUNT}} <SPREADSHEET_ID> <RANGE>`
 - **Sheets — escribir**: `gog sheets update -a {{GOG_ACCOUNT}} <SPREADSHEET_ID> <RANGE> --values '[[...]]'`
+- **Sheets — agregar fila**: `gog sheets append -a {{GOG_ACCOUNT}} <SPREADSHEET_ID> <RANGE> --values '[["col1","col2"]]'`
 - **Drive — listar**: `gog drive ls -a {{GOG_ACCOUNT}}`
 
 SIEMPRE usá `-a {{GOG_ACCOUNT}}` en todos los comandos de gog. La cuenta ya tiene permisos de Calendar, Sheets, Drive y Contacts.
