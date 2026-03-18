@@ -5,8 +5,10 @@
         "primary": "${PRIMARY_MODEL}"
       },
       "models": {
-        "anthropic/claude-haiku-4-5": {},
-        "anthropic/claude-sonnet-4-6": {}
+        "anthropic/claude-haiku-4-5": { "alias": "haiku" },
+        "anthropic/claude-sonnet-4-6": { "alias": "sonnet" },
+        "anthropic/claude-opus-4-6": { "alias": "opus" },
+        "google/gemini-2.5-flash": { "alias": "flash" }
       },
       "workspace": "${HOME}/.openclaw/workspace",
       "heartbeat": {
@@ -52,10 +54,15 @@
   "gateway": {
     "port": ${GATEWAY_PORT},
     "mode": "local",
-    "bind": "0.0.0.0",
+    "bind": "lan",
     "auth": {
       "mode": "token",
       "token": "${GATEWAY_AUTH_TOKEN}"
+    },
+    "http": {
+      "endpoints": {
+        "chatCompletions": { "enabled": true }
+      }
     },
     "tailscale": {
       "mode": "off",
@@ -77,7 +84,7 @@
     "install": {
       "nodeManager": "bun"
     },
-    "allowBundled": ["himalaya", "gog"]
+    "allowBundled": ["himalaya", "gog", "browser", "search"]
   },
   "plugins": {
     "entries": {

@@ -3,11 +3,13 @@ FROM node:24-slim
 # Install system deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 \
+    python3-pip \
     cron \
     curl \
     git \
     gettext-base \
     ca-certificates \
+    && pip3 install --break-system-packages requests requests-oauthlib \
     && rm -rf /var/lib/apt/lists/*
 
 # Install himalaya (email CLI)

@@ -48,7 +48,7 @@
   "gateway": {
     "port": ${GATEWAY_PORT},
     "mode": "local",
-    "bind": "loopback",
+    "bind": "lan",
     "auth": { "mode": "token", "token": "${GATEWAY_AUTH_TOKEN}" },
     "tailscale": { "mode": "off", "resetOnExit": false }
   },
