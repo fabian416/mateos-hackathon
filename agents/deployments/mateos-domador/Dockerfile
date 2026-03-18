@@ -16,6 +16,12 @@ RUN curl -fsSL "https://github.com/pimalaya/himalaya/releases/download/${HIMALAY
     | tar -xz -C /usr/local/bin/ \
     && chmod +x /usr/local/bin/himalaya
 
+# Install gog (Google Workspace CLI for Sheets, Calendar, Gmail, Drive, etc.)
+ARG GOG_VERSION=0.12.0
+RUN curl -fsSL "https://github.com/steipete/gogcli/releases/download/v${GOG_VERSION}/gogcli_${GOG_VERSION}_linux_amd64.tar.gz" \
+    | tar -xz -C /usr/local/bin/ gog \
+    && chmod +x /usr/local/bin/gog
+
 # Install openclaw globally
 RUN npm i -g openclaw
 
@@ -42,9 +48,5 @@ RUN echo '{}' > .openclaw/workspace/channel-state.json
 # Make scripts executable
 RUN cp /tmp/scripts/channel-checker.py /home/${AGENT_USER}/channel-checker.py \
     && chmod +x /home/${AGENT_USER}/channel-checker.py
-RUN if [ -f /tmp/scripts/tweet-scheduler.py ]; then \
-      cp /tmp/scripts/tweet-scheduler.py /home/${AGENT_USER}/tweet-scheduler.py \
-      && chmod +x /home/${AGENT_USER}/tweet-scheduler.py; \
-    fi
 
-ENTRYPOINT ["/home/${AGENT_USER}/docker-entrypoint.sh"]
+ENTRYPOINT ["/home/agent/docker-entrypoint.sh"]

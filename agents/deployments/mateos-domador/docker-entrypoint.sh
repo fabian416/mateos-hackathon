@@ -28,7 +28,7 @@ export TELEGRAM_DM_POLICY="${TELEGRAM_DM_POLICY:-allowlist}"
 export TELEGRAM_GROUP_POLICY="${TELEGRAM_GROUP_POLICY:-disabled}"
 export GATEWAY_PORT="${GATEWAY_PORT:-18789}"
 export PRIMARY_MODEL="${PRIMARY_MODEL:-anthropic/claude-haiku-4-5}"
-export GMAIL_DISPLAY_NAME="${GMAIL_DISPLAY_NAME:-MateOS Bot}"
+export GMAIL_DISPLAY_NAME="${GMAIL_DISPLAY_NAME:-${CLIENT_NAME:-MateOS} Bot}"
 export WHATSAPP_ENABLED="${WHATSAPP_ENABLED:-false}"
 export WHATSAPP_DM_POLICY="${WHATSAPP_DM_POLICY:-open}"
 export WHATSAPP_ALLOW_FROM="${WHATSAPP_ALLOW_FROM:-}"
@@ -51,17 +51,6 @@ fi
   done
 ) &
 echo "Channel checker loop started (every 60s)"
-
-# Start tweet-scheduler loop (if Twitter enabled and script exists)
-if [ "${TWITTER_ENABLED:-false}" = "true" ] && [ -f ~/tweet-scheduler.py ]; then
-  (
-    while true; do
-      ~/tweet-scheduler.py >> ~/.openclaw/logs/tweet-scheduler.log 2>&1 || true
-      sleep 60
-    done
-  ) &
-  echo "Tweet scheduler loop started (every 60s)"
-fi
 
 # Start openclaw gateway (foreground)
 echo "Starting openclaw gateway..."

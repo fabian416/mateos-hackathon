@@ -19,7 +19,7 @@ Si no tiene draft, leé el body del mensaje y redactá uno nuevo con tono SOUL.m
 
 ## Email (himalaya)
 
-- Cuenta: {{GMAIL_EMAIL}} ({{CLIENT_NAME}})
+- Cuenta: {{GMAIL_EMAIL}} (MateOS)
 - Leer bandeja: `himalaya envelope list --folder INBOX`
 - Leer email: `himalaya message read --no-headers <ID>`
 - Enviar email nuevo:

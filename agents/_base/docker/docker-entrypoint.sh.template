@@ -33,6 +33,8 @@ export WHATSAPP_ENABLED="${WHATSAPP_ENABLED:-false}"
 export WHATSAPP_DM_POLICY="${WHATSAPP_DM_POLICY:-open}"
 export WHATSAPP_ALLOW_FROM="${WHATSAPP_ALLOW_FROM:-}"
 export AGENT_NAME="${AGENT_NAME:-agent}"
+export ROUTER_URL="${ROUTER_URL:-http://agent-router:8080}"
+export SQUAD_AUTH_TOKEN="${SQUAD_AUTH_TOKEN:-}"
 
 # Generate configs from templates
 envsubst < /tmp/config/openclaw.json.template > ~/.openclaw/openclaw.json

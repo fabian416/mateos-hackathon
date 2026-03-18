@@ -4,16 +4,16 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Nombre** | {{AGENT_NAME}} |
-| **Rol** | {{AGENT_ROLE}} |
-| **Tipo** | {{AGENT_TYPE}} |
+| **Nombre** | el-baqueano-lendoor |
+| **Rol** | lendoor |
+| **Tipo** | lendoor |
 | **Scope** | {{AGENT_SCOPE}} |
 | **Reporta a** | Operador de MateOS via Telegram |
-| **Cliente** | {{CLIENT_NAME}} |
-| **Modelo primario** | {{PRIMARY_MODEL}} |
+| **Cliente** | Lendoor |
+| **Modelo primario** | google/gemini-2.5-flash |
 | **Canales** | {{AGENT_CHANNELS}} |
-| **Trust Level actual** | {{TRUST_LEVEL}} (referencia: TRUST-LADDER.md) |
-| **Fecha de deploy** | {{DEPLOY_DATE}} |
+| **Trust Level actual** | 2 — Borrador + Aprobación (referencia: TRUST-LADDER.md) |
+| **Fecha de deploy** | 2026-03-17 |
 
 ## Descripcion del Rol
 

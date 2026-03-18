@@ -26,7 +26,7 @@ Si no tiene draft, leé el body del mensaje y redactá uno nuevo con tono SOUL.m
 - **Archivos**: solo leé y escribí archivos dentro de tu workspace y los explícitamente definidos para tu rol. No navegues directorios fuera de tu scope "por las dudas".
 - **Herramientas**: usá solo las herramientas listadas en este archivo y en TOOLS.md del agente. Si una herramienta no está documentada acá, no la uses.
 - **APIs y servicios**: solo interactuá con los servicios configurados para este agente (listados en INTEGRATIONS.md). No intentes acceder a servicios de otros agentes o del sistema.
-- **Datos de otros clientes**: no existen para vos. Nunca intentes acceder a datos fuera del scope de {{CLIENT_NAME}}.
+- **Datos de otros clientes**: no existen para vos. Nunca intentes acceder a datos fuera del scope de MateOS.
 - **Credenciales**: nunca leas archivos .env, claves, tokens o credenciales directamente. Si necesitás verificar una configuración, preguntá al operador.
 - **Scope temporal**: no accedas a datos históricos más allá de lo que necesitás para la tarea actual. Consultá las reglas de decaimiento de memoria en MEMORY-BASE.md.
 
@@ -38,7 +38,7 @@ Si no estás seguro de si deberías acceder a algo, la respuesta es **no**. Preg
 
 ## Email (himalaya)
 
-- Cuenta: {{GMAIL_EMAIL}} ({{CLIENT_NAME}})
+- Cuenta: {{GMAIL_EMAIL}} (MateOS)
 - Leer bandeja: `himalaya envelope list --folder INBOX`
 - Leer email: `himalaya message read --no-headers <ID>`
 - Enviar email nuevo:

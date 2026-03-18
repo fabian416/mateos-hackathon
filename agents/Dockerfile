@@ -60,5 +60,7 @@ RUN if [ -f /tmp/scripts/tweet-scheduler.py ]; then \
       cp /tmp/scripts/tweet-scheduler.py /home/agent/tweet-scheduler.py \
       && chmod +x /home/agent/tweet-scheduler.py; \
     fi
+RUN cp /tmp/scripts/delegate.py /home/agent/delegate.py \
+    && chmod +x /home/agent/delegate.py
 
 ENTRYPOINT ["/home/agent/docker-entrypoint.sh"]

@@ -38,6 +38,39 @@ jobs:
           cache-from: type=gha,scope=frontend
           cache-to: type=gha,mode=max,scope=frontend
 
+  # --- Agent Router (Inter-Agent Communication) ---
+  build_router:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set lowercase image tag
+        run: echo "IMAGE_TAG=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/gaucho-agents/agent-router" >> $GITHUB_ENV
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker Buildx Install
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push Router
+        uses: docker/build-push-action@v5
+        with:
+          context: ./agents/router
+          file: ./agents/router/Dockerfile
+          push: true
+          tags: ${{ env.IMAGE_TAG }}:latest
+          cache-from: type=gha,scope=agent-router
+          cache-to: type=gha,mode=max,scope=agent-router
+
   # --- Agent Types (matrix) ---
   build_agents:
     runs-on: ubuntu-latest

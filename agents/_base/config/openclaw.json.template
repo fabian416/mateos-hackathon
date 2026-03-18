@@ -52,7 +52,7 @@
   "gateway": {
     "port": ${GATEWAY_PORT},
     "mode": "local",
-    "bind": "loopback",
+    "bind": "0.0.0.0",
     "auth": {
       "mode": "token",
       "token": "${GATEWAY_AUTH_TOKEN}"

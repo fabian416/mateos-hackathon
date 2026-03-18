@@ -11,7 +11,7 @@ services:
       - bot-data:/home/${AGENT_USER:-agent}/.openclaw/logs
       - whatsapp-creds:/home/${AGENT_USER:-agent}/.openclaw/credentials/whatsapp
     healthcheck:
-      test: ["CMD", "pgrep", "-f", "openclaw"]
+      test: ["CMD", "pgrep", "-f", "python"]
       interval: 5m
       timeout: 5s
       retries: 3

@@ -176,7 +176,32 @@ sed -i "s/\${CONTAINER_NAME}/${SERVICE_NAME}/g" "${DEPLOY_DIR}/docker-compose.ym
 # 7. Replace {{AGENT_DISPLAY_NAME}} in entrypoint
 sed -i "s/{{AGENT_DISPLAY_NAME}}/${AGENT_TYPE} - ${CLIENT_NAME}/g" "${DEPLOY_DIR}/docker-entrypoint.sh"
 
-# 8. Create .gitignore
+# 8. Replace {{PLACEHOLDERS}} in all workspace .md files
+echo "  Reemplazando placeholders en workspace..."
+BRAND_EMOJI_DEFAULT="🧉"
+SUPPORT_SIG="Equipo ${CLIENT_NAME}"
+AGENT_ROLE="${AGENT_TYPE}"
+DEPLOY_DATE="$(date -I)"
+
+for md_file in "${DEPLOY_DIR}/workspace/"*.md; do
+    [ -f "$md_file" ] || continue
+    sed -i \
+        -e "s|{{CLIENT_NAME}}|${CLIENT_NAME}|g" \
+        -e "s|{{BRAND_EMOJI}}|${BRAND_EMOJI_DEFAULT}|g" \
+        -e "s|{{SUPPORT_SIGNATURE}}|${SUPPORT_SIG}|g" \
+        -e "s|{{AGENT_NAME}}|${SERVICE_NAME}|g" \
+        -e "s|{{AGENT_TYPE}}|${AGENT_TYPE}|g" \
+        -e "s|{{AGENT_ROLE}}|${AGENT_ROLE}|g" \
+        -e "s|{{DEPLOY_DATE}}|${DEPLOY_DATE}|g" \
+        -e "s|{{PRIMARY_MODEL}}|google/gemini-2.5-flash|g" \
+        -e "s|{{OPERATOR_NAME}}|Operador|g" \
+        -e "s|{{OPERATOR_TIMEZONE}}|America/Argentina/Buenos_Aires|g" \
+        -e "s|{{OPERATOR_HOURS}}|9:00-21:00 ART|g" \
+        -e "s|{{TRUST_LEVEL}}|2 — Borrador + Aprobación|g" \
+        "$md_file"
+done
+
+# 9. Create .gitignore
 cat > "${DEPLOY_DIR}/.gitignore" << 'GIEOF'
 .env
 logs/

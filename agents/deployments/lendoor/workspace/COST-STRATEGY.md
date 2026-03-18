@@ -25,7 +25,7 @@
 |--------|-----------------|----------------------|-------|
 | El Baqueano (Asistente Ejecutivo) | Haiku | Haiku | La mayoria de sus tareas son rutinarias. Escala a Sonnet solo para resumen semanal. |
 | CEO Agent (Estrategia) | Sonnet | N/A (no tiene heartbeat) | Sus tareas requieren razonamiento. Escala a Opus para planificacion trimestral. |
-| {{AGENT_NAME}} | {{PRIMARY_MODEL}} | {{HEARTBEAT_MODEL}} | {{COST_NOTES}} |
+| el-baqueano-lendoor | google/gemini-2.5-flash | {{HEARTBEAT_MODEL}} | {{COST_NOTES}} |
 
 ---
 

@@ -71,7 +71,7 @@ Al arrancar cada sesion, el agente debe:
 ## Plantilla de MEMORY.md
 
 ```markdown
-# Memoria Persistente de {{AGENT_NAME}}
+# Memoria Persistente de el-baqueano-lendoor
 
 > Ultima actualizacion: {{LAST_UPDATED}}
 

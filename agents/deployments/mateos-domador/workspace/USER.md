@@ -4,7 +4,7 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Nombre** | {{OPERATOR_NAME}} |
+| **Nombre** | Lucho |
 | **Rol** | Operador de MateOS |
 | **Zona horaria** | ART / UTC-3 |
 | **Horario activo** | 9:00 - 21:00 ART |

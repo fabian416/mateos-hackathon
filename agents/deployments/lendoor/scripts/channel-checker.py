@@ -6,6 +6,7 @@ Evolución de email-checker.py para multi-canal.
 Se ejecuta via loop en Docker (cada 60s).
 """
 
+import fcntl
 import json
 import mimetypes
 import os
@@ -13,6 +14,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.error
 import urllib.request
@@ -38,6 +40,9 @@ SENDDOC_MAX = 50 * 1024 * 1024     # 50 MB
 def run(cmd, timeout=30):
     """Ejecuta un comando y devuelve stdout."""
     r = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+    if r.returncode != 0:
+        print(f"[{datetime.now().isoformat()}] run: command {cmd} exited with code {r.returncode}: {r.stderr[:200]}", file=sys.stderr)
+        return ""
     return r.stdout.strip()
 
 
@@ -272,7 +277,7 @@ def has_pending():
         return None
     except Exception as e:
         print(f"[{datetime.now().isoformat()}] channel-checker: can't read state: {e}", file=sys.stderr)
-        return "unknown"
+        return None
 
     pending_id = state.get("pendingMessageId")
     if not pending_id:
@@ -283,7 +288,7 @@ def has_pending():
     if received:
         from datetime import timedelta, timezone
         try:
-            received_dt = datetime.fromisoformat(received.replace(" ", "T"))
+            received_dt = datetime.fromisoformat(received.replace("Z", "+00:00").replace(" ", "T"))
             if received_dt.tzinfo is None:
                 received_dt = received_dt.replace(tzinfo=timezone.utc)
             now = datetime.now(timezone.utc)
@@ -359,12 +364,12 @@ def read_email(email_id):
 def mark_as_read(email_id):
     subprocess.run(
         [HIMALAYA, "flag", "add", str(email_id), "Seen"],
-        capture_output=True,
+        capture_output=True, timeout=15,
     )
 
 
 def save_state(channel, message_id, from_addr, from_name, subject, date, body, attachments=None):
-    """Guarda el estado del mensaje pendiente."""
+    """Guarda el estado del mensaje pendiente (atomic write)."""
     state = {
         "pendingMessageId": str(message_id),
         "channel": channel,
@@ -375,8 +380,18 @@ def save_state(channel, message_id, from_addr, from_name, subject, date, body, a
         "body": body[:5000],
         "attachments": attachments or [],
     }
-    with open(STATE_FILE, "w") as f:
-        json.dump(state, f, ensure_ascii=False, indent=2)
+    STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp_path = tempfile.mkstemp(dir=STATE_FILE.parent, suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w") as f:
+            json.dump(state, f, ensure_ascii=False, indent=2)
+        os.replace(tmp_path, STATE_FILE)
+    except BaseException:
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
+        raise
 
 
 def send_proposal_to_telegram():
@@ -451,7 +466,8 @@ def send_proposal_to_telegram():
 
 
 def trigger_agent(message, message_id):
-    """Despierta la sesión principal via openclaw gateway call chat.send."""
+    """Despierta la sesión principal via openclaw gateway call chat.send.
+    Returns True on success, False on failure."""
     params = json.dumps({
         "sessionKey": "agent:main:main",
         "message": message,
@@ -467,12 +483,17 @@ def trigger_agent(message, message_id):
                 f"⚠️ channel-checker: chat.send falló\n"
                 f"Exit: {r.returncode}\nError: {r.stderr[:500]}"
             )
+            return False
+        return True
     except subprocess.TimeoutExpired:
         notify_telegram("⚠️ channel-checker: chat.send timeout (60s)")
+        return False
     except FileNotFoundError:
         notify_telegram(f"⚠️ channel-checker: openclaw no encontrado en {OPENCLAW}")
+        return False
     except Exception as e:
         notify_telegram(f"⚠️ channel-checker: error\n{type(e).__name__}: {e}")
+        return False
 
 
 def handle_completed_state():
@@ -496,7 +517,7 @@ def handle_completed_state():
     completed_at = completed.get("completedAt", "")
     if completed_at and file_age_seconds > 120:
         try:
-            completed_dt = datetime.fromisoformat(completed_at)
+            completed_dt = datetime.fromisoformat(completed_at.replace("Z", "+00:00"))
             if completed_dt.tzinfo is None:
                 completed_dt = completed_dt.replace(tzinfo=timezone.utc)
             now = datetime.now(timezone.utc)
@@ -542,6 +563,17 @@ def handle_completed_state():
 
 
 def main():
+    # Acquire exclusive lock to prevent concurrent runs
+    lock_path = OPENCLAW_DIR / "workspace" / "channel-checker.lock"
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    lock_file = open(lock_path, "w")
+    try:
+        fcntl.flock(lock_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        # Another instance is running, exit silently
+        lock_file.close()
+        sys.exit(0)
+
     print(f"[{datetime.now().isoformat()}] channel-checker: starting")
 
     # 0. Limpiar adjuntos viejos
@@ -572,7 +604,6 @@ def main():
 
             body = read_email(email_id)
             attachments = download_attachments(email_id)
-            mark_as_read(email_id)
             save_state("email", email_id, from_addr, from_name, subject, date, body, attachments)
 
             message = (
@@ -583,7 +614,10 @@ def main():
                 f"Guardalo en el campo 'draft' de channel-state.json. "
                 f"NO envíes la propuesta a Telegram — el script lo hace automáticamente."
             )
-            trigger_agent(message, email_id)
+            if trigger_agent(message, email_id):
+                mark_as_read(email_id)
+            else:
+                mark_as_unread(email_id)
             print(f"[{datetime.now().isoformat()}] channel-checker: email #{email_id} triggered: {subject}")
             sys.exit(0)
 

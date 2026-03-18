@@ -1,0 +1,22 @@
+services:
+  el-baqueano-mateos:
+    build:
+      context: ../../
+      dockerfile: agents/Dockerfile
+      args:
+        AGENT_TYPE: el-baqueano
+    container_name: el-baqueano-mateos
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - bot-data:/home/agent/.openclaw/logs
+      - whatsapp-creds:/home/agent/.openclaw/credentials/whatsapp
+    healthcheck:
+      test: ["CMD", "pgrep", "-f", "openclaw"]
+      interval: 5m
+      timeout: 5s
+      retries: 3
+
+volumes:
+  bot-data:
+  whatsapp-creds:

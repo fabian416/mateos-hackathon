@@ -1,10 +1,10 @@
 services:
-  el-baqueano-lendoor:
+  el-rastreador-mateos:
     build:
       context: .
       args:
         AGENT_USER: ${AGENT_USER:-agent}
-    container_name: el-baqueano-lendoor
+    container_name: el-rastreador-mateos
     restart: unless-stopped
     env_file: .env
     volumes:

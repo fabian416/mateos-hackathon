@@ -14,9 +14,11 @@ Flujo:
 Estado se guarda en tweet-state.json.
 """
 
+import fcntl
 import json
 import os
 import sys
+import tempfile
 import time
 import urllib.error
 import urllib.request
@@ -169,17 +171,38 @@ def log(msg):
     print(f"[{datetime.now(ART).strftime('%Y-%m-%d %H:%M:%S')}] tweet-scheduler: {msg}")
 
 
+def truncate_safe(text, limit=277, suffix="..."):
+    """Trunca texto a `limit` caracteres sin cortar emojis multi-byte.
+    Encode a UTF-8, corta, y decodea ignorando bytes incompletos al final."""
+    if len(text) <= limit + len(suffix):
+        return text
+    encoded = text.encode("utf-8")[:limit * 4]  # generous upper bound
+    # Walk character by character to find the last safe cut point
+    truncated = ""
+    for char in text:
+        if len(truncated) + len(char) > limit:
+            break
+        truncated += char
+    return truncated.rstrip() + suffix
+
+
 def retry(fn, retries=3, delay=5):
-    """Ejecuta fn() con reintentos. Para internet intermitente."""
+    """Ejecuta fn() con reintentos. Para internet intermitente.
+    Si fn() retorna False (sentinel), aborta sin reintentar (error no recuperable).
+    Si fn() retorna None, reintenta (error de red recuperable).
+    """
     for attempt in range(retries):
         try:
             result = fn()
+            if result is False:
+                # Non-retryable failure (e.g. missing API key)
+                return None
             if result is not None:
                 return result
         except Exception as e:
             log(f"attempt {attempt + 1}/{retries} failed: {e}")
-            if attempt < retries - 1:
-                time.sleep(delay * (attempt + 1))  # backoff: 5s, 10s, 15s
+        if attempt < retries - 1:
+            time.sleep(delay * (attempt + 1))  # backoff: 5s, 10s, 15s
     return None
 
 
@@ -204,8 +227,20 @@ def load_state():
 
 
 def save_state(state):
-    with open(STATE_FILE, "w") as f:
-        json.dump(state, f, ensure_ascii=False, indent=2)
+    """Escribe state atómicamente: temp file + os.replace()."""
+    dir_path = STATE_FILE.parent
+    fd, tmp_path = tempfile.mkstemp(dir=dir_path, suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w") as f:
+            json.dump(state, f, ensure_ascii=False, indent=2)
+        os.replace(tmp_path, STATE_FILE)
+    except Exception:
+        # Limpiar temp file si os.replace() falló
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
+        raise
 
 
 def notify_telegram(text, parse_mode=None):
@@ -348,7 +383,9 @@ def generate_with_grok(prompt):
 
 
 def generate_with_gemini(prompt):
-    """Genera tweet con Gemini. Costo: gratis (tier gratuito Google)."""
+    """Genera tweet con Gemini. Costo: gratis (tier gratuito Google).
+    Returns: str (tweet), None (network/API failure, retryable), or False (no API key, not retryable).
+    """
     google_key = os.environ.get("GOOGLE_API_KEY", "")
     if not google_key:
         try:
@@ -357,7 +394,7 @@ def generate_with_gemini(prompt):
         except Exception:
             pass
     if not google_key:
-        return None
+        return False  # sentinel: no API key, don't retry
     try:
         url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={google_key}"
         payload = {"contents": [{"parts": [{"text": prompt}]}]}
@@ -416,7 +453,7 @@ def generate_tweet(content_type):
 
 
 def post_tweet(text):
-    """Publica tweet en Twitter/X."""
+    """Publica tweet en Twitter/X con timeout, retry y exception handling."""
     api_key = TW_API_KEY or os.environ.get("TWITTER_API_KEY", "")
     api_secret = TW_API_SECRET or os.environ.get("TWITTER_API_SECRET", "")
     access_token = TW_ACCESS_TOKEN or os.environ.get("TWITTER_ACCESS_TOKEN", "")
@@ -426,13 +463,32 @@ def post_tweet(text):
         return False, "Twitter credentials missing"
 
     auth = OAuth1(api_key, api_secret, access_token, access_secret)
-    r = requests.post("https://api.x.com/2/tweets", json={"text": text}, auth=auth)
 
-    if r.status_code == 201:
-        tweet_id = r.json().get("data", {}).get("id", "")
-        return True, tweet_id
-    else:
-        return False, f"HTTP {r.status_code}: {r.text}"
+    last_error = None
+    for attempt in range(3):
+        try:
+            r = requests.post(
+                "https://api.x.com/2/tweets",
+                json={"text": text},
+                auth=auth,
+                timeout=30,
+            )
+            if r.status_code == 201:
+                tweet_id = r.json().get("data", {}).get("id", "")
+                return True, tweet_id
+            else:
+                last_error = f"HTTP {r.status_code}: {r.text}"
+                # Don't retry on auth errors or bad requests
+                if r.status_code in (400, 401, 403):
+                    return False, last_error
+        except requests.exceptions.RequestException as e:
+            last_error = str(e)
+            log(f"post_tweet attempt {attempt + 1}/3 failed: {e}")
+
+        if attempt < 2:
+            time.sleep(5 * (attempt + 1))  # backoff: 5s, 10s
+
+    return False, last_error or "post_tweet failed after 3 attempts"
 
 
 # =============================================================================
@@ -461,11 +517,12 @@ def check_telegram_responses(state):
 
         if text_lower in ["✅", "si", "sí", "dale", "enviar", "publicar", "ok"]:
             tweet_text = state.get("draft", "")
-            last_slot = state.get("last_slot")
-            content_type = state.get("content_type")
             if not tweet_text:
                 notify_telegram("⚠️ No hay tweet pendiente para publicar.")
-                save_state({"last_slot": last_slot, "content_type": content_type})
+                # Clear draft/pending but preserve last_update_id, last_slot, content_type
+                state.pop("pending", None)
+                state.pop("draft", None)
+                save_state(state)
                 return True
 
             ok, result = post_tweet(tweet_text)
@@ -474,7 +531,12 @@ def check_telegram_responses(state):
                 notify_telegram(f"✅ Tweet publicado!\nhttps://x.com/{handle}/status/{result}")
             else:
                 notify_telegram(f"❌ Error al publicar: {result}")
-            save_state({"last_slot": last_slot, "content_type": content_type})
+            # Clear draft/pending but preserve last_update_id, last_slot, content_type
+            state.pop("pending", None)
+            state.pop("draft", None)
+            state.pop("slot", None)
+            state.pop("created_at", None)
+            save_state(state)
             return True
 
         elif text_lower.startswith("✏️") or text_lower.startswith("modificar"):
@@ -492,7 +554,12 @@ def check_telegram_responses(state):
 
         elif text_lower in ["❌", "no", "descartar", "cancelar"]:
             notify_telegram("❌ Tweet descartado.")
-            save_state({"last_slot": state.get("last_slot"), "content_type": state.get("content_type")})
+            # Clear draft/pending but preserve last_update_id, last_slot, content_type
+            state.pop("pending", None)
+            state.pop("draft", None)
+            state.pop("slot", None)
+            state.pop("created_at", None)
+            save_state(state)
             return True
 
     # No hubo respuesta relevante
@@ -500,7 +567,27 @@ def check_telegram_responses(state):
     return False
 
 
+LOCK_FILE = DEPLOY_DIR / ".tweet-scheduler.lock"
+
+
 def main():
+    # Acquire exclusive lock — exit silently if another instance is running
+    lock_fd = open(LOCK_FILE, "w")
+    try:
+        fcntl.flock(lock_fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        # Another instance is running
+        lock_fd.close()
+        return
+
+    try:
+        _main_locked()
+    finally:
+        fcntl.flock(lock_fd, fcntl.LOCK_UN)
+        lock_fd.close()
+
+
+def _main_locked():
     load_env()
     state = load_state()
     current_slot = get_current_slot()
@@ -538,24 +625,28 @@ def main():
         log("generation failed")
         notify_telegram("⚠️ Mateo no pudo generar el tweet. Revisá los logs.")
         # Marcar slot como procesado para no reintentar cada 2 min
-        save_state({"last_slot": current_slot, "content_type": new_type})
+        state["last_slot"] = current_slot
+        state["content_type"] = new_type
+        state.pop("pending", None)
+        state.pop("draft", None)
+        save_state(state)
         return
 
-    # Truncar a 280
+    # Truncar a 280 (safe: no corta emojis)
     if len(tweet) > 280:
-        tweet = tweet[:277] + "..."
+        tweet = truncate_safe(tweet, limit=277, suffix="...")
 
-    # Guardar como pendiente
+    # Guardar como pendiente (preserve last_update_id from state)
     now = datetime.now(ART)
-    new_state = {
+    state.update({
         "pending": True,
         "draft": tweet,
         "content_type": new_type,
         "slot": current_slot,
         "last_slot": current_slot,
         "created_at": now.isoformat(),
-    }
-    save_state(new_state)
+    })
+    save_state(state)
 
     # Enviar sugerencia a Telegram
     type_labels = {

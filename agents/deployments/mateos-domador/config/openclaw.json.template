@@ -52,7 +52,7 @@
   "gateway": {
     "port": ${GATEWAY_PORT},
     "mode": "local",
-    "bind": "loopback",
+    "bind": "0.0.0.0",
     "auth": {
       "mode": "token",
       "token": "${GATEWAY_AUTH_TOKEN}"
@@ -64,7 +64,7 @@
   },
   "hooks": {
     "enabled": true,
-    "token": "b7c8d9e0f1a2345678901234abcdef567890abcdef012345",
+    "token": "${GATEWAY_AUTH_TOKEN}",
     "internal": {
       "enabled": true,
       "entries": {

@@ -96,7 +96,7 @@ Al arrancar cada sesión, el agente debe:
 ## Plantilla de MEMORY.md
 
 ```markdown
-# Memoria Persistente de {{AGENT_NAME}}
+# Memoria Persistente de el-tropero-mateos
 
 > Ultima actualizacion: {{LAST_UPDATED}}
 
