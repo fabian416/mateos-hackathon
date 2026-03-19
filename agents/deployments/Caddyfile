@@ -4,7 +4,7 @@
     email admin@mateos.ar
 }
 
-{$MATEOS_SITE:mateos.zk-access.xyz} {
+{$MATEOS_SITE:mateos.tech} {
     encode gzip zstd
 
     header {

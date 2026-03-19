@@ -67,7 +67,7 @@
 | `tweet-scheduler.py` | 6x/dia (slots fijos) | SI (Gemini Flash) | ~$0.01/tweet |
 | `nightly-extraction.py` | 1x/dia (23:00 ART) | SI (Gemini Flash, 500 tokens max) | ~$0.002/dia |
 | `daily-brief.py` | 2x/dia (08:00 + 21:00) | NO (template-based) | $0 |
-| `delegate.py` | Bajo demanda | NO (solo HTTP) | $0 |
+| `sessions_send` | Bajo demanda | NO (in-process) | $0 |
 
 **Recomendacion por defecto:** Cada 30 minutos para agentes operativos. Cada 4 horas para agentes de monitoreo.
 

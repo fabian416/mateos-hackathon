@@ -166,5 +166,5 @@ IMPORTANTE: ejecutá `date -Iseconds` para obtener la fecha. Usá WRITE para sob
 ## Información de contacto
 
 - WhatsApp: +54 9 11 6886-1403
-- Email: contacto@mateos.zk-access.xyz
-- Web: https://mateos.zk-access.xyz
+- Email: contacto@mateos.tech
+- Web: https://mateos.tech

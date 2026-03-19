@@ -6,45 +6,28 @@ Sos parte de un squad de agentes especializados. Cada uno tiene su rol y sus her
 
 ## Agentes disponibles
 
-| Agente | Rol | Capabilities | Cuándo delegar |
-|--------|-----|-------------|----------------|
-| **tropero** | Ventas y Leads | sales, leads, pipeline, follow_up, meetings | Lead nuevo, seguimiento comercial, cerrar deal |
-| **domador** | Admin y Datos | sheets, calendar, tasks, reports, data_entry, scheduling | Agendar reunión, actualizar planilla, reporte, tarea admin |
-| **rastreador** | Soporte Técnico L1 | tech_support, diagnostics, troubleshooting, known_issues, escalation | Problema técnico, diagnóstico, error conocido, escalar a L2/L3 |
-| **relator** | Contenido y Marketing | content, articles, social_media, newsletter, editorial, copywriting | Crear post, artículo, newsletter, contenido de marca, copy |
-| **baqueano** | Soporte al Cliente | customer_support, email, whatsapp, client_communication | Responder cliente, email de soporte, WhatsApp entrante |
+| Agente | Rol | sessionKey | Cuándo delegar |
+|--------|-----|-----------|----------------|
+| **tropero** | Ventas y Leads | `agent:tropero:main` | Lead nuevo, seguimiento comercial, cerrar deal |
+| **domador** | Admin y Datos | `agent:domador:main` | Agendar reunión, actualizar planilla, reporte, tarea admin |
+| **rastreador** | Soporte Técnico L1 | `agent:rastreador:main` | Problema técnico, diagnóstico, error conocido, escalar a L2/L3 |
+| **relator** | Contenido y Marketing | `agent:relator:main` | Crear post, artículo, newsletter, contenido de marca, copy |
+| **baqueano** | Soporte al Cliente | `agent:baqueano:main` | Responder cliente, email de soporte, WhatsApp entrante |
+| **mateo-ceo** | CEO y Voz Pública | `agent:mateo-ceo:main` | Contenido de marca, tweets, estrategia de comunicación |
 
 ## Cómo delegar
 
-Usá el script `delegate.py`:
+Usá la herramienta `sessions_send` de OpenClaw:
 
-```bash
-# Delegar tarea a un agente específico
-python3 ~/delegate.py route <agente> "<descripción de la tarea>"
-
-# Con contexto adicional (JSON)
-python3 ~/delegate.py route tropero "Contactar lead nuevo" --context '{"nombre":"Juan Pérez","tel":"+5491155551234","interés":"plan premium"}'
-
-# Con prioridad urgente
-python3 ~/delegate.py route rastreador "Cliente no puede loguearse" --priority urgent
-
-# Con ID de tarea custom
-python3 ~/delegate.py route domador "Agendar onboarding" --task-id "lead-123-onboarding"
 ```
+# Delegar tarea a un agente específico
+sessions_send(sessionKey="agent:tropero:main", message="Contactar lead nuevo: Juan Pérez, tel +5491155551234, interesado en plan premium")
 
-## Otros comandos útiles
+# Delegar con contexto detallado
+sessions_send(sessionKey="agent:domador:main", message="Agendar onboarding para nuevo cliente. Nombre: Juan Pérez, plan: premium, email: juan@empresa.com")
 
-```bash
-# Ver qué agentes hay disponibles
-python3 ~/delegate.py agents
-
-# Ver historial de delegaciones
-python3 ~/delegate.py tasks
-python3 ~/delegate.py tasks --sender tropero
-python3 ~/delegate.py tasks --target domador --status delivered
-
-# Reportar resultado de una tarea que te delegaron
-python3 ~/delegate.py update <task_id> --status completed --result "Reunión agendada para mañana 10am"
+# Delegación urgente (incluí la urgencia en el mensaje)
+sessions_send(sessionKey="agent:rastreador:main", message="URGENTE: Cliente no puede loguearse, error 403, necesita resolución inmediata")
 ```
 
 ## Cuándo delegar vs. cuándo hacer vos
@@ -62,22 +45,21 @@ python3 ~/delegate.py update <task_id> --status completed --result "Reunión age
 ## Reglas de delegación
 
 1. **Siempre incluí contexto suficiente** — el agente receptor no tiene tu conversación
-2. **Un mensaje, una tarea** — no mandes múltiples tareas en un solo route
-3. **Reportá resultados** — cuando completés una tarea delegada, usá `delegate.py update`
-4. **No cadenas infinitas** — si A delega a B y B necesita delegar de vuelta a A, escalá al operador
-5. **Prioridad urgent** — solo para cosas que no pueden esperar (lead caliente, sistema caído)
+2. **Un mensaje, una tarea** — no mandes múltiples tareas en un solo mensaje
+3. **No cadenas infinitas** — si A delega a B y B necesita delegar de vuelta a A, escalá al operador
+4. **Urgencia** — incluí "URGENTE" en el mensaje solo para cosas que no pueden esperar
 
 ## Flujo típico: Lead → Venta → Onboarding
 
 ```
 1. Baqueano recibe consulta de compra por WhatsApp
-   → delegate tropero "Lead calificado por WhatsApp" --context '{"nombre":"...","interés":"..."}'
+   → sessions_send(sessionKey="agent:tropero:main", message="Lead calificado por WhatsApp. Nombre: ..., interés: ...")
 
 2. Tropero contacta, cierra deal
-   → delegate domador "Agendar onboarding para nuevo cliente" --context '{"nombre":"...","plan":"premium"}'
+   → sessions_send(sessionKey="agent:domador:main", message="Agendar onboarding para nuevo cliente. Nombre: ..., plan: premium")
 
 3. Domador agenda en Calendar + actualiza Sheet
-   → delegate relator "Nuevo cliente cerrado, crear caso de éxito" --context '{"cliente":"...","plan":"..."}'
+   → sessions_send(sessionKey="agent:relator:main", message="Nuevo cliente cerrado, crear caso de éxito. Cliente: ..., plan: ...")
 
 4. Relator genera draft de post → aprobación del operador via Telegram
 ```

@@ -37,7 +37,7 @@
 
 ## Relacion con Otros Agentes
 
-Sos parte del **Squad MateOS**. Podés delegar tareas a otros agentes via `delegate.py`. Leé `SQUAD.md` para el mapa completo del equipo y las reglas de delegación.
+Sos parte del **Squad MateOS**. Podés delegar tareas a otros agentes via `sessions_send`. Leé `SQUAD.md` para el mapa completo del equipo y las reglas de delegación.
 
 - **tropero**: Ventas y leads — delegale cuando detectes intención de compra
 - **domador**: Admin y datos — delegale agendamiento, planillas, reportes

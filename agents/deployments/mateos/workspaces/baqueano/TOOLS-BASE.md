@@ -153,41 +153,29 @@ Para TODA acción que cierra un mensaje:
 
 ## Delegación Inter-Agente
 
-Sos parte de un squad. Cuando una tarea NO es tu especialidad, delegá al agente correcto usando `delegate.py`.
+Sos parte de un squad. Cuando una tarea NO es tu especialidad, delegá al agente correcto usando `sessions_send`.
 
 ### Referencia rápida
 
-| Necesidad | Agente | Ejemplo |
-|---|---|---|
-| Contactar lead / venta | **tropero** | `python3 ~/delegate.py route tropero "Lead nuevo: Juan, interesado en plan premium"` |
-| Agendar reunión / planilla | **domador** | `python3 ~/delegate.py route domador "Agendar onboarding mañana 10am"` |
-| Problema técnico | **rastreador** | `python3 ~/delegate.py route rastreador "Cliente no puede loguearse, error 403"` |
-| Crear contenido / post | **relator** | `python3 ~/delegate.py route relator "Crear caso de éxito del cliente X"` |
-| Responder cliente | **baqueano** | `python3 ~/delegate.py route baqueano "Responder consulta de soporte"` |
+| Necesidad | Agente | sessionKey | Ejemplo |
+|---|---|---|---|
+| Contactar lead / venta | **tropero** | `agent:tropero:main` | `sessions_send(sessionKey="agent:tropero:main", message="Lead nuevo: Juan, interesado en plan premium")` |
+| Agendar reunión / planilla | **domador** | `agent:domador:main` | `sessions_send(sessionKey="agent:domador:main", message="Agendar onboarding mañana 10am")` |
+| Problema técnico | **rastreador** | `agent:rastreador:main` | `sessions_send(sessionKey="agent:rastreador:main", message="Cliente no puede loguearse, error 403")` |
+| Crear contenido / post | **relator** | `agent:relator:main` | `sessions_send(sessionKey="agent:relator:main", message="Crear caso de éxito del cliente X")` |
+| Responder cliente | **baqueano** | `agent:baqueano:main` | `sessions_send(sessionKey="agent:baqueano:main", message="Responder consulta de soporte")` |
 
-### Comandos
+### Cómo funciona
 
-```bash
-# Delegar tarea
-python3 ~/delegate.py route <agente> "<tarea>" [--priority urgent] [--context '{"key":"val"}']
-
-# Ver agentes disponibles
-python3 ~/delegate.py agents
-
-# Ver historial
-python3 ~/delegate.py tasks
-
-# Reportar resultado de tarea recibida
-python3 ~/delegate.py update <task_id> --status completed --result "Hecho"
-```
+- `sessions_send` es una herramienta nativa de OpenClaw para comunicación entre agentes
+- El mensaje llega directamente al agente destino dentro del mismo proceso
+- La comunicación inter-agente es **AUTÓNOMA** (no requiere aprobación del operador)
+- Lo que SÍ requiere aprobación es la acción final externa (email, tweet, etc.)
 
 ### Mensajes inter-agente recibidos
 
-Cuando recibas un mensaje que empieza con `[INTER-AGENT]`, es de otro agente del squad:
-- Leé el `from` para saber quién te lo manda
-- Leé el `task_id` para poder reportar el resultado después
-- Ejecutá la tarea según tu SOUL.md y TOOLS.md
-- Cuando termines, reportá con `delegate.py update <task_id> --status completed --result "..."`
+Cuando otro agente te envíe un mensaje via `sessions_send`:
+- Leé el contenido y ejecutá la tarea según tu SOUL.md y TOOLS.md
 - Si no podés resolver, delegá a otro agente o escalá al operador
 
 Para más detalles leé `SQUAD.md`.

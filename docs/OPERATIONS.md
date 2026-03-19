@@ -13,7 +13,7 @@ Systemd: `docker-compose@mateos.service`
 - **NEVER** use `--force-recreate` on the `mateos-agents` container -- it loses WhatsApp session.
 - Use `docker compose restart mateos-agents` instead.
 - `NODE_OPTIONS=--max-old-space-size=3072` is required for OpenClaw in the container.
-- DNS for `mateos.zk-access.xyz` must point to `54.160.120.210`.
+- DNS for `mateos.tech` must point to `54.160.120.210`.
 
 ---
 
@@ -31,7 +31,7 @@ docker ps --format "table {{.Names}}\t{{.Status}}"
 docker logs -f mateos-agents --tail 100
 
 # Frontend
-curl -I https://mateos.zk-access.xyz
+curl -I https://mateos.tech
 
 # Memory usage
 docker stats --no-stream

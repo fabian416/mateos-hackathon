@@ -19,7 +19,7 @@ Each agent has a distinct personality rooted in Argentine gaucho culture, speaks
 | Brand | MateOS |
 | CEO Agent | Mateo (was "Marcos") |
 | Repo | `git@github.com:fabian416/mateos.git` |
-| Frontend | https://mateos.zk-access.xyz |
+| Frontend | https://mateos.tech |
 | EC2 | 54.160.120.210 (ec2-user, key `~/.ssh/lendoor_keys`) |
 
 ---
@@ -40,7 +40,7 @@ All 7 agents run inside **one OpenClaw container** (`mateos-agents`), NOT separa
 | `frontend` | `ghcr.io/fabian416/mateos/frontend` | Next.js web app | 512MB |
 | `mateos-agents` | `ghcr.io/fabian416/mateos/agents` | Single OpenClaw with 7 agents | 4GB |
 
-There is **no agent-router container**. Inter-agent communication happens inside the single OpenClaw process via `agentToAgent`.
+There is **no agent-router container**. Inter-agent communication happens inside the single OpenClaw process via `sessions_send`.
 
 ---
 
@@ -62,7 +62,7 @@ All agents start at Trust Level 2 (Draft & Approve).
 
 ## 4. Inter-Agent Communication
 
-With the single-container architecture, agents communicate via OpenClaw's built-in `agentToAgent` mechanism. There is no external HTTP router or `delegate.py` script. All agents share the same OpenClaw process and can send messages to each other directly.
+With the single-container architecture, agents communicate via OpenClaw's built-in `sessions_send` tool. There is no external HTTP router or scripts. All agents share the same OpenClaw process and can send messages to each other directly using `sessions_send(sessionKey="agent:<id>:main", message="...")`. See `docs/INTER-AGENT.md` for full details.
 
 ---
 
@@ -94,7 +94,7 @@ With the single-container architecture, agents communicate via OpenClaw's built-
 
 ### Caddy (HTTPS)
 
-Caddy auto-provisions TLS certificates via Let's Encrypt. The `Caddyfile` reverse-proxies `mateos.zk-access.xyz` to the `frontend` container on port 3000. DNS must point to `54.160.120.210`.
+Caddy auto-provisions TLS certificates via Let's Encrypt. The `Caddyfile` reverse-proxies `mateos.tech` to the `frontend` container on port 3000. DNS must point to `54.160.120.210`.
 
 ---
 

@@ -1,0 +1,44 @@
+name: Deploy to Production
+
+on:
+  workflow_run:
+    workflows: ["Build & Push"]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy to production
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USER }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          port: ${{ secrets.PROD_SSH_PORT || 22 }}
+          script: |
+            set -e
+            cd /opt/docker/mateos
+
+            echo "=== Pulling new images ==="
+            docker compose pull
+
+            echo "=== Recreating containers ==="
+            docker compose up -d
+
+            echo "=== Waiting for health checks ==="
+            sleep 30
+
+            echo "=== Verifying deployment ==="
+            docker ps --format 'table {{.Names}}\t{{.Status}}'
+
+            # Check frontend is healthy
+            docker inspect frontend --format '{{.State.Health.Status}}' | grep -q healthy || echo "WARNING: frontend not healthy yet"
+
+            echo "=== Deployment complete ==="

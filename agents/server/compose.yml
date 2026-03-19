@@ -1,6 +1,4 @@
 # === MateOS — Production Stack (EC2) ===
-# 1 OpenClaw container with 7 agents + Frontend + Caddy
-
 services:
   caddy:
     image: caddy:2-alpine
@@ -24,7 +22,7 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000', r => process.exit(r.statusCode === 200 ? 0 : 1))"]
       interval: 30s
       timeout: 5s
       retries: 3
@@ -34,26 +32,26 @@ services:
     image: ghcr.io/fabian416/mateos/agents:latest
     container_name: mateos-agents
     restart: unless-stopped
-    user: root
     mem_limit: 4g
     env_file: ./mateos/.env
     environment:
       - NODE_OPTIONS=--max-old-space-size=3072
-      - GOG_KEYRING_PASSWORD=mateos2026
-      - GOG_ACCOUNT=squary.pay@gmail.com
+      - CALENDAR_ID=${CALENDAR_ID:-primary}
       - HOME=/home/agent
     entrypoint: ["/bin/bash", "-c"]
     command:
       - |
-        chown -R agent:agent /home/agent/.openclaw /home/agent/.config 2>/dev/null || true
         cp /mnt/entrypoint.sh /tmp/run.sh && chmod +x /tmp/run.sh
         cp /mnt/config/openclaw.json.template /tmp/config/openclaw.json.template
-        apt-get update -qq && apt-get install -y -qq python3-pip > /dev/null 2>&1; pip3 install --break-system-packages requests requests-oauthlib > /dev/null 2>&1
-        exec su agent -c "/tmp/run.sh"
+        exec /tmp/run.sh
     volumes:
+      # Persistent state (survives recreate)
       - mateos-logs:/home/agent/.openclaw/logs
       - mateos-data:/home/agent/.openclaw/agents
       - mateos-gogcli:/home/agent/.config/gogcli
+      - mateos-memory:/home/agent/.openclaw/memory
+      - mateos-telegram:/home/agent/.openclaw/telegram
+      # Read-only config from host
       - ./mateos/workspaces:/mnt/workspaces:ro
       - ./mateos/docker-entrypoint.sh:/mnt/entrypoint.sh:ro
       - ./mateos/config/openclaw.json.template:/mnt/config/openclaw.json.template:ro
@@ -65,11 +63,11 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     healthcheck:
-      test: ["CMD", "pgrep", "-f", "openclaw"]
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:18789', r => process.exit(r.statusCode === 200 ? 0 : 1))"]
       interval: 5m
-      timeout: 5s
+      timeout: 10s
       retries: 3
-      start_period: 60s
+      start_period: 90s
 
 volumes:
   caddy-data:
@@ -77,3 +75,5 @@ volumes:
   mateos-logs:
   mateos-data:
   mateos-gogcli:
+  mateos-memory:
+  mateos-telegram:

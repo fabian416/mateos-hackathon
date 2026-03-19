@@ -12,7 +12,7 @@
 - At least 4GB RAM (8GB swap configured)
 - Docker >= 24.x and Docker Compose v2
 - Ports 80/443 open (Caddy handles HTTPS)
-- DNS: `mateos.zk-access.xyz` -> 54.160.120.210
+- DNS: `mateos.tech` -> 54.160.120.210
 
 ### API Keys and Credentials
 
@@ -197,7 +197,7 @@ docker ps --format "table {{.Names}}\t{{.Status}}"
 docker logs -f mateos-agents --tail 100
 
 # Frontend
-curl -I https://mateos.zk-access.xyz
+curl -I https://mateos.tech
 
 # Check Caddy
 docker logs caddy --tail 50

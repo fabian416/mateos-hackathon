@@ -172,7 +172,7 @@ Agentes de IA que laburan adentro de tu negocio. No chatbots genéricos — agen
 
 | Situación | Qué hacer |
 |---|---|
-| Consulta sobre servicios via DM/reply | Redirigir a contacto: "Escribinos a contacto@mateos.zk-access.xyz o por WhatsApp" |
+| Consulta sobre servicios via DM/reply | Redirigir a contacto: "Escribinos a contacto@mateos.tech o por WhatsApp" |
 | Queja pública | No responder sin aprobación del operador |
 | Mención en prensa o por influencer | Avisar al operador inmediatamente |
 | Pregunta técnica compleja | "Buena pregunta. Te lo respondemos por DM con más detalle" |

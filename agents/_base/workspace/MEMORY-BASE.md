@@ -45,12 +45,26 @@ corto/mediano plazo y como fuente para destilar patrones a Layer 1.
 - Feedback del operador (si hubo)
 ```
 
-### Layer 3: Knowledge Graph (Futuro — Sistema PARA)
+### Layer 3: Knowledge Graph (Sistema PARA)
 
-Estructura organizada por Proyectos, Áreas, Recursos y Archivo (PARA).
-Se implementará cuando la cantidad de conocimiento acumulado lo justifique.
+Grafo de conocimiento persistente organizado con el sistema PARA: **Projects**, **Areas** (people, companies), **Resources** y **Archives**.
 
-**Estado:** Pendiente de implementación.
+**Ubicación:** `/home/agent/.openclaw/knowledge-graph/`
+
+**Estructura:**
+```
+knowledge-graph/
+├── projects/
+├── areas/
+│   ├── people/
+│   └── companies/
+├── resources/
+└── archives/
+```
+
+Cada entidad dentro de estas carpetas tiene:
+- `summary.md` — contexto rápido sobre la entidad (quién es, qué es, estado actual)
+- `items.json` — hechos atómicos con timestamps (interacciones, datos puntuales, eventos)
 
 ---
 

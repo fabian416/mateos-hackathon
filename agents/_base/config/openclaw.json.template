@@ -60,9 +60,12 @@
     "agentToAgent": {
       "enabled": true,
       "allow": ["mateo-ceo", "tropero", "domador", "rastreador", "relator", "paisano", "baqueano"]
+    },
+    "sessions": {
+      "visibility": "all"
     }
   },
-  "commands": { "native": "auto", "nativeSkills": "auto", "restart": true, "ownerDisplay": "raw" },
+  "commands": { "native": "auto", "nativeSkills": true, "restart": true, "ownerDisplay": "raw" },
   "channels": {
     "telegram": {
       "enabled": true,
@@ -99,6 +102,6 @@
       }
     }
   },
-  "skills": { "install": { "nodeManager": "bun" }, "allowBundled": ["himalaya", "gog", "browser", "search"] },
+  "skills": { "install": { "nodeManager": "npm" }, "allowBundled": ["himalaya", "gog", "browser", "search", "github"] },
   "plugins": { "entries": { "telegram": { "enabled": true } } }
 }

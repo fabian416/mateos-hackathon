@@ -27,5 +27,5 @@
 ## Notas
 
 - Cada agente solo debe usar los servicios marcados con ✅ para su rol.
-- Si necesitás un servicio que no tenés, delegá al agente correcto con `delegate.py`.
+- Si necesitás un servicio que no tenés, delegá al agente correcto con `sessions_send` (ver SQUAD.md).
 - Las credenciales nunca se leen directamente — están inyectadas en el entorno del container.
