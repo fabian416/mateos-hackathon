@@ -19,7 +19,7 @@ export default function ActivityFeedLight() {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <div className="px-5 py-3 border-b border-white/[0.04] flex items-center justify-between shrink-0">
-        <span className="text-[12px] text-white/50 uppercase tracking-wider font-semibold">Inter-Agent Comms</span>
+        <span className="text-[13px] text-white/55 uppercase tracking-wider font-semibold">Inter-Agent Comms</span>
         <div className="flex items-center gap-1.5">
           <div className="w-[6px] h-[6px] rounded-full bg-emerald-400 animate-pulse shadow-[0_0_4px_rgba(52,211,153,0.5)]" />
           <span className="text-[11px] text-white/30">live</span>
@@ -46,12 +46,12 @@ export default function ActivityFeedLight() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[12px] font-semibold" style={{ color: AGENT_COLORS[e.from] }}>{AGENT_NAMES[e.from]}</span>
+                  <span className="text-[13px] font-semibold" style={{ color: AGENT_COLORS[e.from] }}>{AGENT_NAMES[e.from]}</span>
                   <span className="text-[10px] text-white/15">→</span>
-                  <span className="text-[12px] font-semibold" style={{ color: AGENT_COLORS[e.to] }}>{AGENT_NAMES[e.to]}</span>
+                  <span className="text-[13px] font-semibold" style={{ color: AGENT_COLORS[e.to] }}>{AGENT_NAMES[e.to]}</span>
                   <span className="text-[10px] text-white/20 ml-auto shrink-0">{e.timestamp}</span>
                 </div>
-                <p className="text-[11px] text-white/40 mt-0.5 truncate font-mono">{e.action}</p>
+                <p className="text-[11px] text-white/45 mt-0.5 truncate font-mono">{e.action}</p>
               </div>
             </div>
           </motion.div>

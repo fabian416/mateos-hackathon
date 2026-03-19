@@ -25,7 +25,7 @@ export default function DashboardPage() {
       <header className="relative z-10 border-b border-white/[0.06] px-4 sm:px-6 py-3 bg-black/30 backdrop-blur-md shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-violet-500/20 to-emerald-500/20 border border-white/10 flex items-center justify-center text-sm sm:text-base font-bold text-white">M</div>
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-violet-500/30 to-emerald-500/30 border border-white/15 flex items-center justify-center text-sm sm:text-base font-bold text-white shadow-[0_0_20px_rgba(139,92,246,0.25)]">M</div>
             <span className="font-bold text-white text-[15px] sm:text-[17px] tracking-tight">MateOS</span>
             <span className="text-[11px] text-white/25 bg-white/5 border border-white/10 px-2.5 py-0.5 rounded-full ml-1 hidden sm:inline">Zero Human Factory</span>
           </div>
@@ -41,7 +41,7 @@ export default function DashboardPage() {
 
         {/* Current squad + Explore */}
         <div className="flex items-center gap-3 mt-2">
-          <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 rounded-lg px-4 py-1.5">
+          <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 rounded-lg px-4 py-1.5 shadow-[0_0_16px_rgba(245,158,11,0.15)]">
             <span className="text-amber-400 text-[12px]">&#10022;</span>
             <span className="text-[12px] font-semibold text-amber-200">MateOS HQ</span>
             <span className="text-[10px] text-emerald-400/70 ml-1">$12,400</span>
@@ -68,7 +68,7 @@ export default function DashboardPage() {
             { label: "LLM REQUESTS", value: "11.2K", sub: "via Bankr Gateway", color: "#FB7185" },
           ].map((s) => (
             <div key={s.label} className="px-3 sm:px-6 py-3 sm:py-4 border-r border-white/[0.04] last:border-r-0">
-              <div className="text-[9px] sm:text-[10px] text-white/45 uppercase tracking-wider mb-1">{s.label}</div>
+              <div className="text-[10px] sm:text-[11px] text-white/50 uppercase tracking-wider mb-1">{s.label}</div>
               <div className="flex items-baseline gap-1 sm:gap-2">
                 <span className="text-xl sm:text-3xl font-bold" style={{ color: s.color }}>{s.value}</span>
                 {s.change && <span className="text-[10px] sm:text-[11px] text-emerald-400/70">{s.change}</span>}

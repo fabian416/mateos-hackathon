@@ -18,14 +18,6 @@ interface Agent {
   status: "working" | "idle" | "coordinating";
 }
 
-interface Message {
-  id: number;
-  from: string;
-  to: string;
-  text: string;
-  emoji: string;
-}
-
 const AGENTS: Agent[] = [
   { id: "ceo", name: "OpsChad", letter: "OC", subtitle: "Coordination", color: "#EAB308", colorLight: "#FEF08A", x: 0.5, y: 0.42, size: 52, tasks: 247, status: "coordinating" },
   { id: "baqueano", name: "ChatGod", letter: "CG", subtitle: "WhatsApp", color: "#10B981", colorLight: "#A7F3D0", x: 0.18, y: 0.15, size: 46, tasks: 1842, status: "working" },
@@ -53,47 +45,12 @@ interface LightPulse {
 
 let pulseCounter = 0;
 
-// Real delegate.py format: route <agent> "<task>" --context '{"key":"val"}'
-const MSG_TEMPLATES = [
-  // MateOS HQ — client acquisition flow
-  { from: "baqueano", to: "ceo", text: "route OpsChad \"New client inquiry from landing\"", emoji: "→" },
-  { from: "ceo", to: "rastreador", text: "route DM Sniper \"Follow up TechFlow Agency\"", emoji: "→" },
-  { from: "rastreador", to: "domador", text: "route CalendApe \"Book demo — TechFlow\"", emoji: "→" },
-  { from: "domador", to: "ceo", text: "update demo-42 → completed \"Demo Fri 3pm — AutoFix\"", emoji: "✅" },
-
-  // MateOS HQ — billing
-  { from: "tropero", to: "ceo", text: "update sub-renewal → completed \"$300 USDC — Pizzeria\"", emoji: "✅" },
-  { from: "ceo", to: "tropero", text: "route BagChaser \"Invoice Peluqueria Marta — $940\"", emoji: "→" },
-  { from: "tropero", to: "baqueano", text: "update billing → completed \"3 subs collected today\"", emoji: "✅" },
-
-  // MateOS HQ — outreach
-  { from: "rastreador", to: "ceo", text: "update outreach → completed \"3 demos booked this week\"", emoji: "✅" },
-  { from: "ceo", to: "rastreador", text: "route DM Sniper \"Target cafes in Montevideo\" --urgent", emoji: "→" },
-  { from: "rastreador", to: "tropero", text: "route BagChaser \"New client signed — Cafe Monteverde\"", emoji: "→" },
-
-  // MateOS HQ — content & social
-  { from: "paisano", to: "relator", text: "route HypeSmith \"Write case study — Peluqueria Marta\"", emoji: "→" },
-  { from: "relator", to: "ceo", text: "update content → completed \"Newsletter sent — 840 subs\"", emoji: "✅" },
-  { from: "ceo", to: "paisano", text: "route PostMalone \"Share demo video on X\"", emoji: "→" },
-  { from: "relator", to: "paisano", text: "route PostMalone \"Publish case study thread\"", emoji: "→" },
-
-  // MateOS HQ — support
-  { from: "baqueano", to: "domador", text: "route CalendApe \"Reschedule onboarding — Don Juan\"", emoji: "→" },
-  { from: "baqueano", to: "tropero", text: "route BagChaser \"Client asking about pricing\"", emoji: "→" },
-
-  // MateOS HQ — coordination
-  { from: "ceo", to: "baqueano", text: "alert: 3 new inquiries — peak detected", emoji: "→" },
-  { from: "paisano", to: "relator", text: "route HypeSmith \"Event photos ready\"", emoji: "🖼️" },
-  { from: "relator", to: "paisano", text: "route PostMalone \"Publish success story\"", emoji: "📸" },
-];
-
-let msgCounter = 0;
 
 export default function AgentNetworkVisual() {
   const ref = useRef<HTMLDivElement>(null);
   const [dims, setDims] = useState({ w: 900, h: 500 });
   const [agents, setAgents] = useState(AGENTS);
-  const [messages, setMessages] = useState<Message[]>([]);
+
   const [pulses, setPulses] = useState<LightPulse[]>([]);
   const [impacts, setImpacts] = useState<{ id: number; agentId: string; color: string }[]>([]);
   const [activeAgent, setActiveAgent] = useState<string | null>(null);
@@ -133,14 +90,6 @@ export default function AgentNetworkVisual() {
         }, 3200);
       }, 600);
 
-      // Also fire a message bubble for some events
-      if (Math.random() > 0.6) {
-        msgCounter++;
-        const tmpl = MSG_TEMPLATES[Math.floor(Math.random() * MSG_TEMPLATES.length)];
-        const msg: Message = { id: msgCounter, ...tmpl };
-        setMessages((prev) => [...prev, msg]);
-        setTimeout(() => setMessages((prev) => prev.filter((m) => m.id !== msg.id)), 1200);
-      }
     }, 800);
     return () => clearInterval(interval);
   }, [agents]);
@@ -170,8 +119,8 @@ export default function AgentNetworkVisual() {
           return (
             <line key={`line-${fromId}-${toId}`}
               x1={from.x} y1={from.y} x2={to.x} y2={to.y}
-              stroke={hasActive ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.03)"}
-              strokeWidth={0.8}
+              stroke={hasActive ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.04)"}
+              strokeWidth={hasActive ? 1.2 : 0.8}
             />
           );
         })}
@@ -185,7 +134,7 @@ export default function AgentNetworkVisual() {
             <g key={`pulse-${pulse.id}`}>
               {/* Bright core */}
               <motion.circle
-                r={4}
+                r={5}
                 fill={pulse.color}
                 filter="url(#pulse-glow)"
                 initial={{ cx: from.x, cy: from.y, opacity: 1 }}
@@ -229,8 +178,8 @@ export default function AgentNetworkVisual() {
                 cx={cx} cy={cy}
                 fill={a.color}
                 animate={{
-                  r: hasImpact ? [a.size * 1.1, a.size * 1.4, a.size * 1.1] : [a.size * 0.9, a.size * 1.05, a.size * 0.9],
-                  opacity: hasImpact ? [0.1, 0.2, 0.1] : [0.04, 0.08, 0.04],
+                  r: hasImpact ? [a.size * 1.2, a.size * 1.5, a.size * 1.2] : [a.size * 1.0, a.size * 1.15, a.size * 1.0],
+                  opacity: hasImpact ? [0.12, 0.22, 0.12] : [0.05, 0.1, 0.05],
                 }}
                 transition={{ duration: hasImpact ? 0.7 : 5, repeat: hasImpact ? 1 : Infinity, ease: "easeInOut" }}
               />
@@ -345,35 +294,6 @@ export default function AgentNetworkVisual() {
           );
         })}
       </svg>
-
-      {/* Animated message bubbles traveling between agents */}
-      <AnimatePresence>
-        {messages.map((msg) => {
-          const from = getPos(msg.from);
-          const to = getPos(msg.to);
-          const fromAgent = agents.find((a) => a.id === msg.from);
-
-          return (
-            <motion.div
-              key={msg.id}
-              className="absolute pointer-events-none flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border shadow-lg"
-              style={{
-                backgroundColor: `rgba(15,15,25,0.85)`,
-                backdropFilter: "blur(8px)",
-                borderColor: `${fromAgent?.color || "#fff"}40`,
-                boxShadow: `0 0 20px ${fromAgent?.color || "#fff"}25`,
-              }}
-              initial={{ x: from.x - 40, y: from.y - 12, opacity: 0, scale: 0.6 }}
-              animate={{ x: to.x - 40, y: to.y - 12, opacity: [0, 1, 1, 0], scale: 1 }}
-              exit={{ opacity: 0, scale: 0.5 }}
-              transition={{ duration: 1, ease: "easeOut" }}
-            >
-              <span className="text-xs">{msg.emoji}</span>
-              <span className="text-[10px] text-white/70 font-medium whitespace-nowrap">{msg.text}</span>
-            </motion.div>
-          );
-        })}
-      </AnimatePresence>
 
       {/* Selected agent detail */}
       <AnimatePresence>
