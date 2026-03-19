@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
@@ -47,6 +47,12 @@ export default function OnboardingPage() {
   const [hoveredAgent, setHoveredAgent] = useState<string | null>(null);
   const [deploying, setDeploying] = useState(false);
 
+  // Reset deploying state when user navigates back to this page
+  // (browser bfcache or Next.js soft nav may restore stale state)
+  useEffect(() => {
+    setDeploying(false);
+  }, []);
+
   const totalPrice = ALL_AGENTS.filter((a) => selected.has(a.id)).reduce((s, a) => s + a.price, 0);
 
   const selectType = (typeId: string) => {
@@ -73,22 +79,22 @@ export default function OnboardingPage() {
         agents: Array.from(selected).join(","),
       });
       router.push(`/deploy?${params.toString()}`);
-    }, 700);
+    }, 1500);
   };
 
   return (
     <div className="min-h-screen bg-[#08080F] text-white relative overflow-hidden">
       <StarField />
 
-      {/* Deploy overlay */}
+      {/* Deploy overlay — appears instantly to prevent any white flash during transition */}
       <AnimatePresence>
         {deploying && (
           <motion.div
-            className="fixed inset-0 z-50 flex flex-col items-center justify-center"
-            style={{ background: "radial-gradient(ellipse at 50% 40%, #111130 0%, #0a0a14 70%)" }}
-            initial={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0a0a14]"
+            initial={{ opacity: 1 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
+            exit={{ opacity: 1 }}
+            transition={{ duration: 0 }}
           >
             <motion.div
               initial={{ opacity: 0, y: 5 }}
@@ -145,7 +151,7 @@ export default function OnboardingPage() {
                     onChange={(e) => setBusinessName(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && businessName.trim() && setStep(1)}
                     placeholder="Pizzeria Don Juan"
-                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-5 py-4 text-lg text-white text-center placeholder:text-white/15 focus:outline-none focus:border-violet-500/40 focus:shadow-[0_0_20px_rgba(139,92,246,0.1)] transition-all caret-violet-400" />
+                    className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-6 py-5 text-xl text-white text-center placeholder:text-white/15 focus:outline-none focus:border-violet-500/40 focus:shadow-[0_0_20px_rgba(139,92,246,0.1)] transition-all caret-violet-400" />
                   <p className="text-white/15 text-[11px] mt-3">Press Enter to continue</p>
                 </motion.div>
 
@@ -175,10 +181,10 @@ export default function OnboardingPage() {
                       onClick={() => selectType(type.id)}
                       whileHover={{ y: -4, borderColor: "rgba(139,92,246,0.3)" }}
                       whileTap={{ scale: 0.97 }}
-                      className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-6 text-left transition-all group cursor-pointer">
-                      <span className="text-3xl">{type.emoji}</span>
-                      <h3 className="font-semibold text-white/70 mt-3 group-hover:text-white transition-colors">{type.name}</h3>
-                      <p className="text-[11px] text-white/25 mt-1">{type.agents} agents recommended</p>
+                      className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-8 text-left transition-all group cursor-pointer">
+                      <span className="text-4xl">{type.emoji}</span>
+                      <h3 className="font-semibold text-[16px] text-white/70 mt-4 group-hover:text-white transition-colors">{type.name}</h3>
+                      <p className="text-[12px] text-white/25 mt-1.5">{type.agents} agents recommended</p>
                     </motion.button>
                   ))}
                 </div>
@@ -200,7 +206,7 @@ export default function OnboardingPage() {
                   <p className="text-white/30 text-[13px] mt-2">Hover to preview. Click to toggle.</p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-28 sm:mb-24">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-28 sm:mb-24">
                   {ALL_AGENTS.map((agent, i) => {
                     const isSelected = selected.has(agent.id);
                     const isHovered = hoveredAgent === agent.id;
@@ -211,7 +217,7 @@ export default function OnboardingPage() {
                         onMouseEnter={() => setHoveredAgent(agent.id)}
                         onMouseLeave={() => setHoveredAgent(null)}
                         whileHover={{ y: -3 }}
-                        className={`cursor-pointer rounded-xl p-5 border transition-all ${
+                        className={`cursor-pointer rounded-xl p-6 border transition-all ${
                           isSelected ? "bg-white/[0.05] border-white/15" : "bg-white/[0.02] border-white/[0.04] opacity-50 hover:opacity-80"
                         }`}
                         style={isSelected ? { borderColor: `${agent.color}40`, boxShadow: `0 0 20px ${agent.color}10` } : {}}>
@@ -231,9 +237,9 @@ export default function OnboardingPage() {
                               <div className="text-[10px] text-white/25">{agent.role}</div>
                             </div>
                           </div>
-                          <div className={`w-9 h-5 rounded-full transition-all flex items-center ${isSelected ? "justify-end" : "justify-start"}`}
+                          <div className={`w-11 h-6 rounded-full transition-all flex items-center ${isSelected ? "justify-end" : "justify-start"}`}
                             style={{ backgroundColor: isSelected ? agent.color : "rgba(255,255,255,0.08)" }}>
-                            <motion.div layout className="w-3.5 h-3.5 bg-white rounded-full mx-0.5"
+                            <motion.div layout className="w-4.5 h-4.5 bg-white rounded-full mx-0.5"
                               transition={{ type: "spring", stiffness: 500, damping: 30 }} />
                           </div>
                         </div>
@@ -243,12 +249,12 @@ export default function OnboardingPage() {
                         <AnimatePresence>
                           {isHovered && (
                             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.2 }} className="overflow-hidden">
-                              <div className="mt-3 pt-3 border-t border-white/[0.04] space-y-1.5">
+                              transition={{ duration: 0.3, ease: "easeInOut" }} className="overflow-hidden">
+                              <div className="mt-3 pt-3 border-t border-white/[0.06] space-y-2">
                                 {agent.preview.map((p, j) => (
                                   <div key={j} className="flex items-start gap-2">
-                                    <div className="w-1 h-1 rounded-full mt-1.5 shrink-0" style={{ backgroundColor: agent.color }} />
-                                    <span className="text-[10px] text-white/35 font-mono">{p}</span>
+                                    <div className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ backgroundColor: agent.color }} />
+                                    <span className="text-[11px] text-white/50 font-mono">{p}</span>
                                   </div>
                                 ))}
                               </div>
@@ -266,7 +272,8 @@ export default function OnboardingPage() {
 
                 {/* Sticky deploy bar */}
                 <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }}
-                  className="fixed bottom-0 left-0 right-0 z-40 bg-[#08080F]/90 backdrop-blur-xl border-t border-white/[0.06] px-4 sm:px-6 py-3 sm:py-4">
+                  className="fixed bottom-0 left-0 right-0 z-40 bg-[#08080F]/90 backdrop-blur-xl px-4 sm:px-6 py-3 sm:py-4"
+                  style={{ borderTop: "1px solid transparent", borderImage: "linear-gradient(to right, transparent, rgba(139,92,246,0.4), rgba(34,211,238,0.3), transparent) 1" }}>
                   <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
                     <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto justify-between sm:justify-start">
                       <div className="flex items-center gap-3">

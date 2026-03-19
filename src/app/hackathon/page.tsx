@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
@@ -42,6 +42,11 @@ export default function HackathonLanding() {
   const router = useRouter();
   const [isTransitioning, setIsTransitioning] = useState(false);
 
+  // Reset transition state when user navigates back to this page
+  useEffect(() => {
+    setIsTransitioning(false);
+  }, []);
+
   const handleWatchClick = useCallback(() => {
     if (isTransitioning) return;
     setIsTransitioning(true);
@@ -57,10 +62,10 @@ export default function HackathonLanding() {
         {isTransitioning && (
           <motion.div
             className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-[#0B0B14]"
-            initial={{ opacity: 0 }}
+            initial={{ opacity: 1 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+            exit={{ opacity: 1 }}
+            transition={{ duration: 0 }}
           >
             {/* Subtle gradient glow */}
             <div className="absolute inset-0 bg-gradient-to-br from-violet-500/[0.03] via-transparent to-emerald-500/[0.03]" />
@@ -172,11 +177,11 @@ export default function HackathonLanding() {
 
       {/* ═══════ COMPARISON TABLE ═══════ */}
       <section className="py-24 px-6">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-            className="text-[13px] text-white/40 uppercase tracking-[0.3em] mb-5 text-center">Before & After</motion.p>
+            className="text-[14px] text-white/40 uppercase tracking-[0.3em] mb-5 text-center">Before & After</motion.p>
           <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-12 sm:mb-16">
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white text-center mb-12 sm:mb-16">
             Your business today <span className="text-white/30">vs</span>{" "}
             <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">on MateOS</span>
           </motion.h2>
@@ -188,10 +193,10 @@ export default function HackathonLanding() {
                 <motion.div key={row.label}
                   initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
                   transition={{ delay: i * 0.08 }}
-                  className={`flex flex-col gap-1 sm:grid sm:grid-cols-[120px_1fr_1fr] sm:gap-4 py-4 border-b border-white/[0.04] sm:items-center ${isLast ? "border-0 pt-6" : ""}`}>
-                  <span className={`text-[13px] font-semibold ${isLast ? "text-white" : "text-white/50"}`}>{row.label}</span>
-                  <span className={`text-[13px] sm:text-[15px] ${isLast ? "text-red-400 font-bold sm:text-xl" : "text-white/40"}`}>{row.before}</span>
-                  <span className={`text-[13px] sm:text-[15px] ${isLast ? "text-emerald-400 font-bold sm:text-xl" : "text-white/80"}`}>{row.after}</span>
+                  className={`flex flex-col gap-1 sm:grid sm:grid-cols-[160px_1fr_1fr] sm:gap-6 py-5 border-b border-white/[0.04] sm:items-center ${isLast ? "border-0 pt-6" : ""}`}>
+                  <span className={`text-[14px] font-semibold ${isLast ? "text-white" : "text-white/50"}`}>{row.label}</span>
+                  <span className={`text-[13px] sm:text-[15px] rounded-lg sm:px-3 sm:py-2 ${isLast ? "text-red-400 font-bold sm:text-xl sm:bg-red-500/[0.08]" : "text-red-400/60 sm:bg-red-500/[0.04]"}`}>{row.before}</span>
+                  <span className={`text-[13px] sm:text-[15px] rounded-lg sm:px-3 sm:py-2 ${isLast ? "text-emerald-400 font-bold sm:text-xl sm:bg-emerald-500/[0.08]" : "text-emerald-400/80 sm:bg-emerald-500/[0.04]"}`}>{row.after}</span>
                 </motion.div>
               );
             })}
@@ -203,7 +208,7 @@ export default function HackathonLanding() {
       <section className="py-28 sm:py-40 px-6">
         <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
           className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold leading-tight">
+          <h2 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-white leading-tight">
             &ldquo;The best-run company in this room has{" "}
             <span className="bg-gradient-to-r from-violet-400 to-emerald-400 bg-clip-text text-transparent">zero employees</span>.&rdquo;
           </h2>
@@ -213,8 +218,8 @@ export default function HackathonLanding() {
       {/* ═══════ THE SQUAD ═══════ */}
       <section className="py-24 px-6 border-t border-white/[0.04]">
         <div className="max-w-5xl mx-auto">
-          <p className="text-[13px] text-white/40 uppercase tracking-[0.3em] mb-5 text-center">The Squad</p>
-          <h2 className="text-3xl lg:text-5xl font-bold text-center mb-16">
+          <p className="text-[14px] text-white/40 uppercase tracking-[0.3em] mb-5 text-center">The Squad</p>
+          <h2 className="text-4xl lg:text-5xl font-bold text-white text-center mb-16">
             7 specialized agents. <span className="text-white/30">One coordinated team.</span>
           </h2>
 
@@ -253,8 +258,8 @@ export default function HackathonLanding() {
       {/* ═══════ HOW IT WORKS ═══════ */}
       <section className="py-24 px-6 border-t border-white/[0.04]">
         <div className="max-w-4xl mx-auto">
-          <p className="text-[13px] text-white/40 uppercase tracking-[0.3em] mb-5 text-center">How It Works</p>
-          <h2 className="text-3xl lg:text-5xl font-bold text-center mb-16">
+          <p className="text-[14px] text-white/40 uppercase tracking-[0.3em] mb-5 text-center">How It Works</p>
+          <h2 className="text-4xl lg:text-5xl font-bold text-white text-center mb-16">
             From zero to operating <span className="text-white/30">in 90 seconds</span>
           </h2>
 
@@ -283,8 +288,8 @@ export default function HackathonLanding() {
       {/* ═══════ PROOF ═══════ */}
       <section className="py-24 px-6 border-t border-white/[0.04]">
         <div className="max-w-4xl mx-auto">
-          <p className="text-[13px] text-white/40 uppercase tracking-[0.3em] mb-5 text-center">Not a pitch deck</p>
-          <h2 className="text-3xl lg:text-5xl font-bold text-center mb-16">
+          <p className="text-[14px] text-white/40 uppercase tracking-[0.3em] mb-5 text-center">Not a pitch deck</p>
+          <h2 className="text-4xl lg:text-5xl font-bold text-white text-center mb-16">
             A running system.
           </h2>
 
@@ -294,7 +299,7 @@ export default function HackathonLanding() {
                 initial={{ opacity: 0, y: 15 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                 transition={{ delay: i * 0.08 }}
                 whileHover={{ borderColor: `${p.color}30` }}
-                className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-6 transition-all cursor-default group">
+                className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-8 transition-all cursor-default group">
                 <div className="w-3 h-3 rounded-full mb-4 group-hover:scale-150 transition-transform" style={{ backgroundColor: p.color }} />
                 <h3 className="text-[17px] font-semibold text-white group-hover:text-white transition-colors">{p.title}</h3>
                 <p className="text-[14px] text-white/40 mt-2 leading-relaxed group-hover:text-white/50 transition-colors">{p.desc}</p>
@@ -307,7 +312,7 @@ export default function HackathonLanding() {
       {/* ═══════ CTA ═══════ */}
       <section className="py-24 sm:py-36 px-6 text-center">
         <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-          className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-5">
+          className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-5">
           See it in action
         </motion.h2>
         <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
@@ -329,13 +334,14 @@ export default function HackathonLanding() {
 
       {/* ═══════ FOOTER ═══════ */}
       <div className="mx-auto max-w-4xl h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
-      <footer className="py-8 px-6">
-        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
+      <footer className="py-10 px-6">
+        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
             <span className="font-bold text-white/60">MateOS</span>
-            <span className="text-[11px] text-white/20">Zero Human Factory</span>
+            <span className="text-[12px] text-white/20">Zero Human Factory</span>
           </div>
-          <div className="flex items-center gap-4 text-[11px] text-white/20">
+          <div className="text-[12px] text-white/30 font-medium">Built by Fabian & Lucho</div>
+          <div className="flex items-center gap-4 text-[12px] text-white/25">
             <span>Synthesis 2026</span>
             <span>Base</span>
             <span>ERC-8004</span>

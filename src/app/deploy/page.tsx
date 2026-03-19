@@ -160,8 +160,8 @@ function DeployContent() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ type: "spring", stiffness: 200, damping: 20 }}
               >
-                <circle cx={centerX} cy={centerY} r={6} fill="rgba(196,163,90,0.1)" stroke="#C4A35A" strokeWidth={0.4} />
-                <text x={centerX} y={centerY + 0.8} textAnchor="middle" fontSize={2.2} fill="#C4A35A" fontWeight="bold">
+                <circle cx={centerX} cy={centerY} r={8} fill="rgba(196,163,90,0.15)" stroke="#C4A35A" strokeWidth={0.6} />
+                <text x={centerX} y={centerY + 1} textAnchor="middle" fontSize={3} fill="#C4A35A" fontWeight="bold">
                   {businessName.length > 12 ? businessName.substring(0, 12) + "..." : businessName}
                 </text>
               </motion.g>
@@ -196,11 +196,11 @@ function DeployContent() {
                       transition={{ duration: 2.5, repeat: Infinity }}
                     />
                     {/* Ring */}
-                    <circle cx={pos.x} cy={pos.y} r={4} fill="none" stroke={meta.color} strokeWidth={0.4} opacity={0.6} />
+                    <circle cx={pos.x} cy={pos.y} r={5} fill="none" stroke={meta.color} strokeWidth={0.5} opacity={0.6} />
                     {/* Fill */}
-                    <circle cx={pos.x} cy={pos.y} r={3.6} fill={meta.color} opacity={0.15} />
+                    <circle cx={pos.x} cy={pos.y} r={4.5} fill={meta.color} opacity={0.15} />
                     {/* Initial letter */}
-                    <text x={pos.x} y={pos.y - 0.3} textAnchor="middle" dominantBaseline="central" fontSize={2.5} fill={meta.color} fontWeight="bold">
+                    <text x={pos.x} y={pos.y - 0.3} textAnchor="middle" dominantBaseline="central" fontSize={3} fill={meta.color} fontWeight="bold">
                       {meta.name.split(" ")[1]?.[0] || "A"}
                     </text>
                     {/* Name below */}
@@ -209,10 +209,10 @@ function DeployContent() {
                     </text>
                     {/* Pulse on appear */}
                     <motion.circle
-                      cx={pos.x} cy={pos.y} r={4}
+                      cx={pos.x} cy={pos.y} r={5}
                       fill="none" stroke={meta.color} strokeWidth={0.5}
-                      initial={{ r: 4, opacity: 0.8 }}
-                      animate={{ r: 12, opacity: 0 }}
+                      initial={{ r: 5, opacity: 0.8 }}
+                      animate={{ r: 14, opacity: 0 }}
                       transition={{ duration: 1.2 }}
                     />
                   </motion.g>
@@ -253,17 +253,17 @@ function DeployContent() {
           )}
           {phase === 3 && (
             <motion.div key="p3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-2">
-              <p className="text-secondary text-sm font-medium">Registering on-chain identity</p>
-              <div className="flex items-center justify-center gap-2">
-                <div className="w-3 h-3 border border-secondary/50 rounded-sm flex items-center justify-center">
+              <p className="text-secondary text-base font-semibold">Registering on-chain identity</p>
+              <div className="flex items-center justify-center gap-2.5 mt-1">
+                <div className="w-4 h-4 border border-secondary/50 rounded-sm flex items-center justify-center">
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: 0.5 }}
-                    className="w-1.5 h-1.5 bg-secondary rounded-[1px]"
+                    className="w-2 h-2 bg-secondary rounded-[1px]"
                   />
                 </div>
-                <span className="text-xs text-white/40 font-mono">ERC-8004 identity verified</span>
+                <span className="text-sm text-white/60 font-mono font-medium">ERC-8004 identity verified</span>
               </div>
             </motion.div>
           )}
@@ -278,14 +278,15 @@ function DeployContent() {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center mx-auto"
+                className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto"
+                style={{ boxShadow: "0 0 40px rgba(34,197,94,0.2)" }}
               >
-                <svg className="w-6 h-6 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                <svg className="w-8 h-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
               </motion.div>
-              <p className="text-green-400 font-bold">Your squad is online</p>
-              <p className="text-white/30 text-xs">Redirecting to dashboard...</p>
+              <p className="text-green-400 font-bold text-xl" style={{ textShadow: "0 0 20px rgba(34,197,94,0.3)" }}>Your squad is online</p>
+              <p className="text-white/30 text-sm">Redirecting to dashboard...</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -297,8 +298,16 @@ function DeployContent() {
 export default function DeployPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center" style={{ background: "#0a0a14" }}>
-        <div className="text-white/40 text-sm">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "radial-gradient(ellipse at 50% 40%, #111130 0%, #0a0a14 70%)" }}>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="flex items-center gap-3"
+        >
+          <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="text-[15px] text-white/60 font-medium">Deploying your squad...</span>
+        </motion.div>
       </div>
     }>
       <DeployContent />

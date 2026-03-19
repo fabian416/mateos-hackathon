@@ -48,8 +48,8 @@ export default function ExplorePage() {
               { value: "14.1K", label: "tasks this month", color: "#FFD43B" },
             ].map((s) => (
               <div key={s.label} className="flex items-baseline gap-2">
-                <span className="text-[18px] font-bold" style={{ color: s.color }}>{s.value}</span>
-                <span className="text-[11px] text-white/30">{s.label}</span>
+                <span className="text-[24px] font-bold" style={{ color: s.color }}>{s.value}</span>
+                <span className="text-[12px] text-white/35">{s.label}</span>
               </div>
             ))}
           </div>
@@ -65,9 +65,9 @@ export default function ExplorePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.08 }}
                 whileHover={{ y: -4 }}
-                className={`rounded-xl p-5 border transition-all cursor-pointer group ${
+                className={`rounded-xl p-6 border transition-all cursor-pointer group ${
                   squad.isHQ
-                    ? "bg-amber-500/[0.04] border-amber-500/20 hover:border-amber-500/40"
+                    ? "bg-amber-500/[0.06] border-amber-500/25 hover:border-amber-500/50 ring-1 ring-amber-500/10"
                     : "bg-white/[0.02] border-white/[0.06] hover:border-white/15"
                 }`}
               >
@@ -75,12 +75,12 @@ export default function ExplorePage() {
                 <div className="flex items-center justify-between mb-3">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[15px] font-semibold text-white/80 group-hover:text-white transition-colors">
+                      <span className={`font-semibold group-hover:text-white transition-colors ${squad.isHQ ? "text-[17px] text-amber-200" : "text-[15px] text-white/80"}`}>
                         {squad.name}
                       </span>
-                      {squad.isHQ && <span className="text-amber-400 text-[12px]">✦</span>}
+                      {squad.isHQ && <span className="text-amber-400 text-[14px]">✦</span>}
                     </div>
-                    <p className="text-[11px] text-white/25 mt-0.5">{squad.desc}</p>
+                    <p className={`mt-0.5 ${squad.isHQ ? "text-[12px] text-amber-200/40" : "text-[11px] text-white/25"}`}>{squad.desc}</p>
                   </div>
                   <span className="text-[9px] px-2 py-0.5 rounded-full font-medium bg-emerald-500/10 text-emerald-400">
                     active
@@ -103,17 +103,17 @@ export default function ExplorePage() {
 
                 {/* Stats */}
                 <div className="grid grid-cols-3 gap-2 mb-4">
-                  <div className="bg-white/[0.03] rounded-lg p-2 text-center">
-                    <div className="text-[14px] font-bold text-emerald-400">{squad.revenue}</div>
-                    <div className="text-[8px] text-white/20 mt-0.5">rev/mo</div>
+                  <div className="bg-white/[0.03] rounded-lg p-2.5 text-center">
+                    <div className="text-[16px] font-bold text-emerald-400">{squad.revenue}</div>
+                    <div className="text-[9px] text-white/25 mt-0.5">rev/mo</div>
                   </div>
-                  <div className="bg-white/[0.03] rounded-lg p-2 text-center">
-                    <div className="text-[14px] font-bold text-white/60">{squad.tasks}</div>
-                    <div className="text-[8px] text-white/20 mt-0.5">tasks</div>
+                  <div className="bg-white/[0.03] rounded-lg p-2.5 text-center">
+                    <div className="text-[16px] font-bold text-white/60">{squad.tasks}</div>
+                    <div className="text-[9px] text-white/25 mt-0.5">tasks</div>
                   </div>
-                  <div className="bg-white/[0.03] rounded-lg p-2 text-center">
-                    <div className="text-[14px] font-bold text-white/60">{squad.uptime}</div>
-                    <div className="text-[8px] text-white/20 mt-0.5">uptime</div>
+                  <div className="bg-white/[0.03] rounded-lg p-2.5 text-center">
+                    <div className="text-[16px] font-bold text-white/60">{squad.uptime}</div>
+                    <div className="text-[9px] text-white/25 mt-0.5">uptime</div>
                   </div>
                 </div>
 
@@ -128,10 +128,11 @@ export default function ExplorePage() {
 
           {/* Deploy CTA */}
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
-            className="text-center mt-12 pb-8">
-            <p className="text-white/20 text-[13px] mb-4">Want your own AI workforce?</p>
+            className="text-center mt-16 pb-10">
+            <p className="text-white/30 text-[15px] mb-2 font-medium">Want your own AI workforce?</p>
+            <p className="text-white/15 text-[13px] mb-6">Deploy a squad in 90 seconds. No code required.</p>
             <Link href="/onboarding"
-              className="inline-flex items-center gap-2 bg-white text-black font-semibold px-8 py-3 rounded-xl text-[13px] hover:bg-white/90 transition-all hover:scale-105 active:scale-95">
+              className="inline-flex items-center gap-2 bg-white text-black font-bold px-10 py-4 rounded-xl text-[15px] hover:bg-white/90 transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.1)]">
               Deploy Your Squad &rarr;
             </Link>
           </motion.div>

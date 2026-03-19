@@ -10,12 +10,12 @@
   --color-success: #2D5A3D;
   --color-error: #8B2F1C;
 
-  --color-surface: #FAF8F5;
-  --color-surface-alt: #F0EBE3;
+  --color-surface: #08080F;
+  --color-surface-alt: #0c0c16;
   --color-dark: #1A1A2E;
   --color-darker: #0D0D1A;
 
-  --color-text: #1A1A2E;
+  --color-text: #FAF8F5;
   --color-text-secondary: #5C5C6F;
   --color-text-muted: #8A8A9A;
   --color-text-inverse: #FAF8F5;
@@ -34,10 +34,25 @@
 }
 
 html, body {
-  background: #08080F;
+  background: #08080F !important;
   color: var(--color-text);
   font-family: var(--font-sans), system-ui, sans-serif;
   overflow-x: hidden;
+}
+
+/* Prevent white flash during Next.js client-side navigation transitions.
+   The __next container and all route-level wrappers inherit the dark background
+   so there is never a frame where the browser default white canvas is visible. */
+#__next,
+[data-nextjs-scroll-focus-boundary],
+main,
+div[class=""] {
+  background: #08080F;
+}
+
+/* Force all empty containers dark during transitions */
+:root {
+  color-scheme: dark;
 }
 
 html {

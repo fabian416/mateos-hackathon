@@ -56,9 +56,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es-AR">
+    <html lang="es-AR" style={{ background: "#08080F" }}>
       <body
         className={`${dmSerif.variable} ${playfair.variable} ${sourceSans.variable} ${jetbrainsMono.variable} antialiased`}
+        style={{ background: "#08080F" }}
       >
         {children}
       </body>
