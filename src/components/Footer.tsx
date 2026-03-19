@@ -19,10 +19,10 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
           {/* Col 1: Logo + description */}
           <div className="col-span-2 md:col-span-1">
-            <span className="text-text-inverse font-bold text-xl" style={{ display: "inline-flex", alignItems: "baseline" }}>
-              <span style={{ fontFamily: "var(--font-playfair)", fontWeight: 800, letterSpacing: "-0.02em" }}>Mate</span>
-              <span style={{ fontFamily: "var(--font-jetbrains-mono)", fontWeight: 500, fontSize: "0.85em", color: "#C4A35A", letterSpacing: "0.05em" }}>OS</span>
-            </span>
+            <div className="flex items-center gap-2">
+              <svg className="w-7 h-7" viewBox="0 0 220 220" fill="none"><defs><radialGradient id="ftGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#7C5CFF"/><stop offset="100%" stopColor="#00D1FF"/></radialGradient></defs><circle cx="110" cy="110" r="90" stroke="url(#ftGrad)" strokeWidth="4" opacity="0.6"/><circle cx="110" cy="110" r="35" fill="url(#ftGrad)"/><circle cx="110" cy="40" r="6" fill="#7C5CFF"/><circle cx="180" cy="110" r="6" fill="#00D1FF"/><circle cx="110" cy="180" r="6" fill="#7C5CFF"/><circle cx="40" cy="110" r="6" fill="#00D1FF"/></svg>
+              <span className="text-text-inverse font-bold text-xl">MateOS</span>
+            </div>
             <p className="text-slate-300 text-sm mt-4">
               Agentes de IA para empresas argentinas.
             </p>

@@ -68,7 +68,7 @@ export default function Header() {
           }}
           className={`font-extrabold text-xl lg:text-2xl shrink-0 transition-colors duration-300 flex items-center gap-2 ${scrolled ? "text-text" : "text-white"}`}
         >
-          <MateLogo size={36} />
+          <svg className="w-9 h-9" viewBox="0 0 220 220" fill="none"><defs><radialGradient id="hdGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#7C5CFF"/><stop offset="100%" stopColor="#00D1FF"/></radialGradient></defs><circle cx="110" cy="110" r="90" stroke="url(#hdGrad)" strokeWidth="4" opacity="0.6"/><circle cx="110" cy="110" r="35" fill="url(#hdGrad)"/><circle cx="110" cy="40" r="6" fill="#7C5CFF"/><circle cx="180" cy="110" r="6" fill="#00D1FF"/><circle cx="110" cy="180" r="6" fill="#7C5CFF"/><circle cx="40" cy="110" r="6" fill="#00D1FF"/></svg>
           <span style={{ display: "inline-flex", alignItems: "baseline" }}>
             <span style={{ fontFamily: "var(--font-playfair)", fontWeight: 800, letterSpacing: "-0.02em" }}>Mate</span>
             <span style={{ fontFamily: "var(--font-jetbrains-mono)", fontWeight: 500, fontSize: "0.85em", color: "#C4A35A", letterSpacing: "0.05em" }}>OS</span>

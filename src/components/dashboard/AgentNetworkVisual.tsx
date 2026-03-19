@@ -488,39 +488,121 @@ export default function AgentNetworkVisual() {
         {selectedAgent && (() => {
           const a = agents.find((x) => x.id === selectedAgent);
           if (!a) return null;
+
+          const CARD_W = 260;
+          const CARD_H = 180;
+          const OFFSET = a.size + 20;
+          const nodeCx = a.x * w;
+          const nodeCy = a.y * h;
+
+          // Position card near the node: left/right based on horizontal half, above if near bottom
+          const showRight = nodeCx < w / 2;
+          const showBelow = nodeCy < h * 0.6;
+
+          const cardLeft = showRight ? nodeCx + OFFSET : nodeCx - OFFSET - CARD_W;
+          const cardTop = showBelow ? nodeCy - CARD_H * 0.3 : nodeCy - CARD_H + CARD_H * 0.3;
+
+          // Clamp to container bounds
+          const clampedLeft = Math.max(8, Math.min(cardLeft, w - CARD_W - 8));
+          const clampedTop = Math.max(8, Math.min(cardTop, h - CARD_H - 8));
+
+          // Connection line: from node center to nearest card edge
+          const cardCenterX = clampedLeft + CARD_W / 2;
+          const cardCenterY = clampedTop + CARD_H / 2;
+          const lineEndX = showRight ? clampedLeft : clampedLeft + CARD_W;
+          const lineEndY = Math.max(clampedTop, Math.min(nodeCy, clampedTop + CARD_H));
+
           return (
-            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
-              className="absolute bottom-4 left-4 rounded-xl p-4 max-w-[260px] shadow-2xl border"
-              style={{ backgroundColor: "rgba(15,15,25,0.9)", backdropFilter: "blur(16px)", borderColor: `${a.color}25` }}>
-              <div className="flex items-center gap-2.5 mb-3">
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold"
-                  style={{ backgroundColor: `${a.color}20`, color: a.color, boxShadow: `0 0 12px ${a.color}20` }}>
-                  {a.letter}
-                </div>
-                <div>
-                  <div className="text-[13px] font-bold text-white/90">{a.name}</div>
-                  <div className="text-[10px] text-white/35">{a.subtitle}</div>
-                </div>
-              </div>
-              <div className="grid grid-cols-3 gap-2">
-                {[
-                  { v: a.tasks.toLocaleString(), l: "Tasks", c: a.color },
-                  { v: "100%", l: "Activity", c: a.color },
-                  { v: "99.8%", l: "Uptime", c: "#10B981" },
-                ].map((s) => (
-                  <div key={s.l} className="bg-white/[0.04] rounded-lg py-2 text-center">
-                    <div className="text-sm font-bold" style={{ color: s.c }}>{s.v}</div>
-                    <div className="text-[8px] text-white/25 mt-0.5">{s.l}</div>
+            <>
+              {/* Click-outside overlay to dismiss */}
+              <motion.div
+                key="card-overlay"
+                className="absolute inset-0 z-10"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setSelectedAgent(null)}
+              />
+
+              {/* Connection line from node to card */}
+              <svg
+                key="card-connector"
+                className="absolute inset-0 z-20 pointer-events-none"
+                width={w}
+                height={h}
+              >
+                <motion.line
+                  x1={nodeCx} y1={nodeCy} x2={lineEndX} y2={lineEndY}
+                  stroke={a.color}
+                  strokeWidth={1}
+                  strokeOpacity={0.3}
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  animate={{ pathLength: 1, opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                />
+                {/* Small circle at the card connection point */}
+                <motion.circle
+                  cx={lineEndX} cy={lineEndY} r={3}
+                  fill={a.color}
+                  fillOpacity={0.3}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                />
+              </svg>
+
+              <motion.div
+                key="agent-card"
+                className="absolute z-20 rounded-xl p-4 shadow-2xl border"
+                style={{
+                  left: clampedLeft,
+                  top: clampedTop,
+                  width: CARD_W,
+                  backgroundColor: "rgba(15,15,25,0.92)",
+                  backdropFilter: "blur(16px)",
+                  borderColor: `${a.color}30`,
+                  boxShadow: `0 0 20px ${a.color}15, 0 8px 32px rgba(0,0,0,0.4)`,
+                }}
+                initial={{ opacity: 0, scale: 0.9, filter: "blur(4px)" }}
+                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, scale: 0.95, filter: "blur(4px)" }}
+                transition={{
+                  duration: 0.25,
+                  ease: [0.2, 0.8, 0.2, 1],
+                }}
+              >
+                <div className="flex items-center gap-2.5 mb-3">
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold"
+                    style={{ backgroundColor: `${a.color}20`, color: a.color, boxShadow: `0 0 12px ${a.color}20` }}>
+                    {a.letter}
                   </div>
-                ))}
-              </div>
-              <div className="mt-3 pt-2 border-t border-white/[0.06] flex items-center gap-1.5">
-                <svg className="w-3 h-3 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                </svg>
-                <span className="text-[10px] text-white/30 font-mono">ERC-8004 verified</span>
-              </div>
-            </motion.div>
+                  <div>
+                    <div className="text-[13px] font-bold text-white/90">{a.name}</div>
+                    <div className="text-[10px] text-white/35">{a.subtitle}</div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    { v: a.tasks.toLocaleString(), l: "Tasks", c: a.color },
+                    { v: "100%", l: "Activity", c: a.color },
+                    { v: "99.8%", l: "Uptime", c: "#10B981" },
+                  ].map((s) => (
+                    <div key={s.l} className="bg-white/[0.04] rounded-lg py-2 text-center">
+                      <div className="text-sm font-bold" style={{ color: s.c }}>{s.v}</div>
+                      <div className="text-[8px] text-white/25 mt-0.5">{s.l}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-3 pt-2 border-t border-white/[0.06] flex items-center gap-1.5">
+                  <svg className="w-3 h-3 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  <span className="text-[10px] text-white/30 font-mono">ERC-8004 verified</span>
+                </div>
+              </motion.div>
+            </>
           );
         })()}
       </AnimatePresence>

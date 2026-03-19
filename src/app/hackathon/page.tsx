@@ -343,10 +343,11 @@ export default function HackathonLanding() {
       <footer className="py-10 px-6">
         <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-3">
+            <svg className="w-5 h-5" viewBox="0 0 220 220" fill="none"><defs><radialGradient id="hkGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#7C5CFF"/><stop offset="100%" stopColor="#00D1FF"/></radialGradient></defs><circle cx="110" cy="110" r="90" stroke="url(#hkGrad)" strokeWidth="4" opacity="0.6"/><circle cx="110" cy="110" r="35" fill="url(#hkGrad)"/><circle cx="110" cy="40" r="6" fill="#7C5CFF"/><circle cx="180" cy="110" r="6" fill="#00D1FF"/><circle cx="110" cy="180" r="6" fill="#7C5CFF"/><circle cx="40" cy="110" r="6" fill="#00D1FF"/></svg>
             <span className="font-bold text-white/60">MateOS</span>
             <span className="text-[12px] text-white/20">Zero Human Factory</span>
           </div>
-          <div className="text-[12px] text-white/30 font-medium">Built by Fabian & Lucho</div>
+          <div className="text-[12px] text-white/30 font-medium">Powered by autonomous agents</div>
           <div className="flex items-center gap-4 text-[12px] text-white/25">
             <span>Synthesis 2026</span>
             <span>Base</span>

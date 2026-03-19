@@ -1,42 +1,20 @@
-<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="64" height="64" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <radialGradient id="orb" cx="40%" cy="35%" r="55%">
-      <stop offset="0%" stop-color="#6366F1" stop-opacity="0.9"/>
-      <stop offset="40%" stop-color="#8B5CF6" stop-opacity="0.7"/>
-      <stop offset="70%" stop-color="#06B6D4" stop-opacity="0.5"/>
-      <stop offset="100%" stop-color="#10B981" stop-opacity="0.3"/>
+    <radialGradient id="grad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#7C5CFF"/>
+      <stop offset="100%" stop-color="#00D1FF"/>
     </radialGradient>
-    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.15"/>
-      <stop offset="100%" stop-color="#08080F" stop-opacity="0"/>
-    </radialGradient>
-    <linearGradient id="ring" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.8"/>
-      <stop offset="33%" stop-color="#06B6D4" stop-opacity="0.6"/>
-      <stop offset="66%" stop-color="#10B981" stop-opacity="0.4"/>
-      <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.2"/>
-    </linearGradient>
-    <linearGradient id="mGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95"/>
-      <stop offset="100%" stop-color="#E2E8F0" stop-opacity="0.8"/>
-    </linearGradient>
   </defs>
 
-  <!-- Background -->
-  <circle cx="32" cy="32" r="32" fill="#08080F"/>
+  <!-- Outer glow ring -->
+  <circle cx="110" cy="110" r="90" stroke="url(#grad)" stroke-width="4" opacity="0.6"/>
 
-  <!-- Outer glow -->
-  <circle cx="32" cy="32" r="30" fill="url(#glow)"/>
+  <!-- Inner core -->
+  <circle cx="110" cy="110" r="35" fill="url(#grad)"/>
 
-  <!-- Orb ring -->
-  <circle cx="32" cy="32" r="26" fill="none" stroke="url(#ring)" stroke-width="1.5"/>
-
-  <!-- Inner orb -->
-  <circle cx="32" cy="32" r="22" fill="url(#orb)"/>
-
-  <!-- Subtle inner highlight -->
-  <ellipse cx="28" cy="26" rx="10" ry="8" fill="#8B5CF6" opacity="0.15"/>
-
-  <!-- M letter -->
-  <text x="32" y="40" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="26" fill="url(#mGrad)">M</text>
+  <!-- Small agents -->
+  <circle cx="110" cy="40" r="6" fill="#7C5CFF"/>
+  <circle cx="180" cy="110" r="6" fill="#00D1FF"/>
+  <circle cx="110" cy="180" r="6" fill="#7C5CFF"/>
+  <circle cx="40" cy="110" r="6" fill="#00D1FF"/>
 </svg>

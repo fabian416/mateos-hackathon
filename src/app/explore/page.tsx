@@ -27,7 +27,7 @@ export default function ExplorePage() {
         <header className="border-b border-white/[0.06] px-6 py-4 flex items-center justify-between bg-black/30 backdrop-blur-md">
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <div className="w-7 h-7 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center text-xs font-bold text-white">M</div>
+              <svg className="w-7 h-7" viewBox="0 0 220 220" fill="none"><defs><radialGradient id="exGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#7C5CFF"/><stop offset="100%" stopColor="#00D1FF"/></radialGradient></defs><circle cx="110" cy="110" r="90" stroke="url(#exGrad)" strokeWidth="4" opacity="0.6"/><circle cx="110" cy="110" r="35" fill="url(#exGrad)"/><circle cx="110" cy="40" r="6" fill="#7C5CFF"/><circle cx="180" cy="110" r="6" fill="#00D1FF"/><circle cx="110" cy="180" r="6" fill="#7C5CFF"/><circle cx="40" cy="110" r="6" fill="#00D1FF"/></svg>
               <span className="font-bold text-white/80 text-[14px]">MateOS</span>
             </Link>
             <div className="w-px h-5 bg-white/10" />

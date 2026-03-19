@@ -26,7 +26,20 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-3">
             <a href="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
-              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-violet-500/30 to-emerald-500/30 border border-white/15 flex items-center justify-center text-sm sm:text-base font-bold text-white shadow-[0_0_20px_rgba(139,92,246,0.25)]">M</div>
+              <svg className="w-8 h-8 sm:w-9 sm:h-9" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <radialGradient id="hdrGrad" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#7C5CFF"/>
+                    <stop offset="100%" stopColor="#00D1FF"/>
+                  </radialGradient>
+                </defs>
+                <circle cx="110" cy="110" r="90" stroke="url(#hdrGrad)" strokeWidth="4" opacity="0.6"/>
+                <circle cx="110" cy="110" r="35" fill="url(#hdrGrad)"/>
+                <circle cx="110" cy="40" r="6" fill="#7C5CFF"/>
+                <circle cx="180" cy="110" r="6" fill="#00D1FF"/>
+                <circle cx="110" cy="180" r="6" fill="#7C5CFF"/>
+                <circle cx="40" cy="110" r="6" fill="#00D1FF"/>
+              </svg>
               <span className="font-bold text-white text-[15px] sm:text-[17px] tracking-tight">MateOS</span>
             </a>
             <span className="text-[11px] text-white/25 bg-white/5 border border-white/10 px-2.5 py-0.5 rounded-full ml-1 hidden sm:inline">Zero Human Factory</span>
