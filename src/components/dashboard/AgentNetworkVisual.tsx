@@ -27,13 +27,13 @@ interface Message {
 }
 
 const AGENTS: Agent[] = [
-  { id: "ceo", name: "El CEO", letter: "C", subtitle: "Coordination", color: "#EAB308", colorLight: "#FEF08A", x: 0.5, y: 0.42, size: 52, tasks: 247, status: "coordinating" },
-  { id: "baqueano", name: "El Baqueano", letter: "B", subtitle: "WhatsApp", color: "#10B981", colorLight: "#A7F3D0", x: 0.18, y: 0.15, size: 46, tasks: 1842, status: "working" },
-  { id: "tropero", name: "El Tropero", letter: "T", subtitle: "Billing", color: "#8B5CF6", colorLight: "#DDD6FE", x: 0.82, y: 0.15, size: 44, tasks: 631, status: "working" },
-  { id: "domador", name: "El Domador", letter: "D", subtitle: "Scheduling", color: "#A855F7", colorLight: "#E9D5FF", x: 0.1, y: 0.65, size: 42, tasks: 924, status: "working" },
-  { id: "rastreador", name: "El Rastreador", letter: "R", subtitle: "Outreach", color: "#06B6D4", colorLight: "#CFFAFE", x: 0.9, y: 0.65, size: 40, tasks: 456, status: "idle" },
-  { id: "paisano", name: "El Paisano", letter: "P", subtitle: "Social", color: "#EC4899", colorLight: "#FBCFE8", x: 0.3, y: 0.85, size: 40, tasks: 312, status: "working" },
-  { id: "relator", name: "El Relator", letter: "R", subtitle: "Content", color: "#F97316", colorLight: "#FED7AA", x: 0.7, y: 0.85, size: 40, tasks: 189, status: "working" },
+  { id: "ceo", name: "OpsChad", letter: "OC", subtitle: "Coordination", color: "#EAB308", colorLight: "#FEF08A", x: 0.5, y: 0.42, size: 52, tasks: 247, status: "coordinating" },
+  { id: "baqueano", name: "ChatGod", letter: "CG", subtitle: "WhatsApp", color: "#10B981", colorLight: "#A7F3D0", x: 0.18, y: 0.15, size: 46, tasks: 1842, status: "working" },
+  { id: "tropero", name: "BagChaser", letter: "BC", subtitle: "Billing", color: "#8B5CF6", colorLight: "#DDD6FE", x: 0.82, y: 0.15, size: 44, tasks: 631, status: "working" },
+  { id: "domador", name: "CalendApe", letter: "CA", subtitle: "Scheduling", color: "#A855F7", colorLight: "#E9D5FF", x: 0.1, y: 0.65, size: 42, tasks: 924, status: "working" },
+  { id: "rastreador", name: "DM Sniper", letter: "DS", subtitle: "Outreach", color: "#06B6D4", colorLight: "#CFFAFE", x: 0.9, y: 0.65, size: 40, tasks: 456, status: "idle" },
+  { id: "paisano", name: "PostMalone", letter: "PM", subtitle: "Social", color: "#EC4899", colorLight: "#FBCFE8", x: 0.3, y: 0.85, size: 40, tasks: 312, status: "working" },
+  { id: "relator", name: "HypeSmith", letter: "HS", subtitle: "Content", color: "#F97316", colorLight: "#FED7AA", x: 0.7, y: 0.85, size: 40, tasks: 189, status: "working" },
 ];
 
 const CONNECTIONS = [
@@ -55,37 +55,36 @@ let pulseCounter = 0;
 
 // Real delegate.py format: route <agent> "<task>" --context '{"key":"val"}'
 const MSG_TEMPLATES = [
-  // Lead → Venta → Onboarding flow (from SQUAD.md)
-  { from: "baqueano", to: "tropero", text: "route tropero \"Lead calificado WhatsApp\"", emoji: "→" },
-  { from: "tropero", to: "domador", text: "route domador \"Agendar onboarding\"", emoji: "→" },
-  { from: "domador", to: "relator", text: "route relator \"Crear caso de exito\"", emoji: "→" },
+  // MateOS HQ — client acquisition flow
+  { from: "baqueano", to: "ceo", text: "route OpsChad \"New client inquiry from landing\"", emoji: "→" },
+  { from: "ceo", to: "rastreador", text: "route DM Sniper \"Follow up TechFlow Agency\"", emoji: "→" },
+  { from: "rastreador", to: "domador", text: "route CalendApe \"Book demo — TechFlow\"", emoji: "→" },
+  { from: "domador", to: "ceo", text: "update demo-42 → completed \"Demo Fri 3pm — AutoFix\"", emoji: "✅" },
 
-  // Baqueano delegates
-  { from: "baqueano", to: "domador", text: "route domador \"Agendar turno Sab 15hs\"", emoji: "📅" },
-  { from: "baqueano", to: "tropero", text: "route tropero \"Cliente VIP quiere factura\"", emoji: "💰" },
-  { from: "baqueano", to: "rastreador", text: "route rastreador \"Cliente no puede pagar\"", emoji: "🔧" },
+  // MateOS HQ — billing
+  { from: "tropero", to: "ceo", text: "update sub-renewal → completed \"$300 USDC — Pizzeria\"", emoji: "✅" },
+  { from: "ceo", to: "tropero", text: "route BagChaser \"Invoice Peluqueria Marta — $940\"", emoji: "→" },
+  { from: "tropero", to: "baqueano", text: "update billing → completed \"3 subs collected today\"", emoji: "✅" },
 
-  // Tropero updates
-  { from: "tropero", to: "baqueano", text: "update task-47 --status completed \"$45 cobrado\"", emoji: "✅" },
-  { from: "tropero", to: "domador", text: "route domador \"Factura #1847 lista, agendar follow-up\"", emoji: "→" },
+  // MateOS HQ — outreach
+  { from: "rastreador", to: "ceo", text: "update outreach → completed \"3 demos booked this week\"", emoji: "✅" },
+  { from: "ceo", to: "rastreador", text: "route DM Sniper \"Target cafes in Montevideo\" --urgent", emoji: "→" },
+  { from: "rastreador", to: "tropero", text: "route BagChaser \"New client signed — Cafe Monteverde\"", emoji: "→" },
 
-  // Domador updates
-  { from: "domador", to: "baqueano", text: "update task-23 --status completed \"Turno Sab 15hs OK\"", emoji: "✅" },
-  { from: "domador", to: "tropero", text: "route tropero \"Cobrar sena $20 reserva\"", emoji: "💰" },
+  // MateOS HQ — content & social
+  { from: "paisano", to: "relator", text: "route HypeSmith \"Write case study — Peluqueria Marta\"", emoji: "→" },
+  { from: "relator", to: "ceo", text: "update content → completed \"Newsletter sent — 840 subs\"", emoji: "✅" },
+  { from: "ceo", to: "paisano", text: "route PostMalone \"Share demo video on X\"", emoji: "→" },
+  { from: "relator", to: "paisano", text: "route PostMalone \"Publish case study thread\"", emoji: "→" },
 
-  // CEO coordination
-  { from: "ceo", to: "rastreador", text: "route rastreador \"Buscar leads zona norte\" --priority urgent", emoji: "🎯" },
-  { from: "ceo", to: "paisano", text: "route relator \"Promo viernes 2x1\" --priority urgent", emoji: "📸" },
-  { from: "ceo", to: "tropero", text: "route tropero \"Follow-up leads semana\"", emoji: "→" },
+  // MateOS HQ — support
+  { from: "baqueano", to: "domador", text: "route CalendApe \"Reschedule onboarding — Don Juan\"", emoji: "→" },
+  { from: "baqueano", to: "tropero", text: "route BagChaser \"Client asking about pricing\"", emoji: "→" },
 
-  // Rastreador reports
-  { from: "rastreador", to: "ceo", text: "update leads-batch --status completed \"12 negocios, 5 calificados\"", emoji: "✅" },
-  { from: "rastreador", to: "tropero", text: "route tropero \"5 leads calificados\" --context '{...}'", emoji: "→" },
-
-  // Relator & Paisano
-  { from: "relator", to: "ceo", text: "update newsletter --status completed \"Enviado a 340 subs\"", emoji: "✅" },
-  { from: "paisano", to: "relator", text: "route relator \"Fotos del evento listas\"", emoji: "🖼️" },
-  { from: "relator", to: "paisano", text: "route paisano \"Publicar post caso de exito\"", emoji: "📸" },
+  // MateOS HQ — coordination
+  { from: "ceo", to: "baqueano", text: "alert: 3 new inquiries — peak detected", emoji: "→" },
+  { from: "paisano", to: "relator", text: "route HypeSmith \"Event photos ready\"", emoji: "🖼️" },
+  { from: "relator", to: "paisano", text: "route PostMalone \"Publish success story\"", emoji: "📸" },
 ];
 
 let msgCounter = 0;

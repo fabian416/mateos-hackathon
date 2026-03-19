@@ -48,16 +48,13 @@ h1, h2, h3 {
   font-family: var(--font-playfair), Georgia, serif;
 }
 
-/* Scrollbar sutil */
+/* Scrollbar — hidden */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 0px;
+  display: none;
 }
-::-webkit-scrollbar-track {
-  background: var(--color-surface);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--color-text-muted);
-  border-radius: 999px;
+* {
+  scrollbar-width: none;
 }
 
 @keyframes moveHorizontal {

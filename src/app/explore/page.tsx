@@ -1,0 +1,142 @@
+"use client";
+
+import { motion } from "framer-motion";
+import Link from "next/link";
+import dynamic from "next/dynamic";
+
+const StarField = dynamic(() => import("@/components/dashboard/StarField"), { ssr: false });
+
+const AGENT_COLORS = ["#10B981", "#8B5CF6", "#A855F7", "#06B6D4", "#EC4899", "#F97316", "#EAB308"];
+
+const SQUADS = [
+  { id: "hq", name: "MateOS HQ", desc: "The squad that runs MateOS itself", agents: 7, revenue: "$12.4K", tasks: "8,247", uptime: "99.9%", isHQ: true },
+  { id: "pizza", name: "Pizzeria Don Juan", desc: "Restaurant in Buenos Aires", agents: 5, revenue: "$1,890", tasks: "2,847", uptime: "99.8%", isHQ: false },
+  { id: "salon", name: "Peluqueria Marta", desc: "Hair salon in Palermo", agents: 3, revenue: "$940", tasks: "1,231", uptime: "99.7%", isHQ: false },
+  { id: "tech", name: "TechFlow Agency", desc: "Digital agency in CDMX", agents: 6, revenue: "$4,200", tasks: "5,102", uptime: "99.8%", isHQ: false },
+  { id: "cafe", name: "Cafe Monteverde", desc: "Coffee shop in Montevideo", agents: 4, revenue: "$1,100", tasks: "1,890", uptime: "99.6%", isHQ: false },
+  { id: "auto", name: "AutoFix Garage", desc: "Auto repair in Cordoba", agents: 4, revenue: "$720", tasks: "856", uptime: "99.5%", isHQ: false },
+];
+
+export default function ExplorePage() {
+  return (
+    <div className="min-h-screen bg-[#08080F] text-white relative">
+      <StarField />
+
+      <div className="relative z-10">
+        {/* Header */}
+        <header className="border-b border-white/[0.06] px-6 py-4 flex items-center justify-between bg-black/30 backdrop-blur-md">
+          <div className="flex items-center gap-4">
+            <Link href="/dashboard" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <div className="w-7 h-7 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center text-xs font-bold text-white">M</div>
+              <span className="font-bold text-white/80 text-[14px]">MateOS</span>
+            </Link>
+            <div className="w-px h-5 bg-white/10" />
+            <span className="text-white/50 text-[14px] font-medium">Explore Squads</span>
+          </div>
+          <Link href="/dashboard" className="text-[12px] text-white/30 hover:text-white/60 transition-colors border border-white/10 rounded-lg px-4 py-2 hover:bg-white/5">
+            &larr; Dashboard
+          </Link>
+        </header>
+
+        {/* Global stats */}
+        <div className="border-b border-white/[0.04] bg-black/20 backdrop-blur-sm">
+          <div className="max-w-6xl mx-auto px-6 py-4 flex flex-wrap items-center justify-center gap-6 sm:gap-8">
+            {[
+              { value: "6", label: "squads active", color: "#A78BFA" },
+              { value: "29", label: "agents deployed", color: "#10B981" },
+              { value: "$21.2K", label: "total revenue / mo", color: "#34D399" },
+              { value: "14.1K", label: "tasks this month", color: "#FFD43B" },
+            ].map((s) => (
+              <div key={s.label} className="flex items-baseline gap-2">
+                <span className="text-[18px] font-bold" style={{ color: s.color }}>{s.value}</span>
+                <span className="text-[11px] text-white/30">{s.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Squad grid */}
+        <div className="max-w-6xl mx-auto px-6 py-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {SQUADS.map((squad, i) => (
+              <motion.div
+                key={squad.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.08 }}
+                whileHover={{ y: -4 }}
+                className={`rounded-xl p-5 border transition-all cursor-pointer group ${
+                  squad.isHQ
+                    ? "bg-amber-500/[0.04] border-amber-500/20 hover:border-amber-500/40"
+                    : "bg-white/[0.02] border-white/[0.06] hover:border-white/15"
+                }`}
+              >
+                {/* Header */}
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[15px] font-semibold text-white/80 group-hover:text-white transition-colors">
+                        {squad.name}
+                      </span>
+                      {squad.isHQ && <span className="text-amber-400 text-[12px]">✦</span>}
+                    </div>
+                    <p className="text-[11px] text-white/25 mt-0.5">{squad.desc}</p>
+                  </div>
+                  <span className="text-[9px] px-2 py-0.5 rounded-full font-medium bg-emerald-500/10 text-emerald-400">
+                    active
+                  </span>
+                </div>
+
+                {/* Agent dots + live indicator */}
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="flex -space-x-0.5">
+                    {Array.from({ length: squad.agents }).map((_, j) => (
+                      <div key={j} className="w-3 h-3 rounded-full border border-[#08080F]"
+                        style={{ backgroundColor: AGENT_COLORS[j % AGENT_COLORS.length] }} />
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-1 ml-1">
+                    <div className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="text-[9px] text-white/20">{squad.agents} agents working</span>
+                  </div>
+                </div>
+
+                {/* Stats */}
+                <div className="grid grid-cols-3 gap-2 mb-4">
+                  <div className="bg-white/[0.03] rounded-lg p-2 text-center">
+                    <div className="text-[14px] font-bold text-emerald-400">{squad.revenue}</div>
+                    <div className="text-[8px] text-white/20 mt-0.5">rev/mo</div>
+                  </div>
+                  <div className="bg-white/[0.03] rounded-lg p-2 text-center">
+                    <div className="text-[14px] font-bold text-white/60">{squad.tasks}</div>
+                    <div className="text-[8px] text-white/20 mt-0.5">tasks</div>
+                  </div>
+                  <div className="bg-white/[0.03] rounded-lg p-2 text-center">
+                    <div className="text-[14px] font-bold text-white/60">{squad.uptime}</div>
+                    <div className="text-[8px] text-white/20 mt-0.5">uptime</div>
+                  </div>
+                </div>
+
+                {/* View button */}
+                <Link href="/dashboard"
+                  className="block w-full text-center text-[12px] font-medium text-white/40 group-hover:text-white/70 border border-white/[0.06] group-hover:border-white/15 rounded-lg py-2 transition-all group-hover:bg-white/[0.03]">
+                  View Squad &rarr;
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Deploy CTA */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
+            className="text-center mt-12 pb-8">
+            <p className="text-white/20 text-[13px] mb-4">Want your own AI workforce?</p>
+            <Link href="/onboarding"
+              className="inline-flex items-center gap-2 bg-white text-black font-semibold px-8 py-3 rounded-xl text-[13px] hover:bg-white/90 transition-all hover:scale-105 active:scale-95">
+              Deploy Your Squad &rarr;
+            </Link>
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+}

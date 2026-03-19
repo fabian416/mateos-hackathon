@@ -105,7 +105,7 @@ function DeployContent() {
       </div>
 
       {/* Main deploy visualization */}
-      <div className="relative w-full max-w-lg aspect-square">
+      <div className="relative w-full max-w-[85vw] sm:max-w-lg aspect-square">
         <svg viewBox="0 0 100 100" className="w-full h-full">
           <defs>
             {agentIds.map((id) => {

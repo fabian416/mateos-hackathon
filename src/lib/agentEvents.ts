@@ -15,34 +15,40 @@ const listeners: Set<Listener> = new Set();
 let counter = 0;
 
 const AGENT_NAMES: Record<string, string> = {
-  baqueano: "Baqueano", tropero: "Tropero", domador: "Domador",
-  rastreador: "Rastreador", paisano: "Paisano", relator: "Relator", ceo: "CEO",
+  baqueano: "ChatGod", tropero: "BagChaser", domador: "CalendApe",
+  rastreador: "DM Sniper", paisano: "PostMalone", relator: "HypeSmith", ceo: "OpsChad",
 };
 
 const TEMPLATES: Omit<AgentEvent, "id" | "timestamp">[] = [
-  // Routes (delegation)
-  { from: "baqueano", to: "tropero", action: "route → \"Lead calificado por WhatsApp\"", type: "route" },
-  { from: "baqueano", to: "domador", action: "route → \"Agendar turno Sab 15hs\"", type: "route" },
-  { from: "baqueano", to: "rastreador", action: "route → \"Cliente no puede pagar\" --priority urgent", type: "route" },
-  { from: "tropero", to: "domador", action: "route → \"Agendar onboarding nuevo cliente\"", type: "route" },
-  { from: "domador", to: "relator", action: "route → \"Crear caso de exito\"", type: "route" },
-  { from: "ceo", to: "rastreador", action: "route → \"Buscar leads zona norte\" --priority urgent", type: "route" },
-  { from: "ceo", to: "paisano", action: "route → \"Publicar promo viernes 2x1\"", type: "route" },
-  { from: "ceo", to: "tropero", action: "route → \"Follow-up leads de la semana\"", type: "route" },
-  { from: "rastreador", to: "tropero", action: "route → \"5 leads calificados\" --context {...}", type: "route" },
-  { from: "paisano", to: "relator", action: "route → \"Fotos del evento listas\"", type: "route" },
-  { from: "relator", to: "paisano", action: "route → \"Publicar post caso de exito\"", type: "route" },
+  // MateOS HQ — client acquisition
+  { from: "baqueano", to: "ceo", action: "route → \"New client inquiry from landing page\"", type: "route" },
+  { from: "ceo", to: "rastreador", action: "route → \"Follow up TechFlow Agency\"", type: "route" },
+  { from: "rastreador", to: "domador", action: "route → \"Book demo — TechFlow Agency\"", type: "route" },
+  { from: "ceo", to: "rastreador", action: "route → \"Target cafes in Montevideo\" --urgent", type: "route" },
 
-  // Updates (task completion)
-  { from: "tropero", to: "baqueano", action: "update task-47 → completed \"$45 USDC cobrado\"", type: "update" },
-  { from: "domador", to: "baqueano", action: "update task-23 → completed \"Turno Sab 15hs confirmado\"", type: "update" },
-  { from: "rastreador", to: "ceo", action: "update leads-batch → completed \"12 negocios, 5 calificados\"", type: "update" },
-  { from: "relator", to: "ceo", action: "update newsletter → completed \"Enviado a 340 subs\"", type: "update" },
-  { from: "domador", to: "tropero", action: "update onboarding-12 → completed \"Reunion agendada lun 10am\"", type: "update" },
+  // MateOS HQ — billing
+  { from: "ceo", to: "tropero", action: "route → \"Invoice Peluqueria Marta — $940\"", type: "route" },
+  { from: "tropero", to: "ceo", action: "update sub-renewal → completed \"$300 USDC — Pizzeria\"", type: "update" },
+  { from: "tropero", to: "baqueano", action: "update billing → completed \"3 subs collected today\"", type: "update" },
 
-  // Alerts
-  { from: "ceo", to: "baqueano", action: "alert: pico de consultas detectado — reforzando WhatsApp", type: "alert" },
-  { from: "ceo", to: "domador", action: "alert: revenue +18% w/w — reporte generado", type: "alert" },
+  // MateOS HQ — outreach results
+  { from: "rastreador", to: "ceo", action: "update outreach → completed \"3 demos booked this week\"", type: "update" },
+  { from: "rastreador", to: "tropero", action: "route → \"New client signed — Cafe Monteverde\"", type: "route" },
+  { from: "domador", to: "ceo", action: "update demo-42 → completed \"Demo Fri 3pm — AutoFix\"", type: "update" },
+
+  // MateOS HQ — content & social
+  { from: "paisano", to: "relator", action: "route → \"Write case study — Peluqueria Marta\"", type: "route" },
+  { from: "relator", to: "ceo", action: "update content → completed \"Newsletter sent — 840 subs\"", type: "update" },
+  { from: "ceo", to: "paisano", action: "route → \"Share demo video on X\"", type: "route" },
+  { from: "relator", to: "paisano", action: "route → \"Publish case study thread\"", type: "route" },
+
+  // MateOS HQ — support & scheduling
+  { from: "baqueano", to: "domador", action: "route → \"Reschedule onboarding — Don Juan\"", type: "route" },
+  { from: "baqueano", to: "tropero", action: "route → \"Client asking about pricing\"", type: "route" },
+
+  // MateOS HQ — alerts
+  { from: "ceo", to: "baqueano", action: "alert: 3 new inquiries — peak detected", type: "alert" },
+  { from: "ceo", to: "domador", action: "alert: revenue +22% w/w — report generated", type: "alert" },
 ];
 
 export function subscribe(listener: Listener) {
