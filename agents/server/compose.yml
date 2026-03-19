@@ -15,7 +15,7 @@ services:
       - caddy-config:/config
 
   frontend:
-    image: ghcr.io/fabian416/mateos/frontend:latest
+    image: ghcr.io/fabian416/mateos-hackathon/frontend:latest
     container_name: frontend
     restart: unless-stopped
     mem_limit: 512m
@@ -29,7 +29,7 @@ services:
       start_period: 10s
 
   mateos-agents:
-    image: ghcr.io/fabian416/mateos/agents:latest
+    image: ghcr.io/fabian416/mateos-hackathon/agents:latest
     container_name: mateos-agents
     restart: unless-stopped
     mem_limit: 4g

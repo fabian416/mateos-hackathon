@@ -31,7 +31,7 @@ services:
       start_period: 10s
 
   mateos-agents:
-    image: ghcr.io/fabian416/mateos/agents:latest
+    image: ghcr.io/fabian416/mateos-hackathon/agents:latest
     container_name: mateos-agents
     restart: unless-stopped
     user: root

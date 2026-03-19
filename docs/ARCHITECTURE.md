@@ -37,8 +37,8 @@ All 7 agents run inside **one OpenClaw container** (`mateos-agents`), NOT separa
 | Service | Image | Role | Memory Limit |
 |---------|-------|------|--------------|
 | `caddy` | `caddy:2-alpine` | HTTPS reverse proxy (Let's Encrypt) | 256MB |
-| `frontend` | `ghcr.io/fabian416/mateos/frontend` | Next.js web app | 512MB |
-| `mateos-agents` | `ghcr.io/fabian416/mateos/agents` | Single OpenClaw with 7 agents | 4GB |
+| `frontend` | `ghcr.io/fabian416/mateos-hackathon/frontend` | Next.js web app | 512MB |
+| `mateos-agents` | `ghcr.io/fabian416/mateos-hackathon/agents` | Single OpenClaw with 7 agents | 4GB |
 
 There is **no agent-router container**. Inter-agent communication happens inside the single OpenClaw process via `sessions_send`.
 
@@ -106,8 +106,8 @@ Only **2 images** are built (was 7+ before):
 
 | Image | Purpose |
 |-------|---------|
-| `ghcr.io/fabian416/mateos/frontend` | Next.js web app |
-| `ghcr.io/fabian416/mateos/agents` | Single agent image with all 7 agents |
+| `ghcr.io/fabian416/mateos-hackathon/frontend` | Next.js web app |
+| `ghcr.io/fabian416/mateos-hackathon/agents` | Single agent image with all 7 agents |
 
 Triggered on push to `main`. Uses Docker Buildx with GitHub Actions cache.
 
