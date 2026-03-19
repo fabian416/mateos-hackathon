@@ -99,7 +99,7 @@ export default function HackathonLanding() {
       <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden pt-11">
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] lg:w-[800px] lg:h-[800px]">
-            <Orb hue={0} hoverIntensity={0.6} rotateOnHover={true} forceHoverState={false} backgroundColor="#08080F" />
+            <Orb hue={19} hoverIntensity={0.18} rotateOnHover={true} forceHoverState={false} globalMouseTracking={false} backgroundColor="#08080F" />
           </div>
         </div>
 

@@ -8,6 +8,7 @@ interface OrbProps {
   hoverIntensity?: number;
   rotateOnHover?: boolean;
   forceHoverState?: boolean;
+  globalMouseTracking?: boolean;
   backgroundColor?: string;
   className?: string;
 }
@@ -24,7 +25,7 @@ function hexToVec3(color: string) {
 
 export default function Orb({
   hue = 0, hoverIntensity = 0.2, rotateOnHover = true,
-  forceHoverState = false, backgroundColor = "#000000", className = "",
+  forceHoverState = false, globalMouseTracking = false, backgroundColor = "#000000", className = "",
 }: OrbProps) {
   const ctnDom = useRef<HTMLDivElement>(null);
 
@@ -87,8 +88,9 @@ void main(){vec2 fragCoord=vUv*iResolution.xy;vec4 col=mainImage(fragCoord);gl_F
       targetHover = Math.sqrt(uvX * uvX + uvY * uvY) < 0.8 ? 1 : 0;
     };
     const onLeave = () => { targetHover = 0; };
-    container.addEventListener("mousemove", onMove);
-    container.addEventListener("mouseleave", onLeave);
+    const mouseTarget = globalMouseTracking ? window : container;
+    mouseTarget.addEventListener("mousemove", onMove as EventListener);
+    if (!globalMouseTracking) container.addEventListener("mouseleave", onLeave);
 
     let rafId: number;
     const update = (t: number) => {
@@ -109,12 +111,12 @@ void main(){vec2 fragCoord=vUv*iResolution.xy;vec4 col=mainImage(fragCoord);gl_F
     return () => {
       cancelAnimationFrame(rafId);
       window.removeEventListener("resize", resize);
-      container.removeEventListener("mousemove", onMove);
-      container.removeEventListener("mouseleave", onLeave);
+      mouseTarget.removeEventListener("mousemove", onMove as EventListener);
+      if (!globalMouseTracking) container.removeEventListener("mouseleave", onLeave);
       if (container.contains(gl.canvas)) container.removeChild(gl.canvas);
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
-  }, [hue, hoverIntensity, rotateOnHover, forceHoverState, backgroundColor]);
+  }, [hue, hoverIntensity, rotateOnHover, forceHoverState, globalMouseTracking, backgroundColor]);
 
   return <div ref={ctnDom} className={className} style={{ width: "100%", height: "100%" }} />;
 }

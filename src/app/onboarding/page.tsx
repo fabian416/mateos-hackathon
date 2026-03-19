@@ -73,33 +73,31 @@ export default function OnboardingPage() {
         agents: Array.from(selected).join(","),
       });
       router.push(`/deploy?${params.toString()}`);
-    }, 900);
+    }, 700);
   };
 
   return (
     <div className="min-h-screen bg-[#08080F] text-white relative overflow-hidden">
       <StarField />
 
-      {/* Deploy overlay — slide left to right, like same screen */}
+      {/* Deploy overlay */}
       <AnimatePresence>
         {deploying && (
           <motion.div
-            className="fixed inset-0 z-50"
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center"
             style={{ background: "radial-gradient(ellipse at 50% 40%, #111130 0%, #0a0a14 70%)" }}
-            initial={{ x: "100%" }}
-            animate={{ x: "0%" }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
           >
             <motion.div
-              className="h-full flex flex-col items-center justify-center"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.3 }}
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.2 }}
+              className="flex items-center gap-3"
             >
-              <div className="flex items-center gap-3">
-                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-[15px] text-white/60 font-medium">Deploying your squad...</span>
-              </div>
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[15px] text-white/60 font-medium">Deploying your squad...</span>
             </motion.div>
           </motion.div>
         )}
@@ -153,7 +151,7 @@ export default function OnboardingPage() {
 
                 <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
                   onClick={() => businessName.trim() && setStep(1)} disabled={!businessName.trim()}
-                  className="mt-6 bg-white text-black font-semibold px-8 py-3 rounded-xl text-[13px] hover:bg-white/90 transition-all hover:scale-105 active:scale-95 disabled:opacity-20 disabled:cursor-not-allowed">
+                  className="mt-6 bg-white text-black font-semibold px-8 py-3 rounded-xl text-[13px] hover:bg-white/90 transition-all hover:scale-105 active:scale-95 disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer">
                   Continue
                 </motion.button>
               </motion.div>
@@ -177,7 +175,7 @@ export default function OnboardingPage() {
                       onClick={() => selectType(type.id)}
                       whileHover={{ y: -4, borderColor: "rgba(139,92,246,0.3)" }}
                       whileTap={{ scale: 0.97 }}
-                      className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-6 text-left transition-all group">
+                      className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-6 text-left transition-all group cursor-pointer">
                       <span className="text-3xl">{type.emoji}</span>
                       <h3 className="font-semibold text-white/70 mt-3 group-hover:text-white transition-colors">{type.name}</h3>
                       <p className="text-[11px] text-white/25 mt-1">{type.agents} agents recommended</p>
