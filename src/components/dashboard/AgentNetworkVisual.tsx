@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fireEvent as fireAgentEvent, AGENT_COLORS } from "@/lib/agentEvents";
 
@@ -10,7 +10,6 @@ interface Agent {
   letter: string;
   subtitle: string;
   color: string;
-  colorLight: string;
   x: number;
   y: number;
   size: number;
@@ -19,16 +18,16 @@ interface Agent {
 }
 
 const AGENTS: Agent[] = [
-  { id: "ceo", name: "OpsChad", letter: "OC", subtitle: "Coordination", color: "#EAB308", colorLight: "#FEF08A", x: 0.5, y: 0.42, size: 52, tasks: 247, status: "coordinating" },
-  { id: "baqueano", name: "ChatGod", letter: "CG", subtitle: "WhatsApp", color: "#10B981", colorLight: "#A7F3D0", x: 0.18, y: 0.15, size: 46, tasks: 1842, status: "working" },
-  { id: "tropero", name: "BagChaser", letter: "BC", subtitle: "Billing", color: "#8B5CF6", colorLight: "#DDD6FE", x: 0.82, y: 0.15, size: 44, tasks: 631, status: "working" },
-  { id: "domador", name: "CalendApe", letter: "CA", subtitle: "Scheduling", color: "#A855F7", colorLight: "#E9D5FF", x: 0.1, y: 0.65, size: 42, tasks: 924, status: "working" },
-  { id: "rastreador", name: "DM Sniper", letter: "DS", subtitle: "Outreach", color: "#06B6D4", colorLight: "#CFFAFE", x: 0.9, y: 0.65, size: 40, tasks: 456, status: "idle" },
-  { id: "paisano", name: "PostMalone", letter: "PM", subtitle: "Social", color: "#EC4899", colorLight: "#FBCFE8", x: 0.3, y: 0.85, size: 40, tasks: 312, status: "working" },
-  { id: "relator", name: "HypeSmith", letter: "HS", subtitle: "Content", color: "#F97316", colorLight: "#FED7AA", x: 0.7, y: 0.85, size: 40, tasks: 189, status: "working" },
+  { id: "ceo", name: "OpsChad", letter: "OC", subtitle: "Coordination", color: "#EAB308", x: 0.5, y: 0.42, size: 52, tasks: 247, status: "coordinating" },
+  { id: "baqueano", name: "ChatGod", letter: "CG", subtitle: "WhatsApp", color: "#10B981", x: 0.18, y: 0.15, size: 46, tasks: 1842, status: "working" },
+  { id: "tropero", name: "BagChaser", letter: "BC", subtitle: "Billing", color: "#8B5CF6", x: 0.82, y: 0.15, size: 44, tasks: 631, status: "working" },
+  { id: "domador", name: "CalendApe", letter: "CA", subtitle: "Scheduling", color: "#A855F7", x: 0.1, y: 0.65, size: 42, tasks: 924, status: "working" },
+  { id: "rastreador", name: "DM Sniper", letter: "DS", subtitle: "Outreach", color: "#06B6D4", x: 0.9, y: 0.65, size: 40, tasks: 456, status: "idle" },
+  { id: "paisano", name: "PostMalone", letter: "PM", subtitle: "Social", color: "#EC4899", x: 0.3, y: 0.85, size: 40, tasks: 312, status: "working" },
+  { id: "relator", name: "HypeSmith", letter: "HS", subtitle: "Content", color: "#F97316", x: 0.7, y: 0.85, size: 40, tasks: 189, status: "working" },
 ];
 
-const CONNECTIONS = [
+const CONNECTIONS: [string, string][] = [
   ["ceo", "baqueano"], ["ceo", "tropero"], ["ceo", "domador"],
   ["ceo", "rastreador"], ["ceo", "paisano"], ["ceo", "relator"],
   ["baqueano", "domador"], ["baqueano", "tropero"],
@@ -41,64 +40,166 @@ interface LightPulse {
   from: string;
   to: string;
   color: string;
+  isCascade?: boolean;
 }
 
 let pulseCounter = 0;
 
+// Compute bezier control point for a curved connection
+function getBezierCP(from: { x: number; y: number }, to: { x: number; y: number }, idx: number) {
+  const mx = (from.x + to.x) / 2;
+  const my = (from.y + to.y) / 2;
+  const dx = to.x - from.x;
+  const dy = to.y - from.y;
+  const offset = (idx % 2 === 0 ? 1 : -1) * 0.12;
+  return { x: mx - dy * offset, y: my + dx * offset };
+}
+
+function getBezierPath(from: { x: number; y: number }, to: { x: number; y: number }, idx: number) {
+  const cp = getBezierCP(from, to, idx);
+  return `M ${from.x} ${from.y} Q ${cp.x} ${cp.y} ${to.x} ${to.y}`;
+}
 
 export default function AgentNetworkVisual() {
   const ref = useRef<HTMLDivElement>(null);
   const [dims, setDims] = useState({ w: 900, h: 500 });
   const [agents, setAgents] = useState(AGENTS);
-
   const [pulses, setPulses] = useState<LightPulse[]>([]);
   const [impacts, setImpacts] = useState<{ id: number; agentId: string; color: string }[]>([]);
   const [activeAgent, setActiveAgent] = useState<string | null>(null);
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
+  const [connectionHeat, setConnectionHeat] = useState<Record<string, number>>({});
+  const [shockwave, setShockwave] = useState<{ x: number; y: number; color: string } | null>(null);
+  const [fullSync, setFullSync] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const up = () => { if (ref.current) setDims({ w: ref.current.offsetWidth, h: ref.current.offsetHeight }); };
     up(); window.addEventListener("resize", up); return () => window.removeEventListener("resize", up);
   }, []);
 
-  // Fire light pulses — uses shared event bus so feed stays in sync
+  const getPos = useCallback((id: string) => {
+    const a = agents.find((x) => x.id === id);
+    return a ? { x: a.x * dims.w, y: a.y * dims.h } : { x: 0, y: 0 };
+  }, [agents, dims]);
+
+  // Fire a single pulse
+  const firePulse = useCallback((fromId: string, toId: string, color: string, isCascade = false) => {
+    pulseCounter++;
+    const pulse: LightPulse = { id: pulseCounter, from: fromId, to: toId, color, isCascade };
+    setPulses((prev) => [...prev.slice(-20), pulse]);
+    setActiveAgent(fromId);
+
+    // Heat up the connection
+    const connKey = [fromId, toId].sort().join("-");
+    setConnectionHeat((prev) => ({ ...prev, [connKey]: 1 }));
+
+    setAgents((prev) => prev.map((a) => ({
+      ...a, tasks: a.id === fromId ? a.tasks + 1 : a.tasks,
+    })));
+
+    setTimeout(() => {
+      setPulses((prev) => prev.filter((p) => p.id !== pulse.id));
+      setImpacts((prev) => [...prev.slice(-10), { id: pulse.id, agentId: toId, color }]);
+      setActiveAgent(toId);
+      setTimeout(() => {
+        setImpacts((prev) => prev.filter((i) => i.id !== pulse.id));
+        setActiveAgent(null);
+      }, 3200);
+    }, 600);
+  }, []);
+
+  // STOCHASTIC PULSE TIMING — variable intervals
+  useEffect(() => {
+    function scheduleNext() {
+      const delay = 300 + Math.random() * Math.random() * 1700;
+      timerRef.current = setTimeout(() => {
+        const evt = fireAgentEvent();
+        const fromColor = AGENT_COLORS[evt.from] || "#fff";
+        firePulse(evt.from, evt.to, fromColor);
+        scheduleNext();
+      }, delay);
+    }
+    scheduleNext();
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  }, [firePulse]);
+
+  // CONNECTION HEAT DECAY — cool down every second
   useEffect(() => {
     const interval = setInterval(() => {
-      // Fire event through shared bus (feed will pick it up)
-      const evt = fireAgentEvent();
-      const fromColor = AGENT_COLORS[evt.from] || "#fff";
-
-      pulseCounter++;
-      const pulse: LightPulse = { id: pulseCounter, from: evt.from, to: evt.to, color: fromColor };
-      setPulses((prev) => [...prev.slice(-15), pulse]);
-      setActiveAgent(evt.from);
-
-      // Update task count
-      setAgents((prev) => prev.map((a) => ({
-        ...a,
-        tasks: a.id === evt.from ? a.tasks + 1 : a.tasks,
-      })));
-
-      // On arrival — impact
-      setTimeout(() => {
-        setPulses((prev) => prev.filter((p) => p.id !== pulse.id));
-        setImpacts((prev) => [...prev.slice(-8), { id: pulse.id, agentId: evt.to, color: fromColor }]);
-        setActiveAgent(evt.to);
-        setTimeout(() => {
-          setImpacts((prev) => prev.filter((i) => i.id !== pulse.id));
-          setActiveAgent(null);
-        }, 3200);
-      }, 600);
-
-    }, 800);
+      setConnectionHeat((prev) => {
+        const next: Record<string, number> = {};
+        for (const [k, v] of Object.entries(prev)) {
+          const nv = v - 0.15;
+          if (nv > 0.01) next[k] = nv;
+        }
+        return next;
+      });
+    }, 1000);
     return () => clearInterval(interval);
-  }, [agents]);
+  }, []);
+
+  // CASCADE EVENT — every 18-30s
+  useEffect(() => {
+    const schedule = () => {
+      const delay = 18000 + Math.random() * 12000;
+      return setTimeout(() => {
+        // Pick a random connection and cascade
+        const conn = CONNECTIONS[Math.floor(Math.random() * CONNECTIONS.length)];
+        const fromAgent = agents.find((a) => a.id === conn[0]);
+        if (!fromAgent) return;
+        firePulse(conn[0], conn[1], fromAgent.color, true);
+
+        // Secondary pulses from the receiver
+        setTimeout(() => {
+          const receiverConns = CONNECTIONS.filter(([f, t]) => f === conn[1] || t === conn[1]);
+          const targets = receiverConns.slice(0, 3);
+          targets.forEach(([f, t], i) => {
+            const target = f === conn[1] ? t : f;
+            const receiverAgent = agents.find((a) => a.id === conn[1]);
+            setTimeout(() => {
+              firePulse(conn[1], target, receiverAgent?.color || "#fff", true);
+            }, 100 + i * 150);
+          });
+        }, 700);
+
+        cascadeTimer.current = schedule();
+      }, delay);
+    };
+    const cascadeTimer = { current: schedule() };
+    return () => clearTimeout(cascadeTimer.current);
+  }, [agents, firePulse]);
+
+  // FULL SYNC EVENT — every 45-65s
+  useEffect(() => {
+    const delay = 45000 + Math.random() * 20000;
+    const timer = setTimeout(() => {
+      setFullSync(true);
+      const peripherals = agents.filter((a) => a.id !== "ceo");
+      peripherals.forEach((a, i) => {
+        setTimeout(() => firePulse(a.id, "ceo", a.color), i * 80);
+      });
+      setTimeout(() => setFullSync(false), 3000);
+    }, delay);
+    return () => clearTimeout(timer);
+  }, [agents, firePulse]);
+
+  // OVERLOAD EVENT — every 55-80s
+  useEffect(() => {
+    const delay = 55000 + Math.random() * 25000;
+    const timer = setTimeout(() => {
+      const nonCeo = agents.filter((a) => a.id !== "ceo");
+      const target = nonCeo[Math.floor(Math.random() * nonCeo.length)];
+      const pos = getPos(target.id);
+      setTimeout(() => {
+        setShockwave({ x: pos.x, y: pos.y, color: target.color });
+        setTimeout(() => setShockwave(null), 2000);
+      }, 2500);
+    }, delay);
+    return () => clearTimeout(timer);
+  }, [agents, getPos]);
 
   const { w, h } = dims;
-  const getPos = (id: string) => {
-    const a = agents.find((x) => x.id === id);
-    return a ? { x: a.x * w, y: a.y * h } : { x: 0, y: 0 };
-  };
 
   return (
     <div ref={ref} className="w-full h-full relative overflow-hidden">
@@ -108,122 +209,153 @@ export default function AgentNetworkVisual() {
             <feGaussianBlur stdDeviation="4" result="blur" />
             <feMerge><feMergeNode in="blur" /><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
           </filter>
+          <filter id="shockwave-glow">
+            <feGaussianBlur stdDeviation="8" />
+          </filter>
         </defs>
 
-        {/* Connections — thin base lines */}
-        {CONNECTIONS.map(([fromId, toId]) => {
+        {/* Curved connections with heat */}
+        {CONNECTIONS.map(([fromId, toId], idx) => {
           const from = getPos(fromId);
           const to = getPos(toId);
+          const connKey = [fromId, toId].sort().join("-");
+          const heat = connectionHeat[connKey] || 0;
           const hasActive = pulses.some((p) => (p.from === fromId && p.to === toId) || (p.from === toId && p.to === fromId));
+          const fromAgent = agents.find((a) => a.id === fromId);
+          const pathD = getBezierPath(from, to, idx);
 
           return (
-            <line key={`line-${fromId}-${toId}`}
-              x1={from.x} y1={from.y} x2={to.x} y2={to.y}
-              stroke={hasActive ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.04)"}
-              strokeWidth={hasActive ? 1.2 : 0.8}
-            />
-          );
-        })}
-
-        {/* Light pulses — bright orbs that travel fast and fade */}
-        {pulses.map((pulse) => {
-          const from = getPos(pulse.from);
-          const to = getPos(pulse.to);
-
-          return (
-            <g key={`pulse-${pulse.id}`}>
-              {/* Bright core */}
-              <motion.circle
-                r={5}
-                fill={pulse.color}
-                filter="url(#pulse-glow)"
-                initial={{ cx: from.x, cy: from.y, opacity: 1 }}
-                animate={{ cx: to.x, cy: to.y, opacity: 0 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
-              />
-              {/* White hot center */}
-              <motion.circle
-                r={2}
-                fill="white"
-                initial={{ cx: from.x, cy: from.y, opacity: 0.9 }}
-                animate={{ cx: to.x, cy: to.y, opacity: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-              />
-              {/* Trail line that appears and fades */}
-              <motion.line
-                x1={from.x} y1={from.y}
-                stroke={pulse.color}
-                strokeWidth={2}
-                filter="url(#pulse-glow)"
-                initial={{ x2: from.x, y2: from.y, opacity: 0.6 }}
-                animate={{ x2: to.x, y2: to.y, opacity: 0 }}
-                transition={{ duration: 0.7, ease: "easeOut" }}
+            <g key={`conn-${fromId}-${toId}`}>
+              {/* Glow path for heated connections */}
+              {heat > 0.3 && (
+                <path d={pathD} fill="none" stroke={fromAgent?.color || "#fff"}
+                  strokeWidth={3} filter="url(#pulse-glow)"
+                  opacity={heat * 0.2} />
+              )}
+              {/* Main path */}
+              <path d={pathD} fill="none"
+                stroke={hasActive ? `rgba(255,255,255,${0.08 + heat * 0.17})` : `rgba(255,255,255,${0.03 + heat * 0.08})`}
+                strokeWidth={0.8 + heat * 1.2}
               />
             </g>
           );
         })}
 
+        {/* Light pulses with comet trails along curves */}
+        {pulses.map((pulse) => {
+          const from = getPos(pulse.from);
+          const to = getPos(pulse.to);
+          const connIdx = CONNECTIONS.findIndex(([f, t]) => (f === pulse.from && t === pulse.to) || (f === pulse.to && t === pulse.from));
+          const pathD = getBezierPath(from, to, connIdx >= 0 ? connIdx : 0);
+
+          return (
+            <g key={`pulse-${pulse.id}`}>
+              {/* Comet trail — follows the curve path, fades */}
+              <motion.path
+                d={pathD} fill="none"
+                stroke={pulse.color}
+                strokeWidth={pulse.isCascade ? 3 : 2}
+                filter="url(#pulse-glow)"
+                initial={{ pathLength: 0, opacity: 0.6 }}
+                animate={{ pathLength: 1, opacity: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              />
+              {/* Bright core traveling */}
+              <motion.circle
+                r={pulse.isCascade ? 6 : 5}
+                fill={pulse.color}
+                filter="url(#pulse-glow)"
+                initial={{ cx: from.x, cy: from.y, opacity: 1 }}
+                animate={{ cx: to.x, cy: to.y, opacity: 0.1 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+              />
+              {/* White hot center */}
+              <motion.circle
+                r={pulse.isCascade ? 3 : 2}
+                fill="white"
+                initial={{ cx: from.x, cy: from.y, opacity: 0.95 }}
+                animate={{ cx: to.x, cy: to.y, opacity: 0 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              />
+            </g>
+          );
+        })}
+
+        {/* Full sync flash */}
+        {fullSync && (
+          <motion.rect x={0} y={0} width={w} height={h} fill="white"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: [0, 0.04, 0] }}
+            transition={{ duration: 1.5, ease: "easeOut" }}
+          />
+        )}
+
+        {/* Shockwave */}
+        {shockwave && (
+          <>
+            <motion.circle cx={shockwave.x} cy={shockwave.y} fill="none"
+              stroke={shockwave.color} strokeWidth={2} filter="url(#shockwave-glow)"
+              initial={{ r: 30, opacity: 0.5 }}
+              animate={{ r: Math.max(w, h) * 0.6, opacity: 0 }}
+              transition={{ duration: 1.8, ease: "easeOut" }}
+            />
+            <motion.circle cx={shockwave.x} cy={shockwave.y} fill="none"
+              stroke="white" strokeWidth={1}
+              initial={{ r: 20, opacity: 0.3 }}
+              animate={{ r: Math.max(w, h) * 0.5, opacity: 0 }}
+              transition={{ duration: 2, delay: 0.1, ease: "easeOut" }}
+            />
+          </>
+        )}
+
         {/* Agent nodes */}
         {agents.map((a) => {
           const cx = a.x * w;
           const cy = a.y * h;
-          const isActive = activeAgent === a.id;
           const isSel = selectedAgent === a.id;
           const hasImpact = impacts.some((i) => i.agentId === a.id);
 
+          // Activity-based glow intensity
+          const recentHeat = Object.entries(connectionHeat)
+            .filter(([k]) => k.includes(a.id))
+            .reduce((sum, [, v]) => sum + v, 0);
+          const activityScale = Math.min(1 + recentHeat * 0.08, 1.1);
+
           return (
             <g key={a.id} onClick={() => setSelectedAgent(isSel ? null : a.id)} className="cursor-pointer">
-              {/* Breathing outer glow */}
+              {/* Breathing outer glow — intensity varies with activity */}
               <motion.circle
                 cx={cx} cy={cy}
                 fill={a.color}
                 animate={{
-                  r: hasImpact ? [a.size * 1.2, a.size * 1.5, a.size * 1.2] : [a.size * 1.0, a.size * 1.15, a.size * 1.0],
-                  opacity: hasImpact ? [0.12, 0.22, 0.12] : [0.05, 0.1, 0.05],
+                  r: hasImpact
+                    ? [a.size * 1.2, a.size * 1.5, a.size * 1.2]
+                    : [a.size * (0.95 + recentHeat * 0.1), a.size * (1.1 + recentHeat * 0.15), a.size * (0.95 + recentHeat * 0.1)],
+                  opacity: hasImpact
+                    ? [0.12, 0.22, 0.12]
+                    : [0.04 + recentHeat * 0.03, 0.09 + recentHeat * 0.05, 0.04 + recentHeat * 0.03],
                 }}
-                transition={{ duration: hasImpact ? 0.7 : 5, repeat: hasImpact ? 1 : Infinity, ease: "easeInOut" }}
+                transition={{ duration: hasImpact ? 0.7 : Math.max(2, 5 - recentHeat * 2), repeat: hasImpact ? 1 : Infinity, ease: "easeInOut" }}
               />
 
               {/* IMPACT ANIMATIONS */}
               {impacts.filter((i) => i.agentId === a.id).map((impact) => (
                 <g key={`impact-${impact.id}`}>
-                  {/* Flash — instant bright, quick fade */}
-                  <motion.circle
-                    cx={cx} cy={cy} r={a.size}
-                    fill="white"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: [0, 0.5, 0] }}
-                    transition={{ duration: 0.2, ease: "easeOut" }}
-                  />
-
-                  {/* Glow — peaks fast, decays SLOWLY */}
-                  <motion.circle
-                    cx={cx} cy={cy}
-                    fill={impact.color}
+                  <motion.circle cx={cx} cy={cy} r={a.size} fill="white"
+                    initial={{ opacity: 0 }} animate={{ opacity: [0, 0.5, 0] }}
+                    transition={{ duration: 0.2, ease: "easeOut" }} />
+                  <motion.circle cx={cx} cy={cy} fill={impact.color}
                     initial={{ r: a.size * 1.2, opacity: 0 }}
                     animate={{ r: [a.size * 1.2, a.size * 1.8, a.size * 1.3], opacity: [0, 0.25, 0] }}
-                    transition={{ duration: 2, ease: "easeOut" }}
-                  />
-
-                  {/* Ring 1 — slow expanding ripple */}
-                  <motion.circle
-                    cx={cx} cy={cy}
-                    fill="none"
-                    stroke={impact.color}
+                    transition={{ duration: 2, ease: "easeOut" }} />
+                  <motion.circle cx={cx} cy={cy} fill="none" stroke={impact.color}
                     initial={{ r: a.size, strokeWidth: 1.5, opacity: 0.4 }}
                     animate={{ r: a.size * 3, strokeWidth: 0.3, opacity: 0 }}
-                    transition={{ duration: 2.5, ease: [0.0, 0.0, 0.15, 1] }}
-                  />
-
-                  {/* Ring 2 — delayed, even slower */}
-                  <motion.circle
-                    cx={cx} cy={cy}
-                    fill="none"
-                    stroke={impact.color}
+                    transition={{ duration: 2.5, ease: [0.0, 0.0, 0.15, 1] }} />
+                  <motion.circle cx={cx} cy={cy} fill="none" stroke={impact.color}
                     initial={{ r: a.size, strokeWidth: 1, opacity: 0.25 }}
                     animate={{ r: a.size * 3.5, strokeWidth: 0.2, opacity: 0 }}
-                    transition={{ duration: 3, delay: 0.15, ease: [0.0, 0.0, 0.1, 1] }}
-                  />
+                    transition={{ duration: 3, delay: 0.15, ease: [0.0, 0.0, 0.1, 1] }} />
                 </g>
               ))}
 
@@ -235,53 +367,43 @@ export default function AgentNetworkVisual() {
                   transition={{ duration: 3, repeat: Infinity, ease: "linear" }} opacity={0.5} />
               )}
 
-              {/* Main circle — with breath animation on impact */}
+              {/* Main circle — scales slightly with activity */}
               <motion.circle
                 cx={cx} cy={cy}
                 fill={a.color}
-                fillOpacity={hasImpact ? 0.28 : 0.14}
+                fillOpacity={hasImpact ? 0.28 : 0.12 + recentHeat * 0.03}
                 stroke={a.color}
-                strokeWidth={hasImpact ? 2.5 : 1.5}
+                strokeWidth={hasImpact ? 2.5 : 1.5 + recentHeat * 0.5}
                 strokeOpacity={hasImpact ? 1 : 0.6}
                 animate={{
-                  r: hasImpact ? [a.size, a.size * 1.12, a.size * 0.97, a.size] : a.size,
+                  r: hasImpact ? [a.size, a.size * 1.12, a.size * 0.97, a.size] : a.size * activityScale,
                 }}
-                transition={hasImpact ? {
-                  duration: 0.8,
-                  times: [0, 0.15, 0.4, 1],
-                  ease: "easeOut",
-                } : { duration: 0.3 }}
-                style={{ filter: `drop-shadow(0 0 ${hasImpact ? 22 : 12}px ${a.color}50)`, transformOrigin: `${cx}px ${cy}px` }}
+                transition={hasImpact ? { duration: 0.8, times: [0, 0.15, 0.4, 1], ease: "easeOut" } : { duration: 1 }}
+                style={{ filter: `drop-shadow(0 0 ${hasImpact ? 22 : 10 + recentHeat * 6}px ${a.color}50)`, transformOrigin: `${cx}px ${cy}px` }}
               />
 
-              {/* Inner ring */}
               <circle cx={cx} cy={cy} r={a.size * 0.65} fill="none" stroke={a.color} strokeWidth={0.6} opacity={0.15} />
 
-              {/* Letter */}
               <text x={cx} y={cy - 6} textAnchor="middle" dominantBaseline="central"
                 fontSize={22} fill={a.color} fontWeight="800"
                 style={{ fontFamily: "var(--font-jetbrains-mono)" }}>
                 {a.letter}
               </text>
 
-              {/* Name inside */}
               <text x={cx} y={cy + 14} textAnchor="middle" fontSize={10} fill="rgba(255,255,255,0.6)" fontWeight="500">
                 {a.name}
               </text>
 
-              {/* Subtitle below */}
               <text x={cx} y={cy + a.size + 16} textAnchor="middle" fontSize={9} fill="rgba(255,255,255,0.25)">
                 {a.subtitle}
               </text>
 
-              {/* Task counter */}
               <text x={cx} y={cy - a.size - 10} textAnchor="middle"
-                fontSize={11} fill={isActive ? a.color : "rgba(255,255,255,0.35)"} fontWeight="700"
+                fontSize={11} fill={hasImpact ? a.color : "rgba(255,255,255,0.35)"} fontWeight="700"
                 style={{ fontFamily: "var(--font-jetbrains-mono)" }}>
                 {a.tasks.toLocaleString()}
               </text>
 
-              {/* Status dot */}
               <circle cx={cx + a.size - 4} cy={cy - a.size + 4} r={5} fill="#0B0B14" />
               <circle cx={cx + a.size - 4} cy={cy - a.size + 4} r={3}
                 fill={a.status === "working" ? "#10B981" : a.status === "coordinating" ? "#EAB308" : "#6B7280"} />
