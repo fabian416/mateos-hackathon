@@ -112,10 +112,10 @@ export default function OnboardingPage() {
       <div className="relative z-10 min-h-screen flex flex-col">
         {/* Header */}
         <header className="px-6 py-4 flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-2">
+          <a href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <div className="w-7 h-7 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center text-xs font-bold text-white">M</div>
             <span className="font-bold text-white/80 text-[14px]">MateOS</span>
-          </div>
+          </a>
           <div className="flex items-center gap-1.5">
             {[0, 1, 2].map((s) => (
               <div key={s} className={`h-1 rounded-full transition-all duration-500 ${s <= step ? "bg-violet-500 w-8" : "bg-white/10 w-4"}`} />

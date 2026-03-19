@@ -25,8 +25,10 @@ export default function DashboardPage() {
       <header className="relative z-10 border-b border-white/[0.06] px-4 sm:px-6 py-3 bg-black/30 backdrop-blur-md shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-3">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-violet-500/30 to-emerald-500/30 border border-white/15 flex items-center justify-center text-sm sm:text-base font-bold text-white shadow-[0_0_20px_rgba(139,92,246,0.25)]">M</div>
-            <span className="font-bold text-white text-[15px] sm:text-[17px] tracking-tight">MateOS</span>
+            <a href="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-gradient-to-br from-violet-500/30 to-emerald-500/30 border border-white/15 flex items-center justify-center text-sm sm:text-base font-bold text-white shadow-[0_0_20px_rgba(139,92,246,0.25)]">M</div>
+              <span className="font-bold text-white text-[15px] sm:text-[17px] tracking-tight">MateOS</span>
+            </a>
             <span className="text-[11px] text-white/25 bg-white/5 border border-white/10 px-2.5 py-0.5 rounded-full ml-1 hidden sm:inline">Zero Human Factory</span>
           </div>
 

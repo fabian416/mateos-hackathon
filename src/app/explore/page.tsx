@@ -26,7 +26,7 @@ export default function ExplorePage() {
         {/* Header */}
         <header className="border-b border-white/[0.06] px-6 py-4 flex items-center justify-between bg-black/30 backdrop-blur-md">
           <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <div className="w-7 h-7 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center text-xs font-bold text-white">M</div>
               <span className="font-bold text-white/80 text-[14px]">MateOS</span>
             </Link>
