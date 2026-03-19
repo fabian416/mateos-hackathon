@@ -8,15 +8,18 @@ import Link from "next/link";
 
 const Orb = dynamic(() => import("@/components/ui/Orb"), { ssr: false });
 const LiveTicker = dynamic(() => import("@/components/ui/LiveTicker"), { ssr: false });
+import ShinyText from "@/components/ui/ShinyText";
+import StarBorder from "@/components/ui/StarBorder";
+import BorderGlow from "@/components/ui/BorderGlow";
 
 const AGENTS = [
-  { name: "ChatGod", role: "WhatsApp Support", color: "#10B981", letter: "CG" },
-  { name: "BagChaser", role: "Billing & Collections", color: "#8B5CF6", letter: "BC" },
-  { name: "CalendApe", role: "Scheduling", color: "#A855F7", letter: "CA" },
-  { name: "DM Sniper", role: "Lead Outreach", color: "#06B6D4", letter: "DS" },
-  { name: "PostMalone", role: "Social Media", color: "#EC4899", letter: "PM" },
-  { name: "HypeSmith", role: "Content & Marketing", color: "#F97316", letter: "HS" },
-  { name: "OpsChad", role: "Coordination & Reports", color: "#EAB308", letter: "OC" },
+  { name: "ChatGod", role: "WhatsApp Support", color: "#10B981", letter: "CG", hsl: "160 84 37" },
+  { name: "BagChaser", role: "Billing & Collections", color: "#8B5CF6", letter: "BC", hsl: "258 89 66" },
+  { name: "CalendApe", role: "Scheduling", color: "#A855F7", letter: "CA", hsl: "271 91 65" },
+  { name: "DM Sniper", role: "Lead Outreach", color: "#06B6D4", letter: "DS", hsl: "189 96 42" },
+  { name: "PostMalone", role: "Social Media", color: "#EC4899", letter: "PM", hsl: "330 81 60" },
+  { name: "HypeSmith", role: "Content & Marketing", color: "#F97316", letter: "HS", hsl: "25 95 53" },
+  { name: "OpsChad", role: "Coordination & Reports", color: "#EAB308", letter: "OC", hsl: "45 96 47" },
 ];
 
 const COMPARISON = [
@@ -48,7 +51,7 @@ export default function HackathonLanding() {
   }, [isTransitioning, router]);
 
   return (
-    <div className="bg-[#08080F] text-white">
+    <div className="bg-[#08080F] text-white overscroll-none">
       {/* ═══════ TRANSITION OVERLAY ═══════ */}
       <AnimatePresence>
         {isTransitioning && (
@@ -96,29 +99,38 @@ export default function HackathonLanding() {
       </div>
 
       {/* ═══════ HERO ═══════ */}
-      <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden pt-11">
+      <section className="relative h-screen flex flex-col items-center justify-center overflow-x-clip pt-11" style={{ paddingBottom: "7vh" }}>
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-[460px] h-[460px] sm:w-[690px] sm:h-[690px] lg:w-[920px] lg:h-[920px]">
+          <div className="w-[445px] h-[445px] sm:w-[668px] sm:h-[668px] lg:w-[890px] lg:h-[890px]">
             <Orb hue={19} hoverIntensity={0.18} rotateOnHover={true} forceHoverState={false} globalMouseTracking={false} backgroundColor="#08080F" />
           </div>
         </div>
 
         <div className="relative z-10 text-center px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }}>
-            <div className="inline-flex items-center gap-2.5 bg-white/5 border border-white/10 rounded-full px-5 py-2 mb-10 hover:bg-white/10 hover:border-white/20 transition-all cursor-default">
-              <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-[14px] text-white/70 font-medium">7 Agents. Zero Employees. Live Now.</span>
-            </div>
+            <StarBorder color="#22d3ee" speed="5s" thickness={1} radius="9999px">
+              <div className="flex items-center gap-2.5 bg-[#08080F] rounded-full px-5 py-2.5 cursor-default">
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-[14px] text-white/70 font-medium">7 Agents. Zero Employees. Live Now.</span>
+              </div>
+            </StarBorder>
           </motion.div>
 
           <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.5 }}
             className="text-5xl sm:text-7xl lg:text-9xl font-extrabold tracking-tighter leading-[0.9]">
             <span className="text-white">Mate</span>
-            <span className="bg-gradient-to-r from-violet-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">OS</span>
+            <ShinyText
+              text="OS"
+              color="#7c3aed"
+              shineColor="#22d3ee"
+              speed={3}
+              spread={100}
+              className="font-extrabold"
+            />
           </motion.h1>
 
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.7 }}
-            className="text-xl sm:text-2xl lg:text-3xl text-white mt-8 font-semibold">
+            className="text-xl sm:text-2xl lg:text-3xl text-white mt-10 font-semibold">
             Your next hire isn&apos;t human.
           </motion.p>
 
@@ -128,7 +140,7 @@ export default function HackathonLanding() {
           </motion.p>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1.1 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5 mt-12">
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5 mt-10">
             <button onClick={handleWatchClick}
               className="bg-white text-black font-bold px-10 py-4 rounded-xl text-[16px] hover:bg-white/90 transition-all hover:scale-105 active:scale-95 cursor-pointer">
               Watch Them Work &rarr;
@@ -140,16 +152,26 @@ export default function HackathonLanding() {
           </motion.div>
         </div>
 
-        <motion.div className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        <motion.div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
           animate={{ y: [0, 8, 0] }} transition={{ duration: 2, repeat: Infinity }}>
           <div className="w-5 h-8 rounded-full border border-white/15 flex items-start justify-center p-1.5">
             <div className="w-1 h-2 bg-white/30 rounded-full" />
           </div>
         </motion.div>
+
+        {/* Fade to black at bottom of hero */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 z-10 pointer-events-none"
+          style={{ background: "linear-gradient(to bottom, transparent 0%, #08080F 100%)" }} />
       </section>
 
+      {/* ═══════ HERO → COMPARISON SEPARATOR ═══════ */}
+      <div className="relative py-4">
+        <div className="mx-auto max-w-2xl h-px bg-gradient-to-r from-transparent via-violet-500/40 to-transparent" />
+        <div className="mx-auto max-w-md h-px mt-px bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent blur-sm" />
+      </div>
+
       {/* ═══════ COMPARISON TABLE ═══════ */}
-      <section className="py-24 px-6 border-t border-white/[0.04]">
+      <section className="py-24 px-6">
         <div className="max-w-4xl mx-auto">
           <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
             className="text-[13px] text-white/40 uppercase tracking-[0.3em] mb-5 text-center">Before & After</motion.p>
@@ -168,8 +190,8 @@ export default function HackathonLanding() {
                   transition={{ delay: i * 0.08 }}
                   className={`flex flex-col gap-1 sm:grid sm:grid-cols-[120px_1fr_1fr] sm:gap-4 py-4 border-b border-white/[0.04] sm:items-center ${isLast ? "border-0 pt-6" : ""}`}>
                   <span className={`text-[13px] font-semibold ${isLast ? "text-white" : "text-white/50"}`}>{row.label}</span>
-                  <span className={`text-[13px] sm:text-[15px] ${isLast ? "text-red-400 font-bold sm:text-xl" : "text-white/30"}`}>{row.before}</span>
-                  <span className={`text-[13px] sm:text-[15px] ${isLast ? "text-emerald-400 font-bold sm:text-xl" : "text-white/70"}`}>{row.after}</span>
+                  <span className={`text-[13px] sm:text-[15px] ${isLast ? "text-red-400 font-bold sm:text-xl" : "text-white/40"}`}>{row.before}</span>
+                  <span className={`text-[13px] sm:text-[15px] ${isLast ? "text-emerald-400 font-bold sm:text-xl" : "text-white/80"}`}>{row.after}</span>
                 </motion.div>
               );
             })}
@@ -178,7 +200,7 @@ export default function HackathonLanding() {
       </section>
 
       {/* ═══════ PROVOCATIVE STATEMENT ═══════ */}
-      <section className="py-20 sm:py-32 px-6">
+      <section className="py-28 sm:py-40 px-6">
         <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
           className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold leading-tight">
@@ -196,19 +218,32 @@ export default function HackathonLanding() {
             7 specialized agents. <span className="text-white/30">One coordinated team.</span>
           </h2>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {AGENTS.map((agent, i) => (
               <motion.div key={agent.name}
                 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                 transition={{ delay: i * 0.06 }}
-                whileHover={{ y: -4, borderColor: `${agent.color}40` }}
-                className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-5 transition-all cursor-default group">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center text-[15px] font-bold mb-3 transition-transform group-hover:scale-110"
-                  style={{ backgroundColor: `${agent.color}15`, color: agent.color }}>
-                  {agent.letter}
-                </div>
-                <div className="text-[16px] font-semibold text-white/80 group-hover:text-white transition-colors">{agent.name}</div>
-                <div className="text-[13px] text-white/35 mt-1 group-hover:text-white/50 transition-colors">{agent.role}</div>
+>
+                <BorderGlow
+                  animated
+                  backgroundColor="#0c0c16"
+                  borderRadius={50}
+                  glowRadius={40}
+                  glowIntensity={1.4}
+                  coneSpread={25}
+                  glowColor={agent.hsl}
+                  colors={[agent.color, agent.color, agent.color]}
+                  fillOpacity={0.4}
+                >
+                  <div className="p-6 cursor-default group">
+                    <div className="w-12 h-12 rounded-lg flex items-center justify-center text-[15px] font-bold mb-3 transition-transform group-hover:scale-110"
+                      style={{ backgroundColor: `${agent.color}15`, color: agent.color }}>
+                      {agent.letter}
+                    </div>
+                    <div className="text-[16px] font-semibold text-white/80 group-hover:text-white transition-colors">{agent.name}</div>
+                    <div className="text-[13px] text-white/35 mt-1 group-hover:text-white/50 transition-colors">{agent.role}</div>
+                  </div>
+                </BorderGlow>
               </motion.div>
             ))}
           </div>
@@ -235,10 +270,10 @@ export default function HackathonLanding() {
               transition={{ delay: i * 0.1 }}
               whileHover={{ x: 4 }}
               className="flex items-start gap-4 sm:gap-6 py-6 sm:py-8 border-b border-white/[0.04] last:border-0 cursor-default group">
-              <span className="text-[16px] font-bold font-mono shrink-0 group-hover:scale-110 transition-transform" style={{ color: item.color }}>{item.step}</span>
+              <span className="text-[20px] font-bold font-mono shrink-0 group-hover:scale-110 transition-transform" style={{ color: item.color }}>{item.step}</span>
               <div>
                 <h3 className="text-xl font-semibold text-white group-hover:text-white transition-colors">{item.title}</h3>
-                <p className="text-[15px] text-white/40 mt-2 max-w-lg group-hover:text-white/50 transition-colors leading-relaxed">{item.desc}</p>
+                <p className="text-[15px] text-white/50 mt-2 max-w-lg group-hover:text-white/60 transition-colors leading-relaxed">{item.desc}</p>
               </div>
             </motion.div>
           ))}
@@ -260,7 +295,7 @@ export default function HackathonLanding() {
                 transition={{ delay: i * 0.08 }}
                 whileHover={{ borderColor: `${p.color}30` }}
                 className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-6 transition-all cursor-default group">
-                <div className="w-2 h-2 rounded-full mb-4 group-hover:scale-150 transition-transform" style={{ backgroundColor: p.color }} />
+                <div className="w-3 h-3 rounded-full mb-4 group-hover:scale-150 transition-transform" style={{ backgroundColor: p.color }} />
                 <h3 className="text-[17px] font-semibold text-white group-hover:text-white transition-colors">{p.title}</h3>
                 <p className="text-[14px] text-white/40 mt-2 leading-relaxed group-hover:text-white/50 transition-colors">{p.desc}</p>
               </motion.div>
@@ -270,7 +305,7 @@ export default function HackathonLanding() {
       </section>
 
       {/* ═══════ CTA ═══════ */}
-      <section className="py-20 sm:py-32 px-6 text-center">
+      <section className="py-24 sm:py-36 px-6 text-center">
         <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
           className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-5">
           See it in action
@@ -280,20 +315,21 @@ export default function HackathonLanding() {
           Watch 7 AI agents coordinate in real-time to run a business. No humans involved.
         </motion.p>
         <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5">
           <button onClick={handleWatchClick}
-            className="bg-white text-black font-bold px-10 sm:px-12 py-4 sm:py-5 rounded-xl text-[16px] sm:text-[17px] hover:bg-white/90 transition-all hover:scale-105 active:scale-95 cursor-pointer">
+            className="bg-white text-black font-bold px-10 py-4 rounded-xl text-[16px] hover:bg-white/90 transition-all hover:scale-105 active:scale-95 cursor-pointer">
             Watch Them Work &rarr;
           </button>
           <Link href="/onboarding"
-            className="border border-white/15 text-white/50 font-medium px-8 sm:px-10 py-3.5 sm:py-4 rounded-xl text-[14px] sm:text-[15px] hover:bg-white/5 hover:text-white hover:border-white/25 transition-all">
+            className="border border-white/20 text-white/70 font-semibold px-10 py-4 rounded-xl text-[16px] hover:bg-white/5 hover:text-white hover:border-white/30 transition-all">
             Deploy Your Squad
           </Link>
         </motion.div>
       </section>
 
       {/* ═══════ FOOTER ═══════ */}
-      <footer className="border-t border-white/[0.04] py-8 px-6">
+      <div className="mx-auto max-w-4xl h-px bg-gradient-to-r from-transparent via-white/[0.08] to-transparent" />
+      <footer className="py-8 px-6">
         <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <span className="font-bold text-white/60">MateOS</span>

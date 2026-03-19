@@ -68,10 +68,10 @@ export default function LiveTicker() {
           transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
         >
           {[...items, ...items].map((item, i) => (
-            <div key={`${item.id}-${i}`} className="flex items-center gap-1.5 sm:gap-2 bg-white/[0.03] border border-white/[0.05] rounded-full px-2.5 sm:px-4 py-1 sm:py-1.5 shrink-0">
-              <div className="w-[4px] h-[4px] sm:w-[5px] sm:h-[5px] rounded-full shrink-0" style={{ backgroundColor: TYPE_DOTS[item.type] || item.color }} />
-              <span className="text-[9px] sm:text-[11px] font-semibold" style={{ color: item.color }}>{item.agent}</span>
-              <span className="text-[9px] sm:text-[11px] text-white/40">{item.action}</span>
+            <div key={`${item.id}-${i}`} className="flex items-center gap-1.5 sm:gap-2 bg-white/[0.03] border border-white/[0.05] rounded-full px-3 sm:px-4 py-2 shrink-0">
+              <div className="w-[5px] h-[5px] sm:w-[6px] sm:h-[6px] rounded-full shrink-0" style={{ backgroundColor: TYPE_DOTS[item.type] || item.color }} />
+              <span className="text-[10px] sm:text-[12px] font-semibold" style={{ color: item.color }}>{item.agent}</span>
+              <span className="text-[10px] sm:text-[12px] text-white/40">{item.action}</span>
             </div>
           ))}
         </motion.div>
