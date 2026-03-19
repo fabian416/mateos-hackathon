@@ -39,26 +39,19 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Squad tabs — scrollable on mobile */}
-        <div className="flex items-center gap-1 mt-2 overflow-x-auto no-scrollbar">
-          {SQUADS.map((s) => (
-            <button key={s.id} onClick={() => setActiveSquad(s.id)}
-              className={`px-3 py-1.5 rounded-lg text-[11px] transition-all whitespace-nowrap shrink-0 ${
-                activeSquad === s.id
-                  ? s.isHQ
-                    ? "bg-amber-500/10 text-amber-200 border border-amber-500/20"
-                    : "bg-white/10 text-white/90 border border-white/10"
-                  : "text-white/30 hover:text-white/50 border border-transparent"
-              }`}>
-              {s.isHQ && <span className="mr-1 text-amber-400">&#10022;</span>}
-              <span className="font-medium">{s.name}</span>
-              <span className="ml-2 text-[10px]" style={{ color: s.status === "active" ? "#34D399" : "#FBBF24", opacity: 0.7 }}>{s.revenue}</span>
-            </button>
-          ))}
+        {/* Current squad + Explore */}
+        <div className="flex items-center gap-3 mt-2">
+          <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/20 rounded-lg px-4 py-1.5">
+            <span className="text-amber-400 text-[12px]">&#10022;</span>
+            <span className="text-[12px] font-semibold text-amber-200">MateOS HQ</span>
+            <span className="text-[10px] text-emerald-400/70 ml-1">$12,400</span>
+          </div>
           <Link href="/explore"
-            className="px-3 py-1.5 rounded-lg text-[11px] transition-all whitespace-nowrap shrink-0 text-white/30 hover:text-white/50 border border-transparent hover:border-white/10 flex items-center gap-1">
-            <span className="text-[13px] leading-none">+</span>
-            <span className="font-medium">Explore</span>
+            className="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-lg px-4 py-1.5 transition-all group">
+            <svg className="w-3.5 h-3.5 text-white/40 group-hover:text-white/70 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <span className="text-[12px] font-medium text-white/40 group-hover:text-white/70 transition-colors">Explore Squads</span>
           </Link>
         </div>
       </header>

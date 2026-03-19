@@ -59,8 +59,8 @@ export default function LiveTicker() {
   }, []);
 
   return (
-    <div className="w-full overflow-hidden border-b border-white/[0.04] bg-[#08080F]/80 backdrop-blur-md">
-      <div className="relative h-9 sm:h-11 flex items-center">
+    <div className="w-full overflow-hidden">
+      <div className="relative h-10 sm:h-12 flex items-center">
         {/* Scrolling container */}
         <motion.div
           className="flex items-center gap-3 absolute whitespace-nowrap"

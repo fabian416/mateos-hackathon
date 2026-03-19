@@ -98,43 +98,43 @@ export default function HackathonLanding() {
       {/* ═══════ HERO ═══════ */}
       <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden pt-11">
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] lg:w-[800px] lg:h-[800px]">
+          <div className="w-[460px] h-[460px] sm:w-[690px] sm:h-[690px] lg:w-[920px] lg:h-[920px]">
             <Orb hue={19} hoverIntensity={0.18} rotateOnHover={true} forceHoverState={false} globalMouseTracking={false} backgroundColor="#08080F" />
           </div>
         </div>
 
         <div className="relative z-10 text-center px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }}>
-            <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-8 hover:bg-white/10 hover:border-white/20 transition-all cursor-default">
-              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-[12px] text-white/60">7 Agents. Zero Employees. Live Now.</span>
+            <div className="inline-flex items-center gap-2.5 bg-white/5 border border-white/10 rounded-full px-5 py-2 mb-10 hover:bg-white/10 hover:border-white/20 transition-all cursor-default">
+              <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[14px] text-white/70 font-medium">7 Agents. Zero Employees. Live Now.</span>
             </div>
           </motion.div>
 
           <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.5 }}
-            className="text-4xl sm:text-6xl lg:text-8xl font-extrabold tracking-tighter leading-[0.9]">
+            className="text-5xl sm:text-7xl lg:text-9xl font-extrabold tracking-tighter leading-[0.9]">
             <span className="text-white">Mate</span>
             <span className="bg-gradient-to-r from-violet-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent">OS</span>
           </motion.h1>
 
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.7 }}
-            className="text-lg sm:text-xl lg:text-2xl text-white/60 mt-6 font-medium">
+            className="text-xl sm:text-2xl lg:text-3xl text-white mt-8 font-semibold">
             Your next hire isn&apos;t human.
           </motion.p>
 
           <motion.p initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.9 }}
-            className="text-[13px] sm:text-[15px] text-white/30 mt-4 max-w-lg mx-auto leading-relaxed">
+            className="text-[15px] sm:text-[17px] text-white/50 mt-5 max-w-xl mx-auto leading-relaxed">
             An autonomous AI workforce that runs your business end-to-end — support, billing, scheduling, outreach, content — while you sleep.
           </motion.p>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1.1 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-10">
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5 mt-12">
             <button onClick={handleWatchClick}
-              className="bg-white text-black font-semibold px-8 py-3.5 rounded-xl text-[14px] hover:bg-white/90 transition-all hover:scale-105 active:scale-95 cursor-pointer">
+              className="bg-white text-black font-bold px-10 py-4 rounded-xl text-[16px] hover:bg-white/90 transition-all hover:scale-105 active:scale-95 cursor-pointer">
               Watch Them Work &rarr;
             </button>
             <Link href="/onboarding"
-              className="border border-white/15 text-white/60 font-medium px-8 py-3.5 rounded-xl text-[14px] hover:bg-white/5 hover:text-white hover:border-white/25 transition-all">
+              className="border border-white/20 text-white/70 font-semibold px-10 py-4 rounded-xl text-[16px] hover:bg-white/5 hover:text-white hover:border-white/30 transition-all">
               Deploy a Squad
             </Link>
           </motion.div>
@@ -152,10 +152,10 @@ export default function HackathonLanding() {
       <section className="py-24 px-6 border-t border-white/[0.04]">
         <div className="max-w-4xl mx-auto">
           <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-            className="text-[12px] text-white/30 uppercase tracking-[0.3em] mb-4 text-center">Before & After</motion.p>
+            className="text-[13px] text-white/40 uppercase tracking-[0.3em] mb-5 text-center">Before & After</motion.p>
           <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-12 sm:mb-16">
-            Your business today <span className="text-white/25">vs</span>{" "}
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-12 sm:mb-16">
+            Your business today <span className="text-white/30">vs</span>{" "}
             <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">on MateOS</span>
           </motion.h2>
 
@@ -167,9 +167,9 @@ export default function HackathonLanding() {
                   initial={{ opacity: 0, x: -10 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
                   transition={{ delay: i * 0.08 }}
                   className={`flex flex-col gap-1 sm:grid sm:grid-cols-[120px_1fr_1fr] sm:gap-4 py-4 border-b border-white/[0.04] sm:items-center ${isLast ? "border-0 pt-6" : ""}`}>
-                  <span className={`text-[12px] font-semibold ${isLast ? "text-white/80" : "text-white/40"}`}>{row.label}</span>
-                  <span className={`text-[12px] sm:text-[13px] ${isLast ? "text-red-400/70 font-bold sm:text-lg" : "text-white/25"}`}>{row.before}</span>
-                  <span className={`text-[12px] sm:text-[13px] ${isLast ? "text-emerald-400 font-bold sm:text-lg" : "text-white/60"}`}>{row.after}</span>
+                  <span className={`text-[13px] font-semibold ${isLast ? "text-white" : "text-white/50"}`}>{row.label}</span>
+                  <span className={`text-[13px] sm:text-[15px] ${isLast ? "text-red-400 font-bold sm:text-xl" : "text-white/30"}`}>{row.before}</span>
+                  <span className={`text-[13px] sm:text-[15px] ${isLast ? "text-emerald-400 font-bold sm:text-xl" : "text-white/70"}`}>{row.after}</span>
                 </motion.div>
               );
             })}
@@ -181,7 +181,7 @@ export default function HackathonLanding() {
       <section className="py-20 sm:py-32 px-6">
         <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
           className="max-w-3xl mx-auto text-center">
-          <h2 className="text-2xl sm:text-3xl lg:text-5xl font-bold leading-tight">
+          <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold leading-tight">
             &ldquo;The best-run company in this room has{" "}
             <span className="bg-gradient-to-r from-violet-400 to-emerald-400 bg-clip-text text-transparent">zero employees</span>.&rdquo;
           </h2>
@@ -191,9 +191,9 @@ export default function HackathonLanding() {
       {/* ═══════ THE SQUAD ═══════ */}
       <section className="py-24 px-6 border-t border-white/[0.04]">
         <div className="max-w-5xl mx-auto">
-          <p className="text-[12px] text-white/30 uppercase tracking-[0.3em] mb-4 text-center">The Squad</p>
-          <h2 className="text-3xl lg:text-4xl font-bold text-center mb-16">
-            7 specialized agents. <span className="text-white/25">One coordinated team.</span>
+          <p className="text-[13px] text-white/40 uppercase tracking-[0.3em] mb-5 text-center">The Squad</p>
+          <h2 className="text-3xl lg:text-5xl font-bold text-center mb-16">
+            7 specialized agents. <span className="text-white/30">One coordinated team.</span>
           </h2>
 
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
@@ -203,12 +203,12 @@ export default function HackathonLanding() {
                 transition={{ delay: i * 0.06 }}
                 whileHover={{ y: -4, borderColor: `${agent.color}40` }}
                 className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-5 transition-all cursor-default group">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center text-sm font-bold mb-3 transition-transform group-hover:scale-110"
+                <div className="w-12 h-12 rounded-lg flex items-center justify-center text-[15px] font-bold mb-3 transition-transform group-hover:scale-110"
                   style={{ backgroundColor: `${agent.color}15`, color: agent.color }}>
                   {agent.letter}
                 </div>
-                <div className="text-[14px] font-semibold text-white/70 group-hover:text-white transition-colors">{agent.name}</div>
-                <div className="text-[12px] text-white/25 mt-1 group-hover:text-white/40 transition-colors">{agent.role}</div>
+                <div className="text-[16px] font-semibold text-white/80 group-hover:text-white transition-colors">{agent.name}</div>
+                <div className="text-[13px] text-white/35 mt-1 group-hover:text-white/50 transition-colors">{agent.role}</div>
               </motion.div>
             ))}
           </div>
@@ -218,9 +218,9 @@ export default function HackathonLanding() {
       {/* ═══════ HOW IT WORKS ═══════ */}
       <section className="py-24 px-6 border-t border-white/[0.04]">
         <div className="max-w-4xl mx-auto">
-          <p className="text-[12px] text-white/30 uppercase tracking-[0.3em] mb-4 text-center">How It Works</p>
-          <h2 className="text-3xl lg:text-4xl font-bold text-center mb-16">
-            From zero to operating <span className="text-white/25">in 90 seconds</span>
+          <p className="text-[13px] text-white/40 uppercase tracking-[0.3em] mb-5 text-center">How It Works</p>
+          <h2 className="text-3xl lg:text-5xl font-bold text-center mb-16">
+            From zero to operating <span className="text-white/30">in 90 seconds</span>
           </h2>
 
           {[
@@ -235,10 +235,10 @@ export default function HackathonLanding() {
               transition={{ delay: i * 0.1 }}
               whileHover={{ x: 4 }}
               className="flex items-start gap-4 sm:gap-6 py-6 sm:py-8 border-b border-white/[0.04] last:border-0 cursor-default group">
-              <span className="text-[14px] font-bold font-mono shrink-0 group-hover:scale-110 transition-transform" style={{ color: item.color }}>{item.step}</span>
+              <span className="text-[16px] font-bold font-mono shrink-0 group-hover:scale-110 transition-transform" style={{ color: item.color }}>{item.step}</span>
               <div>
-                <h3 className="text-lg font-semibold text-white/80 group-hover:text-white transition-colors">{item.title}</h3>
-                <p className="text-[14px] text-white/30 mt-1.5 max-w-lg group-hover:text-white/40 transition-colors">{item.desc}</p>
+                <h3 className="text-xl font-semibold text-white group-hover:text-white transition-colors">{item.title}</h3>
+                <p className="text-[15px] text-white/40 mt-2 max-w-lg group-hover:text-white/50 transition-colors leading-relaxed">{item.desc}</p>
               </div>
             </motion.div>
           ))}
@@ -248,8 +248,8 @@ export default function HackathonLanding() {
       {/* ═══════ PROOF ═══════ */}
       <section className="py-24 px-6 border-t border-white/[0.04]">
         <div className="max-w-4xl mx-auto">
-          <p className="text-[12px] text-white/30 uppercase tracking-[0.3em] mb-4 text-center">Not a pitch deck</p>
-          <h2 className="text-3xl lg:text-4xl font-bold text-center mb-16">
+          <p className="text-[13px] text-white/40 uppercase tracking-[0.3em] mb-5 text-center">Not a pitch deck</p>
+          <h2 className="text-3xl lg:text-5xl font-bold text-center mb-16">
             A running system.
           </h2>
 
@@ -261,8 +261,8 @@ export default function HackathonLanding() {
                 whileHover={{ borderColor: `${p.color}30` }}
                 className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-6 transition-all cursor-default group">
                 <div className="w-2 h-2 rounded-full mb-4 group-hover:scale-150 transition-transform" style={{ backgroundColor: p.color }} />
-                <h3 className="text-[15px] font-semibold text-white/80 group-hover:text-white transition-colors">{p.title}</h3>
-                <p className="text-[13px] text-white/30 mt-2 leading-relaxed group-hover:text-white/40 transition-colors">{p.desc}</p>
+                <h3 className="text-[17px] font-semibold text-white group-hover:text-white transition-colors">{p.title}</h3>
+                <p className="text-[14px] text-white/40 mt-2 leading-relaxed group-hover:text-white/50 transition-colors">{p.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -272,17 +272,17 @@ export default function HackathonLanding() {
       {/* ═══════ CTA ═══════ */}
       <section className="py-20 sm:py-32 px-6 text-center">
         <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-          className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+          className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-5">
           See it in action
         </motion.h2>
         <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-          className="text-white/30 text-base sm:text-lg mb-10 max-w-md mx-auto">
+          className="text-white/40 text-lg sm:text-xl mb-12 max-w-lg mx-auto">
           Watch 7 AI agents coordinate in real-time to run a business. No humans involved.
         </motion.p>
         <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
           className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
           <button onClick={handleWatchClick}
-            className="bg-white text-black font-semibold px-8 sm:px-10 py-3.5 sm:py-4 rounded-xl text-[14px] sm:text-[15px] hover:bg-white/90 transition-all hover:scale-105 active:scale-95 cursor-pointer">
+            className="bg-white text-black font-bold px-10 sm:px-12 py-4 sm:py-5 rounded-xl text-[16px] sm:text-[17px] hover:bg-white/90 transition-all hover:scale-105 active:scale-95 cursor-pointer">
             Watch Them Work &rarr;
           </button>
           <Link href="/onboarding"
