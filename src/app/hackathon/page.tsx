@@ -8,6 +8,7 @@ import Link from "next/link";
 
 const Orb = dynamic(() => import("@/components/ui/Orb"), { ssr: false });
 const LiveTicker = dynamic(() => import("@/components/ui/LiveTicker"), { ssr: false });
+const StarField = dynamic(() => import("@/components/dashboard/StarField"), { ssr: false });
 import ShinyText from "@/components/ui/ShinyText";
 import StarBorder from "@/components/ui/StarBorder";
 import BorderGlow from "@/components/ui/BorderGlow";
@@ -56,7 +57,12 @@ export default function HackathonLanding() {
   }, [isTransitioning, router]);
 
   return (
-    <div className="bg-[#08080F] text-white overscroll-none">
+    <div className="bg-[#08080F] text-white overscroll-none relative">
+      {/* Star field background */}
+      <div className="fixed inset-0 z-0">
+        <StarField />
+      </div>
+
       {/* ═══════ TRANSITION OVERLAY ═══════ */}
       <AnimatePresence>
         {isTransitioning && (

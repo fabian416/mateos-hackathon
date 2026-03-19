@@ -43,6 +43,24 @@ interface LightPulse {
   isCascade?: boolean;
 }
 
+// Orbit particle configs for working nodes (2-3 particles per node)
+const ORBIT_PARTICLES = [
+  { offset: 0, duration: 3 },
+  { offset: 2.1, duration: 4 },
+  { offset: 4.2, duration: 5 },
+];
+
+// Generate random scatter directions for impact micro-particles (seeded per impact)
+function getScatterOffsets(id: number, count: number): { dx: number; dy: number }[] {
+  const offsets: { dx: number; dy: number }[] = [];
+  for (let i = 0; i < count; i++) {
+    const angle = ((id * 137.5 + i * 72) % 360) * (Math.PI / 180);
+    const dist = 8 + ((id * 31 + i * 17) % 13);
+    offsets.push({ dx: Math.cos(angle) * dist, dy: Math.sin(angle) * dist });
+  }
+  return offsets;
+}
+
 let pulseCounter = 0;
 
 // Compute bezier control point for a curved connection
@@ -228,9 +246,20 @@ export default function AgentNetworkVisual() {
             <g key={`conn-${fromId}-${toId}`}>
               {/* Glow path for heated connections */}
               {heat > 0.3 && (
-                <path d={pathD} fill="none" stroke={fromAgent?.color || "#fff"}
-                  strokeWidth={3} filter="url(#pulse-glow)"
-                  opacity={heat * 0.2} />
+                <>
+                  <path d={pathD} fill="none" stroke={fromAgent?.color || "#fff"}
+                    strokeWidth={3} filter="url(#pulse-glow)"
+                    opacity={heat * 0.2} />
+                  {/* Animated dash flow on heated connections */}
+                  <motion.path d={pathD} fill="none"
+                    stroke={fromAgent?.color || "#fff"}
+                    strokeWidth={1.2}
+                    strokeDasharray="4 8"
+                    opacity={heat * 0.35}
+                    animate={{ strokeDashoffset: [0, -24] }}
+                    transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
+                  />
+                </>
               )}
               {/* Main path */}
               <path d={pathD} fill="none"
@@ -260,22 +289,21 @@ export default function AgentNetworkVisual() {
                 animate={{ pathLength: 1, opacity: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
               />
-              {/* Bright core traveling */}
+              {/* Bright core traveling — starts full color, shifts to white, then fades */}
               <motion.circle
                 r={pulse.isCascade ? 6 : 5}
-                fill={pulse.color}
                 filter="url(#pulse-glow)"
-                initial={{ cx: from.x, cy: from.y, opacity: 1 }}
-                animate={{ cx: to.x, cy: to.y, opacity: 0.1 }}
-                transition={{ duration: 0.6, ease: "easeOut" }}
+                initial={{ cx: from.x, cy: from.y, opacity: 1, fill: pulse.color }}
+                animate={{ cx: to.x, cy: to.y, opacity: [1, 0.8, 0.1], fill: [pulse.color, "#ffffff", pulse.color] }}
+                transition={{ duration: 0.6, ease: "easeOut", opacity: { times: [0, 0.4, 1] }, fill: { times: [0, 0.5, 1] } }}
               />
               {/* White hot center */}
               <motion.circle
                 r={pulse.isCascade ? 3 : 2}
                 fill="white"
                 initial={{ cx: from.x, cy: from.y, opacity: 0.95 }}
-                animate={{ cx: to.x, cy: to.y, opacity: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
+                animate={{ cx: to.x, cy: to.y, opacity: [1, 0.8, 0.1] }}
+                transition={{ duration: 0.5, ease: "easeOut", opacity: { times: [0, 0.4, 1] } }}
               />
             </g>
           );
@@ -356,6 +384,15 @@ export default function AgentNetworkVisual() {
                     initial={{ r: a.size, strokeWidth: 1, opacity: 0.25 }}
                     animate={{ r: a.size * 3.5, strokeWidth: 0.2, opacity: 0 }}
                     transition={{ duration: 3, delay: 0.15, ease: [0.0, 0.0, 0.1, 1] }} />
+                  {/* Impact micro-particles — scatter outward from impact point */}
+                  {getScatterOffsets(impact.id, 5).map((off, pi) => (
+                    <motion.circle key={`mp-${impact.id}-${pi}`}
+                      r={1} fill={impact.color}
+                      initial={{ cx, cy, opacity: 0.9 }}
+                      animate={{ cx: cx + off.dx, cy: cy + off.dy, opacity: 0 }}
+                      transition={{ duration: 0.5, ease: "easeOut", delay: pi * 0.03 }}
+                    />
+                  ))}
                 </g>
               ))}
 
@@ -412,6 +449,35 @@ export default function AgentNetworkVisual() {
                   fill="#10B981" animate={{ r: [3, 6, 3], opacity: [0.7, 0, 0.7] }}
                   transition={{ duration: 2, repeat: Infinity }} />
               )}
+
+              {/* Orbiting particles — only on working status nodes */}
+              {a.status === "working" && ORBIT_PARTICLES.map((op, pi) => {
+                const orbitR = a.size * 0.8;
+                return (
+                  <motion.circle key={`orbit-${a.id}-${pi}`}
+                    r={1.5}
+                    fill={a.color}
+                    fillOpacity={0.6}
+                    animate={{
+                      cx: [
+                        cx + Math.cos(op.offset) * orbitR,
+                        cx + Math.cos(op.offset + Math.PI * 0.5) * orbitR,
+                        cx + Math.cos(op.offset + Math.PI) * orbitR,
+                        cx + Math.cos(op.offset + Math.PI * 1.5) * orbitR,
+                        cx + Math.cos(op.offset + Math.PI * 2) * orbitR,
+                      ],
+                      cy: [
+                        cy + Math.sin(op.offset) * orbitR,
+                        cy + Math.sin(op.offset + Math.PI * 0.5) * orbitR,
+                        cy + Math.sin(op.offset + Math.PI) * orbitR,
+                        cy + Math.sin(op.offset + Math.PI * 1.5) * orbitR,
+                        cy + Math.sin(op.offset + Math.PI * 2) * orbitR,
+                      ],
+                    }}
+                    transition={{ duration: op.duration, repeat: Infinity, ease: "linear" }}
+                  />
+                );
+              })}
             </g>
           );
         })}

@@ -1,34 +1,30 @@
 <svg width="180" height="180" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="goldBorder" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#D4A843" />
-      <stop offset="50%" stop-color="#F0D078" />
-      <stop offset="100%" stop-color="#C4993B" />
+    <radialGradient id="orb" cx="40%" cy="35%" r="55%">
+      <stop offset="0%" stop-color="#6366F1" stop-opacity="0.9"/>
+      <stop offset="40%" stop-color="#8B5CF6" stop-opacity="0.7"/>
+      <stop offset="70%" stop-color="#06B6D4" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#10B981" stop-opacity="0.3"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#08080F" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ring" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.8"/>
+      <stop offset="33%" stop-color="#06B6D4" stop-opacity="0.6"/>
+      <stop offset="66%" stop-color="#10B981" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#8B5CF6" stop-opacity="0.2"/>
     </linearGradient>
-    <linearGradient id="mateBody" x1="24" y1="24" x2="40" y2="52" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#D4A843" />
-      <stop offset="60%" stop-color="#C4993B" />
-      <stop offset="100%" stop-color="#8B6914" />
-    </linearGradient>
-    <linearGradient id="rimGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#C4993B" />
-      <stop offset="40%" stop-color="#F0D078" />
-      <stop offset="100%" stop-color="#C4993B" />
-    </linearGradient>
-    <linearGradient id="bombillaGrad" x1="36" y1="10" x2="33" y2="42" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#E8CC7A" />
-      <stop offset="50%" stop-color="#D4A843" />
-      <stop offset="100%" stop-color="#A07828" />
+    <linearGradient id="mGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#E2E8F0" stop-opacity="0.8"/>
     </linearGradient>
   </defs>
-  <circle cx="32" cy="32" r="31" fill="#1A1A2E" />
-  <circle cx="32" cy="32" r="30" fill="none" stroke="url(#goldBorder)" stroke-width="2" />
-  <circle cx="32" cy="32" r="27" fill="none" stroke="#C4993B" stroke-width="0.5" opacity="0.5" />
-  <path d="M25 26.5 C27 22, 30 20, 32 19.5 C34 20, 37 22, 39 26.5" fill="#3D5A1E" opacity="0.7" />
-  <path d="M24 28 C22 32, 22 37, 23.5 42 C25 47, 28 50, 32 51 C36 50, 39 47, 40.5 42 C42 37, 42 32, 40 28" fill="url(#mateBody)" stroke="#8B6914" stroke-width="0.6" />
-  <path d="M25 38 C28 39.5, 36 39.5, 39 38" stroke="#8B6914" stroke-width="0.7" fill="none" opacity="0.5" />
-  <ellipse cx="32" cy="27.5" rx="9" ry="2.8" fill="url(#rimGrad)" stroke="#8B6914" stroke-width="0.5" />
-  <line x1="37.5" y1="13" x2="34" y2="40" stroke="url(#bombillaGrad)" stroke-width="1.8" stroke-linecap="round" />
-  <path d="M35.8 12 L39.2 12 L39.5 13.5 L38 14 L37 14 L35.5 13.5 Z" fill="#D4A843" stroke="#A07828" stroke-width="0.4" />
-  <ellipse cx="33.8" cy="41" rx="2.5" ry="1.3" fill="#D4A843" stroke="#A07828" stroke-width="0.4" />
+  <circle cx="32" cy="32" r="32" fill="#08080F"/>
+  <circle cx="32" cy="32" r="30" fill="url(#glow)"/>
+  <circle cx="32" cy="32" r="26" fill="none" stroke="url(#ring)" stroke-width="1.5"/>
+  <circle cx="32" cy="32" r="22" fill="url(#orb)"/>
+  <ellipse cx="28" cy="26" rx="10" ry="8" fill="#8B5CF6" opacity="0.15"/>
+  <text x="32" y="40" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="800" font-size="26" fill="url(#mGrad)">M</text>
 </svg>

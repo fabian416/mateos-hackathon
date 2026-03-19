@@ -25,9 +25,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Empleados de IA para Empresas Argentinas | MateOS",
+  title: "MateOS — Zero Human Factory",
   description:
-    "Empleados digitales con IA para empresas argentinas. Agentes de inteligencia artificial que trabajan 24/7 automatizando ventas, atención y operaciones.",
+    "An autonomous AI workforce that runs your business end-to-end. 7 agents. Zero employees. Live now.",
   icons: {
     icon: "/favicon.svg",
     apple: "/apple-icon.svg",
