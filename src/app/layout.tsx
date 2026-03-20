@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
-import { DM_Serif_Display, Playfair_Display, Source_Sans_3, JetBrains_Mono } from "next/font/google";
+import {
+  DM_Serif_Display,
+  Playfair_Display,
+  Source_Sans_3,
+  JetBrains_Mono,
+} from "next/font/google";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import "./globals.css";
 
 const dmSerif = DM_Serif_Display({
@@ -44,8 +50,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Empleados de IA para tu Empresa | MateOS",
-    description:
-      "Agentes de IA personalizados que trabajan 24/7. Para empresas argentinas.",
+    description: "Agentes de IA personalizados que trabajan 24/7. Para empresas argentinas.",
   },
   robots: "index, follow",
 };
@@ -61,7 +66,7 @@ export default function RootLayout({
         className={`${dmSerif.variable} ${playfair.variable} ${sourceSans.variable} ${jetbrainsMono.variable} antialiased`}
         style={{ background: "#08080F" }}
       >
-        {children}
+        <ErrorBoundary>{children}</ErrorBoundary>
       </body>
     </html>
   );
