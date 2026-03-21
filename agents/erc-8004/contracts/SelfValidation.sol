@@ -58,9 +58,6 @@ contract SelfValidation {
     mapping(bytes32 => ValidationResponse) public responses;
     mapping(bytes32 => Dispute) public disputes;
 
-    /// @notice Track which agents a wallet is authorized to submit for
-    mapping(address => mapping(uint256 => bool)) public authorizedSubmitters;
-
     uint256 public totalRequests;
     uint256 public totalValidated;
     uint256 public totalDisputed;
@@ -91,9 +88,6 @@ contract SelfValidation {
         string reason
     );
 
-    event SubmitterAuthorized(uint256 indexed agentId, address indexed submitter);
-    event SubmitterRevoked(uint256 indexed agentId, address indexed submitter);
-
     // ──────────────────────────────────────────────
     // Errors
     // ──────────────────────────────────────────────
@@ -103,10 +97,8 @@ contract SelfValidation {
     error ValidationDeadlineExpired();
     error DisputeWindowClosed();
     error SelfValidationNotAllowed();
-    error NotAuthorizedSubmitter();
     error ScoreOutOfRange();
     error AlreadyDisputed();
-    error TaskHashMismatch();
 
     // ──────────────────────────────────────────────
     // Constructor
@@ -115,25 +107,6 @@ contract SelfValidation {
     /// @param _identityRegistry Address of the ERC-8004 Identity Registry on Base
     constructor(address _identityRegistry) {
         identityRegistry = _identityRegistry;
-    }
-
-    // ──────────────────────────────────────────────
-    // Authorization
-    // ──────────────────────────────────────────────
-
-    /// @notice Authorize a wallet to submit validations for an agent.
-    ///         Must be called by the wallet itself (self-authorization).
-    /// @param agentId The ERC-8004 agent ID
-    function authorizeSubmitter(uint256 agentId) external {
-        authorizedSubmitters[msg.sender][agentId] = true;
-        emit SubmitterAuthorized(agentId, msg.sender);
-    }
-
-    /// @notice Revoke submission authorization
-    /// @param agentId The ERC-8004 agent ID
-    function revokeSubmitter(uint256 agentId) external {
-        authorizedSubmitters[msg.sender][agentId] = false;
-        emit SubmitterRevoked(agentId, msg.sender);
     }
 
     // ──────────────────────────────────────────────

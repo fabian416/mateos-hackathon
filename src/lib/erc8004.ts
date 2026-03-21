@@ -42,16 +42,19 @@ export async function getSquadReputation(): Promise<SquadReputation> {
     for (let to = currentBlock; to > currentBlock - LOOKBACK; to -= CHUNK) {
       const from = to - CHUNK > BigInt(0) ? to - CHUNK : BigInt(0);
       try {
-        const logs = await client.getLogs({
-          address: REPUTATION_REGISTRY,
-          topics: [FEEDBACK_EVENT_SIG],
-          fromBlock: from,
-          toBlock: to,
-        });
+        const logs = await client.request({
+          method: "eth_getLogs",
+          params: [{
+            address: REPUTATION_REGISTRY,
+            topics: [FEEDBACK_EVENT_SIG],
+            fromBlock: ("0x" + from.toString(16)) as Hex,
+            toBlock: ("0x" + to.toString(16)) as Hex,
+          }],
+        }) as Array<{ topics: Hex[]; data: Hex; blockNumber: Hex; transactionHash: Hex }>;
         const filtered = logs.filter((l) => l.topics[1]?.toLowerCase() === agentIdHex);
         allLogs.push(...filtered);
       } catch {
-        break;
+        break; // RPC limit hit, use what we have
       }
     }
 
@@ -60,7 +63,7 @@ export async function getSquadReputation(): Promise<SquadReputation> {
       tag1: "",
       tag2: "",
       sender: log.topics[2] ? ("0x" + log.topics[2].slice(26)) : "",
-      blockNumber: log.blockNumber,
+      blockNumber: BigInt(log.blockNumber),
       txHash: log.transactionHash,
     }));
 

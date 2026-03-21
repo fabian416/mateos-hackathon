@@ -5,13 +5,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 
 const AGENT_META: Record<string, { name: string; subtitle: string; color: string }> = {
-  baqueano: { name: "El Baqueano", subtitle: "WhatsApp Support", color: "#2D5A3D" },
-  domador: { name: "El Domador", subtitle: "Scheduling", color: "#8B5CF6" },
-  tropero: { name: "El Tropero", subtitle: "Billing", color: "#6366F1" },
-  paisano: { name: "El Paisano", subtitle: "Social Media", color: "#EC4899" },
-  relator: { name: "El Relator", subtitle: "Content", color: "#F59E0B" },
-  rastreador: { name: "El Rastreador", subtitle: "Outreach", color: "#06B6D4" },
-  ceo: { name: "El CEO", subtitle: "Coordination", color: "#C4A35A" },
+  baqueano: { name: "ChatGod", subtitle: "WhatsApp Support", color: "#10B981" },
+  domador: { name: "CalendApe", subtitle: "Scheduling", color: "#A855F7" },
+  tropero: { name: "BagChaser", subtitle: "Billing", color: "#8B5CF6" },
+  paisano: { name: "PostMalone", subtitle: "Social Media", color: "#EC4899" },
+  relator: { name: "HypeSmith", subtitle: "Content", color: "#F97316" },
+  rastreador: { name: "DM Sniper", subtitle: "Outreach", color: "#06B6D4" },
+  ceo: { name: "OpsChad", subtitle: "Coordination", color: "#EAB308" },
 };
 
 function DeployContent() {

@@ -151,16 +151,19 @@ export async function checkReputation(
     for (let to = currentBlock; to > currentBlock - LOOKBACK; to -= CHUNK) {
       const from = to - CHUNK > BigInt(0) ? to - CHUNK : BigInt(0);
       try {
-        const logs = await publicClient.getLogs({
-          address: REPUTATION_REGISTRY,
-          topics: [FEEDBACK_EVENT_SIG],
-          fromBlock: from,
-          toBlock: to,
-        });
-        // Filter client-side by agentId (topic1)
+        const logs = await publicClient.request({
+          method: "eth_getLogs",
+          params: [{
+            address: REPUTATION_REGISTRY,
+            topics: [FEEDBACK_EVENT_SIG],
+            fromBlock: ("0x" + from.toString(16)) as Hex,
+            toBlock: ("0x" + to.toString(16)) as Hex,
+          }],
+        }) as Array<{ topics: string[]; data: string }>;
         const filtered = logs.filter((l) => l.topics[1]?.toLowerCase() === agentIdHex);
         allLogs.push(...filtered);
-      } catch {
+      } catch (err) {
+        console.warn(`[proxy] RPC query failed at block range, stopping lookback:`, err);
         break;
       }
     }

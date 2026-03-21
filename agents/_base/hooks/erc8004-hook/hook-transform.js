@@ -85,7 +85,8 @@ async function checkReputation(agentId) {
           );
           allLogs = allLogs.concat(filtered);
         }
-      } catch {
+      } catch (err) {
+        console.warn(`[erc8004-hook] RPC query failed at block range ${from}-${to}:`, err.message || err);
         break;
       }
     }
