@@ -3,9 +3,9 @@
     "defaults": {
       "model": { "primary": "${PRIMARY_MODEL}" },
       "models": {
-        "google/gemini-2.5-flash": {},
-        "anthropic/claude-haiku-4-5": {},
-        "anthropic/claude-sonnet-4-6": {}
+        "google/gemini-2.5-flash": { "alias": "flash" },
+        "anthropic/claude-haiku-4-5": { "alias": "haiku" },
+        "anthropic/claude-sonnet-4-6": { "alias": "sonnet" }
       },
       "heartbeat": { "target": "last" },
       "maxConcurrent": 4,
@@ -65,6 +65,15 @@
       "visibility": "all"
     }
   },
+  "bindings": [
+    { "type": "route", "agentId": "mateo-ceo", "match": { "channel": "telegram", "accountId": "mateo-ceo" } },
+    { "type": "route", "agentId": "tropero", "match": { "channel": "telegram", "accountId": "tropero" } },
+    { "type": "route", "agentId": "domador", "match": { "channel": "telegram", "accountId": "domador" } },
+    { "type": "route", "agentId": "rastreador", "match": { "channel": "telegram", "accountId": "rastreador" } },
+    { "type": "route", "agentId": "relator", "match": { "channel": "telegram", "accountId": "relator" } },
+    { "type": "route", "agentId": "paisano", "match": { "channel": "telegram", "accountId": "paisano" } },
+    { "type": "route", "agentId": "baqueano", "match": { "channel": "telegram", "accountId": "baqueano" } }
+  ],
   "commands": { "native": "auto", "nativeSkills": true, "restart": true, "ownerDisplay": "raw" },
   "channels": {
     "telegram": {
@@ -88,11 +97,35 @@
     "mode": "local",
     "bind": "lan",
     "auth": { "mode": "token", "token": "${GATEWAY_AUTH_TOKEN}" },
+    "http": {
+      "endpoints": {
+        "chatCompletions": { "enabled": true }
+      }
+    },
     "tailscale": { "mode": "off", "resetOnExit": false }
   },
   "hooks": {
     "enabled": true,
     "token": "${HOOKS_TOKEN}",
+    "path": "/hooks",
+    "transformsDir": "/home/agent/.openclaw/hooks/transforms",
+    "mappings": [
+      {
+        "id": "sentry",
+        "match": { "path": "sentry" },
+        "transform": { "module": "sentry-hook/hook-transform.js" }
+      },
+      {
+        "id": "stripe",
+        "match": { "path": "stripe" },
+        "transform": { "module": "stripe-hook/hook-transform.js" }
+      },
+      {
+        "id": "github",
+        "match": { "path": "github" },
+        "transform": { "module": "github-hook/hook-transform.js" }
+      }
+    ],
     "internal": {
       "enabled": true,
       "entries": {
