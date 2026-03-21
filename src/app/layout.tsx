@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Serif_Display, Playfair_Display, Source_Sans_3, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { WalletProvider } from "@/lib/walletContext";
 
 const dmSerif = DM_Serif_Display({
   variable: "--font-display",
@@ -61,7 +62,9 @@ export default function RootLayout({
         className={`${dmSerif.variable} ${playfair.variable} ${sourceSans.variable} ${jetbrainsMono.variable} antialiased`}
         style={{ background: "#08080F" }}
       >
-        {children}
+        <WalletProvider>
+          {children}
+        </WalletProvider>
       </body>
     </html>
   );
