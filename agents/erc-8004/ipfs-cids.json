@@ -63,9 +63,18 @@
       "txHash": "0xfaefa7e0c0b916c11dbe7bf5b2d69e379a69f921baa235401d8128f4b13f889d"
     }
   },
+  "squads": {
+    "buenos-table": { "agentId": 35270, "wallet": "W1", "city": "Buenos Aires" },
+    "andes-vineyard": { "agentId": 35303, "wallet": "W2", "city": "Mendoza" },
+    "central-logistics": { "agentId": 35304, "wallet": "W3", "city": "Rosario" },
+    "altura-wines": { "agentId": 35305, "wallet": "W4", "city": "Salta" },
+    "norte-citrus": { "agentId": 35306, "wallet": "W5", "city": "Tucumán" },
+    "estancia-meats": { "agentId": 35307, "wallet": "W6", "city": "Córdoba" }
+  },
   "contracts": {
     "identityRegistry": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
     "reputationRegistry": "0x8004BAa17C55a88189AE136b182e5fdA19dE9b63",
+    "selfValidation": "0xb02d1eDE093aa74847D89388632b59a0fab5893c",
     "chain": "base-mainnet",
     "chainId": 8453
   }
