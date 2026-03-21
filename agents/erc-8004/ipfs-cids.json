@@ -74,7 +74,7 @@
   "contracts": {
     "identityRegistry": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
     "reputationRegistry": "0x8004BAa17C55a88189AE136b182e5fdA19dE9b63",
-    "selfValidation": "0xb02d1eDE093aa74847D89388632b59a0fab5893c",
+    "selfValidation": "0x17Fa2eF50Cc53A96C08610f345fAd0F2c4Ecc149",
     "chain": "base-mainnet",
     "chainId": 8453
   }
