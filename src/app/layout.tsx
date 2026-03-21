@@ -7,6 +7,7 @@ import {
 } from "next/font/google";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import "./globals.css";
+import { WalletProvider } from "@/lib/walletContext";
 
 const dmSerif = DM_Serif_Display({
   variable: "--font-display",
@@ -66,7 +67,9 @@ export default function RootLayout({
         className={`${dmSerif.variable} ${playfair.variable} ${sourceSans.variable} ${jetbrainsMono.variable} antialiased`}
         style={{ background: "#08080F" }}
       >
-        <ErrorBoundary>{children}</ErrorBoundary>
+        <ErrorBoundary>
+          <WalletProvider>{children}</WalletProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

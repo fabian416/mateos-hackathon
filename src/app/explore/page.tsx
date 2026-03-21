@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import dynamic from "next/dynamic";
+import TopNav from "@/components/ui/TopNav";
 
 const StarField = dynamic(() => import("@/components/dashboard/StarField"), { ssr: false });
 
@@ -23,20 +24,8 @@ export default function ExplorePage() {
       <StarField />
 
       <div className="relative z-10">
-        {/* Header */}
-        <header className="border-b border-white/[0.06] px-6 py-4 flex items-center justify-between bg-black/30 backdrop-blur-md">
-          <div className="flex items-center gap-4">
-            <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-              <svg className="w-7 h-7" viewBox="0 0 220 220" fill="none"><defs><radialGradient id="exGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#7C5CFF"/><stop offset="100%" stopColor="#00D1FF"/></radialGradient></defs><circle cx="110" cy="110" r="90" stroke="url(#exGrad)" strokeWidth="4" opacity="0.6"/><circle cx="110" cy="110" r="35" fill="url(#exGrad)"/><circle cx="110" cy="40" r="6" fill="#7C5CFF"/><circle cx="180" cy="110" r="6" fill="#00D1FF"/><circle cx="110" cy="180" r="6" fill="#7C5CFF"/><circle cx="40" cy="110" r="6" fill="#00D1FF"/></svg>
-              <span className="font-bold text-white/80 text-[14px]">MateOS</span>
-            </Link>
-            <div className="w-px h-5 bg-white/10" />
-            <span className="text-white/50 text-[14px] font-medium">Explore Squads</span>
-          </div>
-          <Link href="/dashboard" className="text-[12px] text-white/30 hover:text-white/60 transition-colors border border-white/10 rounded-lg px-4 py-2 hover:bg-white/5">
-            &larr; Dashboard
-          </Link>
-        </header>
+        {/* Top nav */}
+        <TopNav />
 
         {/* Global stats */}
         <div className="border-b border-white/[0.04] bg-black/20 backdrop-blur-sm">
@@ -78,7 +67,7 @@ export default function ExplorePage() {
                       <span className={`font-semibold group-hover:text-white transition-colors ${squad.isHQ ? "text-[17px] text-amber-200" : "text-[15px] text-white/80"}`}>
                         {squad.name}
                       </span>
-                      {squad.isHQ && <span className="text-amber-400 text-[14px]">✦</span>}
+                      {squad.isHQ && <span className="text-amber-400 text-[14px]">&#10022;</span>}
                     </div>
                     <p className={`mt-0.5 ${squad.isHQ ? "text-[12px] text-amber-200/40" : "text-[11px] text-white/25"}`}>{squad.desc}</p>
                   </div>
