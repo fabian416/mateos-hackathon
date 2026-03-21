@@ -1,4 +1,4 @@
-import { createPublicClient, http, parseAbiItem, type Log } from "viem";
+import { createPublicClient, http, type Hex } from "viem";
 import { base } from "viem/chains";
 
 const REPUTATION_REGISTRY = "0x8004BAa17C55a88189AE136b182e5fdA19dE9b63" as const;
@@ -10,9 +10,7 @@ const client = createPublicClient({
   transport: http("https://mainnet.base.org"),
 });
 
-const feedbackEvent = parseAbiItem(
-  "event FeedbackGiven(uint256 indexed agentId, address indexed sender, int128 value, uint8 valueDecimals, string tag1, string tag2, string endpoint, string feedbackURI, bytes32 feedbackHash)"
-);
+const FEEDBACK_EVENT_SIG = "0x6a4a61743519c9d648a14e6493f47dbe3ff1aa29e7785c96c8326a205e58febc" as const;
 
 export interface FeedbackEntry {
   value: number;
@@ -34,22 +32,34 @@ export interface SquadReputation {
 export async function getSquadReputation(): Promise<SquadReputation> {
   try {
     const currentBlock = await client.getBlockNumber();
-    // Query last 10000 blocks (~5.5 hours on Base)
-    const fromBlock = currentBlock - BigInt(10000);
+    // Base RPC limits eth_getLogs to 10k block range — query in chunks
+    const CHUNK = BigInt(9900);
+    const LOOKBACK = BigInt(30000);
+    const allLogs = [];
 
-    const logs = await client.getLogs({
-      address: REPUTATION_REGISTRY,
-      event: feedbackEvent,
-      args: { agentId: SQUAD_AGENT_ID },
-      fromBlock,
-      toBlock: "latest",
-    });
+    const agentIdHex = ("0x" + Number(SQUAD_AGENT_ID).toString(16).padStart(64, "0")).toLowerCase();
 
-    const feedbacks: FeedbackEntry[] = logs.map((log) => ({
-      value: Number(log.args.value ?? 0),
-      tag1: log.args.tag1 ?? "",
-      tag2: log.args.tag2 ?? "",
-      sender: log.args.sender ?? "",
+    for (let to = currentBlock; to > currentBlock - LOOKBACK; to -= CHUNK) {
+      const from = to - CHUNK > BigInt(0) ? to - CHUNK : BigInt(0);
+      try {
+        const logs = await client.getLogs({
+          address: REPUTATION_REGISTRY,
+          topics: [FEEDBACK_EVENT_SIG],
+          fromBlock: from,
+          toBlock: to,
+        });
+        const filtered = logs.filter((l) => l.topics[1]?.toLowerCase() === agentIdHex);
+        allLogs.push(...filtered);
+      } catch {
+        break;
+      }
+    }
+
+    const feedbacks: FeedbackEntry[] = allLogs.map((log) => ({
+      value: Number(BigInt("0x" + log.data.slice(66, 130))),
+      tag1: "",
+      tag2: "",
+      sender: log.topics[2] ? ("0x" + log.topics[2].slice(26)) : "",
       blockNumber: log.blockNumber,
       txHash: log.transactionHash,
     }));
