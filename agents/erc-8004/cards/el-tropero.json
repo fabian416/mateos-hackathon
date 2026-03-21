@@ -1,0 +1,35 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "BagChaser",
+  "description": "Sales and lead qualification agent. Makes first contact within 5 minutes, nurtures prospects through a defined pipeline, schedules meetings, manages CRM in Google Sheets. Consultive approach — asks before offering. Persistent but never invasive.",
+  "services": [
+    {
+      "name": "A2A",
+      "endpoint": "https://mateos.tech/.well-known/agents/el-tropero.json",
+      "version": "0.3.0"
+    }
+  ],
+  "capabilities": [
+    "lead-qualification",
+    "first-contact",
+    "follow-up-cadence",
+    "meeting-scheduling",
+    "pipeline-management",
+    "proposal-drafting",
+    "red-flag-detection"
+  ],
+  "channels": ["whatsapp", "email", "google-sheets", "google-calendar", "telegram"],
+  "trustLevel": 2,
+  "squad": "mateos-hq",
+  "role": "sales",
+  "model": "anthropic/claude-haiku-4-5",
+  "sla": {
+    "new_lead_first_contact_minutes": 5,
+    "follow_up_hours": 48,
+    "meeting_scheduling_hours": 72,
+    "proposal_after_meeting_hours": 24
+  },
+  "x402Support": false,
+  "active": true,
+  "supportedTrust": ["reputation", "validation"]
+}

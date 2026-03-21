@@ -1,0 +1,33 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "ChatGod",
+  "description": "First-line customer support agent. Receives and classifies inquiries via WhatsApp and email, diagnoses issues with minimal info, drafts responses for operator approval. Empathetic, efficient, resolves or escalates within 2 exchanges.",
+  "services": [
+    {
+      "name": "A2A",
+      "endpoint": "https://mateos.tech/.well-known/agents/el-baqueano.json",
+      "version": "0.3.0"
+    }
+  ],
+  "capabilities": [
+    "customer-support",
+    "inquiry-classification",
+    "issue-diagnosis",
+    "escalation-routing",
+    "sla-monitoring",
+    "phishing-detection"
+  ],
+  "channels": ["whatsapp", "email", "telegram"],
+  "trustLevel": 2,
+  "squad": "mateos-hq",
+  "role": "support",
+  "model": "anthropic/claude-haiku-4-5",
+  "sla": {
+    "whatsapp_first_response_minutes": 15,
+    "email_first_response_hours": 4,
+    "critical_response_minutes": 30
+  },
+  "x402Support": false,
+  "active": true,
+  "supportedTrust": ["reputation", "validation"]
+}

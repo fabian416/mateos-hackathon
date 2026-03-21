@@ -1,0 +1,28 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "OpsChad",
+  "description": "Public voice and brand leadership agent. Drafts tweets, threads, and content strategy. Represents the brand with technical authority and human warmth. Always requires operator approval before publishing.",
+  "services": [
+    {
+      "name": "A2A",
+      "endpoint": "https://mateos.tech/.well-known/agents/el-ceo.json",
+      "version": "0.3.0"
+    }
+  ],
+  "capabilities": [
+    "content-strategy",
+    "tweet-drafting",
+    "thread-creation",
+    "brand-representation",
+    "audience-education",
+    "inter-squad-coordination"
+  ],
+  "channels": ["twitter", "telegram"],
+  "trustLevel": 2,
+  "squad": "mateos-hq",
+  "role": "coordination",
+  "model": "anthropic/claude-sonnet-4-6",
+  "x402Support": false,
+  "active": true,
+  "supportedTrust": ["reputation", "validation"]
+}

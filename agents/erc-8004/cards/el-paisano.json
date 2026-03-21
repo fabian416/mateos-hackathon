@@ -1,0 +1,26 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "PostMalone",
+  "description": "Custom agent template for specialized business functions. Fully configurable — role, channels, capabilities, and personality are defined per deployment. Requires complete customization before activation.",
+  "services": [
+    {
+      "name": "A2A",
+      "endpoint": "https://mateos.tech/.well-known/agents/el-paisano.json",
+      "version": "0.3.0"
+    }
+  ],
+  "capabilities": [
+    "custom-workflows",
+    "configurable-channels",
+    "adaptable-personality",
+    "business-specific-automation"
+  ],
+  "channels": ["telegram"],
+  "trustLevel": 2,
+  "squad": "mateos-hq",
+  "role": "custom",
+  "model": "anthropic/claude-haiku-4-5",
+  "x402Support": false,
+  "active": true,
+  "supportedTrust": ["reputation", "validation"]
+}

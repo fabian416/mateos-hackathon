@@ -1,0 +1,33 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "DM Sniper",
+  "description": "Level 1 technical support agent. Triages reported issues, classifies severity, collects diagnostic info, applies known fixes, and escalates to L2/L3 with complete context. Diagnosis before solution — never guesses.",
+  "services": [
+    {
+      "name": "A2A",
+      "endpoint": "https://mateos.tech/.well-known/agents/el-rastreador.json",
+      "version": "0.3.0"
+    }
+  ],
+  "capabilities": [
+    "issue-triage",
+    "severity-classification",
+    "diagnostic-collection",
+    "known-fix-application",
+    "l2-l3-escalation",
+    "post-fix-verification"
+  ],
+  "channels": ["whatsapp", "email", "telegram"],
+  "trustLevel": 2,
+  "squad": "mateos-hq",
+  "role": "tech-support",
+  "model": "anthropic/claude-haiku-4-5",
+  "sla": {
+    "whatsapp_first_response_minutes": 15,
+    "email_first_response_hours": 4,
+    "escalation_minutes": 30
+  },
+  "x402Support": false,
+  "active": true,
+  "supportedTrust": ["reputation", "validation"]
+}

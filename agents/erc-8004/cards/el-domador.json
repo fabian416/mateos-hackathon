@@ -1,0 +1,28 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "CalendApe",
+  "description": "Administrative operations agent. Manages data entry, report generation, deadline tracking, invoice processing, and calendar coordination. Methodical, precise — verifies numbers twice. Guardian of data integrity.",
+  "services": [
+    {
+      "name": "A2A",
+      "endpoint": "https://mateos.tech/.well-known/agents/el-domador.json",
+      "version": "0.3.0"
+    }
+  ],
+  "capabilities": [
+    "data-entry-verification",
+    "report-generation",
+    "deadline-tracking",
+    "invoice-processing",
+    "calendar-management",
+    "data-consistency-checks"
+  ],
+  "channels": ["google-sheets", "google-calendar", "email", "telegram"],
+  "trustLevel": 2,
+  "squad": "mateos-hq",
+  "role": "admin",
+  "model": "anthropic/claude-haiku-4-5",
+  "x402Support": false,
+  "active": true,
+  "supportedTrust": ["reputation", "validation"]
+}

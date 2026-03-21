@@ -1,0 +1,28 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "HypeSmith",
+  "description": "Content and communication agent. Drafts blog articles, social media posts, newsletters, and brand documentation. Creative with purpose — every piece has a clear objective. Adapts voice across platforms while maintaining brand consistency.",
+  "services": [
+    {
+      "name": "A2A",
+      "endpoint": "https://mateos.tech/.well-known/agents/el-relator.json",
+      "version": "0.3.0"
+    }
+  ],
+  "capabilities": [
+    "blog-writing",
+    "social-media-posts",
+    "newsletter-creation",
+    "brand-documentation",
+    "editorial-calendar",
+    "multi-format-adaptation"
+  ],
+  "channels": ["telegram"],
+  "trustLevel": 2,
+  "squad": "mateos-hq",
+  "role": "content",
+  "model": "anthropic/claude-sonnet-4-6",
+  "x402Support": false,
+  "active": true,
+  "supportedTrust": ["reputation", "validation"]
+}
