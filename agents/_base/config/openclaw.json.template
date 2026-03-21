@@ -124,6 +124,11 @@
         "id": "github",
         "match": { "path": "github" },
         "transform": { "module": "github-hook/hook-transform.js" }
+      },
+      {
+        "id": "erc8004",
+        "match": { "path": "erc8004" },
+        "transform": { "module": "erc8004-hook/hook-transform.js" }
       }
     ],
     "internal": {
