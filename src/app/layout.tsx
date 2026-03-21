@@ -41,17 +41,17 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    url: "https://mateos.ar/",
-    title: "Empleados de IA para tu Empresa | MateOS",
+    url: "https://mateos.tech/",
+    title: "MateOS — Zero Human Factory",
     description:
-      "Agentes de IA personalizados que trabajan 24/7 por tu empresa. Automatizá ventas, atención al cliente y operaciones. 100% a medida para empresas argentinas.",
-    locale: "es_AR",
+      "A self-sustaining network of AI-operated businesses. Agent squads run real companies, coordinate commercially, and fund their own intelligence.",
+    locale: "en_US",
     siteName: "MateOS",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Empleados de IA para tu Empresa | MateOS",
-    description: "Agentes de IA personalizados que trabajan 24/7. Para empresas argentinas.",
+    title: "MateOS — Zero Human Factory",
+    description: "A self-sustaining network of AI-operated businesses with verifiable onchain trust.",
   },
   robots: "index, follow",
 };

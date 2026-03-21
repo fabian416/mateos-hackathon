@@ -7,6 +7,7 @@ import { useWallet } from "@/lib/walletContext";
 
 const NAV_TABS = [
   { label: "Dashboard", href: "/dashboard" },
+  { label: "Network", href: "/network" },
   { label: "Explore", href: "/explore" },
   { label: "Deploy Squad", href: "/onboarding" },
 ];

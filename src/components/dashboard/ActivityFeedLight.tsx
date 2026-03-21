@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState, useRef } from "react";
 import { subscribe, AGENT_NAMES, AGENT_COLORS, type AgentEvent } from "@/lib/agentEvents";
 
-export default function ActivityFeedLight() {
+export default function ActivityFeedLight({ isOwner = true }: { isOwner?: boolean }) {
   const [events, setEvents] = useState<AgentEvent[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -29,7 +29,7 @@ export default function ActivityFeedLight() {
         {events.length === 0 && (
           <div className="text-[12px] text-white/15 text-center py-8">Waiting for agent activity...</div>
         )}
-        {events.map((e, i) => (
+        {events.slice(0, 10).map((e, i) => (
           <motion.div
             key={e.id}
             initial={i === 0 ? { opacity: 0, backgroundColor: "rgba(255,255,255,0.04)" } : false}
@@ -51,7 +51,7 @@ export default function ActivityFeedLight() {
                   <span className="text-[13px] font-semibold" style={{ color: AGENT_COLORS[e.to] }}>{AGENT_NAMES[e.to]}</span>
                   <span className="text-[10px] text-white/20 ml-auto shrink-0">{e.timestamp}</span>
                 </div>
-                <p className="text-[11px] text-white/45 mt-0.5 truncate font-mono">{e.action}</p>
+                <p className={`text-[11px] mt-0.5 truncate font-mono ${isOwner ? "text-white/45" : "text-white/20 blur-[4px] select-none"}`}>{isOwner ? e.action : "━━━━━━━━━━━━━━━━━━━━"}</p>
               </div>
             </div>
           </motion.div>

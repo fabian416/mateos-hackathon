@@ -18,11 +18,10 @@ export default function RevenueChartLight() {
   const total = data.reduce((s, v) => s + v, 0);
 
   return (
-    <div className="p-5">
+    <div className="px-5 pb-5">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="text-[11px] text-white/50 uppercase tracking-wider">Revenue</h3>
-          <div className="flex items-baseline gap-2 mt-1">
+          <div className="flex items-baseline gap-2">
             <span className="text-3xl font-bold text-emerald-400">${total.toLocaleString()}</span>
             <span className="text-[11px] text-white/40">USDC (16d)</span>
           </div>
@@ -62,8 +61,8 @@ export default function RevenueChartLight() {
       {/* Sources */}
       <div className="mt-4 grid grid-cols-3 gap-2">
         {[
-          { label: "Suscripciones", value: "$2,400" },
-          { label: "Cobros PyMEs", value: "$1,540" },
+          { label: "Subscriptions", value: "$2,400" },
+          { label: "SME Payments", value: "$1,540" },
           { label: "Token Fees", value: "$340" },
         ].map((s) => (
           <div key={s.label} className="bg-white/[0.03] border border-white/[0.04] rounded-lg p-2.5">
