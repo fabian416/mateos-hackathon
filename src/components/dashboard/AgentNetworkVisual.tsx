@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { fireEvent as fireAgentEvent, AGENT_COLORS } from "@/lib/agentEvents";
+import { getSquadReputation, SQUAD_CONFIG, type SquadReputation } from "@/lib/erc8004";
 
 interface Agent {
   id: string;
@@ -89,7 +90,13 @@ export default function AgentNetworkVisual() {
   const [connectionHeat, setConnectionHeat] = useState<Record<string, number>>({});
   const [shockwave, setShockwave] = useState<{ x: number; y: number; color: string } | null>(null);
   const [fullSync, setFullSync] = useState(false);
+  const [reputation, setReputation] = useState<SquadReputation | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Fetch onchain reputation from ERC-8004 Reputation Registry
+  useEffect(() => {
+    getSquadReputation().then(setReputation);
+  }, []);
 
   useEffect(() => {
     const up = () => { if (ref.current) setDims({ w: ref.current.offsetWidth, h: ref.current.offsetHeight }); };
@@ -595,11 +602,40 @@ export default function AgentNetworkVisual() {
                     </div>
                   ))}
                 </div>
-                <div className="mt-3 pt-2 border-t border-white/[0.06] flex items-center gap-1.5">
-                  <svg className="w-3 h-3 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-[10px] text-white/30 font-mono">ERC-8004 verified</span>
+                <div className="mt-3 pt-2 border-t border-white/[0.06]">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <div className="flex items-center gap-1.5">
+                      <svg className="w-3 h-3 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                      <span className="text-[10px] text-emerald-400/70 font-mono">ERC-8004 verified</span>
+                    </div>
+                    {reputation && (
+                      <span className="text-[10px] text-white/20 font-mono">
+                        #{SQUAD_CONFIG.agentId}
+                      </span>
+                    )}
+                  </div>
+                  {reputation && (
+                    <div className="flex items-center gap-3 mt-1">
+                      <div className="flex items-center gap-1">
+                        <span className="text-[11px] font-bold text-amber-400">{reputation.averageScore}</span>
+                        <span className="text-[9px] text-white/25">/100</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-[10px] text-white/35">{reputation.feedbackCount} reviews</span>
+                      </div>
+                      <a
+                        href={`${SQUAD_CONFIG.explorerUrl}/address/${SQUAD_CONFIG.reputationRegistry}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[9px] text-violet-400/50 hover:text-violet-400 transition-colors ml-auto font-mono"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        verify ↗
+                      </a>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             </>
