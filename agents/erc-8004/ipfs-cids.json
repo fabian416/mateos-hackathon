@@ -1,0 +1,72 @@
+{
+  "squad": {
+    "name": "MateOS HQ",
+    "representativeAgent": "el-ceo",
+    "representativeAgentId": 35270,
+    "description": "The CEO NFT represents the entire squad for inter-squad trust verification"
+  },
+  "agents": {
+    "el-ceo": {
+      "agentId": 35270,
+      "name": "OpsChad",
+      "role": "squad-representative",
+      "cid": "QmVwr3hAk2df8Bn1H83zZtqFtU1QugyWEuRPGT8564mjrv",
+      "uri": "ipfs://QmVwr3hAk2df8Bn1H83zZtqFtU1QugyWEuRPGT8564mjrv",
+      "txHash": "0x38d50f394607830ea218844e9c1a2d71473ef619214d752a55e360a10a7cf48d"
+    },
+    "el-baqueano": {
+      "agentId": 35269,
+      "name": "ChatGod",
+      "role": "internal",
+      "cid": "QmdmTFJ9pktfn3Pk7Vdanz8BbuFpMYsNm9qRVgD56BYG1f",
+      "uri": "ipfs://QmdmTFJ9pktfn3Pk7Vdanz8BbuFpMYsNm9qRVgD56BYG1f",
+      "txHash": "0xdc54fcb770e8a72d3228a3e222caf7a49e90f20265b07651f96851bf99c60b50"
+    },
+    "el-domador": {
+      "agentId": 35272,
+      "name": "CalendApe",
+      "role": "internal",
+      "cid": "QmRJPPd6dm3DhVGt6jA1wMmPHyYWxHYBhKT1AejpfKF4wz",
+      "uri": "ipfs://QmRJPPd6dm3DhVGt6jA1wMmPHyYWxHYBhKT1AejpfKF4wz",
+      "txHash": "0x649067cf8243c758e86ed434c773c0b40d770e9c23d59f6a8d6387567dca55a5"
+    },
+    "el-paisano": {
+      "agentId": 35273,
+      "name": "PostMalone",
+      "role": "internal",
+      "cid": "QmUHxEZBUajfsRWjFSSor65bsh97DBqaoURFprRcdafHsJ",
+      "uri": "ipfs://QmUHxEZBUajfsRWjFSSor65bsh97DBqaoURFprRcdafHsJ",
+      "txHash": "0x089c519412fc0655793cd9798d81f6c5690f2aa9baed1ceb1513dc2cae49c3a4"
+    },
+    "el-rastreador": {
+      "agentId": 35274,
+      "name": "DM Sniper",
+      "role": "internal",
+      "cid": "QmdyvJmNaomVjfBGSp38mhjZvJoachBpwjQ44xNAvyCTbm",
+      "uri": "ipfs://QmdyvJmNaomVjfBGSp38mhjZvJoachBpwjQ44xNAvyCTbm",
+      "txHash": "0x0b4ff96ccbe3bead53b7a9fe23a56f1d8d66675ed32e3aad8bb2ebb35a605916"
+    },
+    "el-relator": {
+      "agentId": 35275,
+      "name": "HypeSmith",
+      "role": "internal",
+      "cid": "QmbHwCDzViZQxaZhW915PNDh9s4cvQ2Nqv8G8y6TkaSgcu",
+      "uri": "ipfs://QmbHwCDzViZQxaZhW915PNDh9s4cvQ2Nqv8G8y6TkaSgcu",
+      "txHash": "0x4a2395c2727bef4c090623b11fbf9e1893034493a415ce018a55e5c1697f8927"
+    },
+    "el-tropero": {
+      "agentId": 35276,
+      "name": "BagChaser",
+      "role": "internal",
+      "cid": "QmQ8Ag7WngDz3fFss2BHUNQPoUBsEXudxmDn9q5HZNaZt2",
+      "uri": "ipfs://QmQ8Ag7WngDz3fFss2BHUNQPoUBsEXudxmDn9q5HZNaZt2",
+      "txHash": "0xfaefa7e0c0b916c11dbe7bf5b2d69e379a69f921baa235401d8128f4b13f889d"
+    }
+  },
+  "contracts": {
+    "identityRegistry": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+    "reputationRegistry": "0x8004BAa17C55a88189AE136b182e5fdA19dE9b63",
+    "chain": "base-mainnet",
+    "chainId": 8453
+  }
+}
