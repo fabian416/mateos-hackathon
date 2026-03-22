@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { transitionEvents, EXIT_NETWORK } from "@/lib/transitionEvents";
 
 // --- Squad nodes positioned on Argentina's geography ---
 interface Squad {
@@ -168,6 +169,19 @@ export default function ArgentinaNetwork() {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, [firePulse]);
+
+  // Listen for exit-network event (TopNav "Dashboard" click) — zoom into bsas then navigate
+  const handleExitNetwork = useCallback(() => {
+    if (zoomTarget) return; // already zooming
+    const bsasPos = getPos("bsas");
+    setZoomTarget({ x: bsasPos.x, y: bsasPos.y, squadId: "bsas" });
+    setTimeout(() => router.push("/dashboard"), 1000);
+  }, [zoomTarget, getPos, router]);
+
+  useEffect(() => {
+    transitionEvents.addEventListener(EXIT_NETWORK, handleExitNetwork);
+    return () => transitionEvents.removeEventListener(EXIT_NETWORK, handleExitNetwork);
+  }, [handleExitNetwork]);
 
   const { w, h } = dims;
 
