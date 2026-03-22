@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
+import TopNav from "@/components/ui/TopNav";
 import AgentNetworkVisual from "@/components/dashboard/AgentNetworkVisual";
 import StarField from "@/components/dashboard/StarField";
 import ActivityFeedLight from "@/components/dashboard/ActivityFeedLight";
@@ -43,8 +44,10 @@ function DashboardContent() {
     <div className="min-h-screen overflow-y-auto flex flex-col bg-[#0B0B14] relative">
       {/* Star field background */}
       <StarField />
-      {/* Top bar */}
-      <header className="relative z-10 border-b border-white/[0.06] px-4 sm:px-6 py-3 bg-black/30 backdrop-blur-md shrink-0">
+      {/* Top nav */}
+      <TopNav />
+      {/* Sub header */}
+      <header className="relative z-10 border-b border-white/[0.06] px-4 sm:px-6 py-3 bg-black/20 backdrop-blur-sm shrink-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-3">
             <a href="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
