@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
 import AgentNetworkVisual from "@/components/dashboard/AgentNetworkVisual";
 import StarField from "@/components/dashboard/StarField";
 import ActivityFeedLight from "@/components/dashboard/ActivityFeedLight";
@@ -23,10 +24,20 @@ const SQUAD_INFO: Record<string, { name: string; agents: number; color: string }
 
 function DashboardContent() {
   const searchParams = useSearchParams();
-  const squadId = searchParams.get("squad") || MY_SQUAD;
+  const fromNetwork = searchParams.get("squad");
+  const squadId = fromNetwork || MY_SQUAD;
   const isOwner = squadId === MY_SQUAD;
   const squad = SQUAD_INFO[squadId] || SQUAD_INFO[MY_SQUAD];
   const [revenueOpen, setRevenueOpen] = useState(true);
+  const [hasAnimated, setHasAnimated] = useState(false);
+
+  useEffect(() => {
+    if (fromNetwork) {
+      setTimeout(() => setHasAnimated(true), 50);
+    } else {
+      setHasAnimated(true);
+    }
+  }, [fromNetwork]);
 
   return (
     <div className="min-h-screen overflow-y-auto flex flex-col bg-[#0B0B14] relative">
@@ -80,6 +91,13 @@ function DashboardContent() {
         </div>
       </header>
 
+      {/* Animated content wrapper — zooms in from network transition */}
+      <motion.div
+        initial={fromNetwork && !hasAnimated ? { scale: 1.5, opacity: 0 } : false}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+        className="flex flex-col flex-1 min-h-0"
+      >
       {/* Stats bar */}
       <div className="relative z-10 border-b border-white/[0.05] bg-black/20 backdrop-blur-sm shrink-0 overflow-x-auto no-scrollbar">
         <div className="grid grid-cols-4 sm:grid-cols-7 min-w-0">
@@ -146,6 +164,7 @@ function DashboardContent() {
           </div>
         </div>
       </div>
+      </motion.div>
     </div>
   );
 }
