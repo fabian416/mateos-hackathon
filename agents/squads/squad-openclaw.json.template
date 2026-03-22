@@ -41,6 +41,11 @@
     "mode": "local",
     "bind": "lan",
     "auth": { "mode": "token", "token": "${GATEWAY_AUTH_TOKEN}" },
+    "http": {
+      "endpoints": {
+        "chatCompletions": { "enabled": true }
+      }
+    },
     "tailscale": { "mode": "off", "resetOnExit": false }
   },
   "hooks": {

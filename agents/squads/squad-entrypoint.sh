@@ -5,6 +5,10 @@ echo "=== MateOS Squad: ${SQUAD_NAME} ==="
 export GATEWAY_PORT="${GATEWAY_PORT:-18790}"
 export PRIMARY_MODEL="${PRIMARY_MODEL:-google/gemini-2.5-flash}"
 
+# Copy hook into transforms dir (OpenClaw requires hooks inside transforms/)
+mkdir -p ~/.openclaw/hooks/transforms/erc8004-hook
+cp ~/.openclaw/hooks/erc8004-hook/hook-transform.js ~/.openclaw/hooks/transforms/erc8004-hook/hook-transform.js 2>/dev/null || true
+
 # Generate config from template
 envsubst < /tmp/config/squad-openclaw.json.template > ~/.openclaw/openclaw.json
 chmod 600 ~/.openclaw/openclaw.json
