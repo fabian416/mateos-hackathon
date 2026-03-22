@@ -1,0 +1,12 @@
+FROM ghcr.io/lucholeonel/mateos-agents:latest
+
+# Copy squad-specific workspace (overridden per squad via build arg)
+ARG SQUAD_DIR=andes-vineyard
+COPY --chown=agent:agent ${SQUAD_DIR}/workspace/ /mnt/workspace/
+
+# Copy shared squad config and entrypoint
+COPY --chown=agent:agent squad-openclaw.json.template /tmp/config/squad-openclaw.json.template
+COPY --chown=agent:agent squad-entrypoint.sh /home/agent/squad-entrypoint.sh
+RUN chmod +x /home/agent/squad-entrypoint.sh
+
+ENTRYPOINT ["/home/agent/squad-entrypoint.sh"]

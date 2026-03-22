@@ -1,0 +1,68 @@
+{
+  "agents": {
+    "defaults": {
+      "model": { "primary": "${PRIMARY_MODEL}" },
+      "models": {
+        "google/gemini-2.5-flash": { "alias": "flash" },
+        "anthropic/claude-haiku-4-5": { "alias": "haiku" }
+      },
+      "heartbeat": { "target": "last" },
+      "maxConcurrent": 2
+    },
+    "list": [
+      {
+        "id": "${SQUAD_AGENT_ID}",
+        "workspace": "${HOME}/.openclaw/workspaces/${SQUAD_AGENT_ID}",
+        "model": "${PRIMARY_MODEL}",
+        "identity": { "name": "${SQUAD_NAME}", "theme": "${SQUAD_THEME}", "emoji": "${SQUAD_EMOJI}" }
+      }
+    ]
+  },
+  "tools": {
+    "agentToAgent": { "enabled": false },
+    "sessions": { "visibility": "all" }
+  },
+  "bindings": [
+    { "type": "route", "agentId": "${SQUAD_AGENT_ID}", "match": { "channel": "telegram", "accountId": "${SQUAD_AGENT_ID}" } }
+  ],
+  "commands": { "native": "auto", "nativeSkills": true, "restart": true },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "accounts": {
+        "${SQUAD_AGENT_ID}": { "enabled": true, "botToken": "${TG_TOKEN}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"] }
+      },
+      "groupPolicy": "disabled",
+      "streaming": "partial"
+    }
+  },
+  "gateway": {
+    "port": ${GATEWAY_PORT},
+    "mode": "local",
+    "bind": "lan",
+    "auth": { "mode": "token", "token": "${GATEWAY_AUTH_TOKEN}" },
+    "tailscale": { "mode": "off", "resetOnExit": false }
+  },
+  "hooks": {
+    "enabled": true,
+    "token": "${HOOKS_TOKEN}",
+    "path": "/hooks",
+    "transformsDir": "${HOME}/.openclaw/hooks/transforms",
+    "mappings": [
+      {
+        "id": "erc8004",
+        "match": { "path": "erc8004" },
+        "transform": { "module": "erc8004-hook/hook-transform.js" }
+      }
+    ],
+    "internal": {
+      "enabled": true,
+      "entries": {
+        "boot-md": { "enabled": true },
+        "session-memory": { "enabled": true }
+      }
+    }
+  },
+  "skills": { "install": { "nodeManager": "npm" }, "allowBundled": ["browser", "search"] },
+  "plugins": { "entries": { "telegram": { "enabled": true } } }
+}

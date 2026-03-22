@@ -1,0 +1,125 @@
+# === MateOS — Multi-Squad Production Stack ===
+# Run alongside the main compose.yml on EC2
+# Each squad is an independent OpenClaw instance with its own CEO agent
+
+services:
+  andes-vineyard:
+    build:
+      context: .
+      dockerfile: Dockerfile.squad
+      args:
+        SQUAD_DIR: andes-vineyard
+    container_name: squad-andes-vineyard
+    restart: unless-stopped
+    mem_limit: 1g
+    environment:
+      - SQUAD_NAME=Andes Vineyard
+      - SQUAD_AGENT_ID=andes-ceo
+      - SQUAD_THEME=Winery — Malbec & Olive Oil
+      - SQUAD_EMOJI=🍷
+      - PRIMARY_MODEL=google/gemini-2.5-flash
+      - GATEWAY_PORT=18791
+      - GATEWAY_AUTH_TOKEN=${GATEWAY_AUTH_TOKEN}
+      - HOOKS_TOKEN=${HOOKS_TOKEN}
+      - TELEGRAM_OWNER_ID=${TELEGRAM_OWNER_ID}
+      - TG_TOKEN=${TG_TOKEN_ANDES}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - HOME=/home/agent
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:18791', r => process.exit(r.statusCode === 200 ? 0 : 1))"]
+      interval: 5m
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+  altura-wines:
+    build:
+      context: .
+      dockerfile: Dockerfile.squad
+      args:
+        SQUAD_DIR: altura-wines
+    container_name: squad-altura-wines
+    restart: unless-stopped
+    mem_limit: 1g
+    environment:
+      - SQUAD_NAME=Altura Wines
+      - SQUAD_AGENT_ID=altura-ceo
+      - SQUAD_THEME=Boutique Winery — Torrontés
+      - SQUAD_EMOJI=🏔️
+      - PRIMARY_MODEL=google/gemini-2.5-flash
+      - GATEWAY_PORT=18792
+      - GATEWAY_AUTH_TOKEN=${GATEWAY_AUTH_TOKEN}
+      - HOOKS_TOKEN=${HOOKS_TOKEN}
+      - TELEGRAM_OWNER_ID=${TELEGRAM_OWNER_ID}
+      - TG_TOKEN=${TG_TOKEN_ALTURA}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - HOME=/home/agent
+
+  central-logistics:
+    build:
+      context: .
+      dockerfile: Dockerfile.squad
+      args:
+        SQUAD_DIR: central-logistics
+    container_name: squad-central-logistics
+    restart: unless-stopped
+    mem_limit: 1g
+    environment:
+      - SQUAD_NAME=Central Logistics
+      - SQUAD_AGENT_ID=central-ceo
+      - SQUAD_THEME=Logistics Hub — Consolidation
+      - SQUAD_EMOJI=🚛
+      - PRIMARY_MODEL=google/gemini-2.5-flash
+      - GATEWAY_PORT=18793
+      - GATEWAY_AUTH_TOKEN=${GATEWAY_AUTH_TOKEN}
+      - HOOKS_TOKEN=${HOOKS_TOKEN}
+      - TELEGRAM_OWNER_ID=${TELEGRAM_OWNER_ID}
+      - TG_TOKEN=${TG_TOKEN_CENTRAL}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - HOME=/home/agent
+
+  norte-citrus:
+    build:
+      context: .
+      dockerfile: Dockerfile.squad
+      args:
+        SQUAD_DIR: norte-citrus
+    container_name: squad-norte-citrus
+    restart: unless-stopped
+    mem_limit: 1g
+    environment:
+      - SQUAD_NAME=Norte Citrus Co.
+      - SQUAD_AGENT_ID=citrus-ceo
+      - SQUAD_THEME=Citrus Processing — Lemons
+      - SQUAD_EMOJI=🍋
+      - PRIMARY_MODEL=google/gemini-2.5-flash
+      - GATEWAY_PORT=18794
+      - GATEWAY_AUTH_TOKEN=${GATEWAY_AUTH_TOKEN}
+      - HOOKS_TOKEN=${HOOKS_TOKEN}
+      - TELEGRAM_OWNER_ID=${TELEGRAM_OWNER_ID}
+      - TG_TOKEN=${TG_TOKEN_CITRUS}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - HOME=/home/agent
+
+  estancia-meats:
+    build:
+      context: .
+      dockerfile: Dockerfile.squad
+      args:
+        SQUAD_DIR: estancia-meats
+    container_name: squad-estancia-meats
+    restart: unless-stopped
+    mem_limit: 1g
+    environment:
+      - SQUAD_NAME=Estancia Meats
+      - SQUAD_AGENT_ID=estancia-ceo
+      - SQUAD_THEME=Cured Meats & Artisan Cheese
+      - SQUAD_EMOJI=🥩
+      - PRIMARY_MODEL=google/gemini-2.5-flash
+      - GATEWAY_PORT=18795
+      - GATEWAY_AUTH_TOKEN=${GATEWAY_AUTH_TOKEN}
+      - HOOKS_TOKEN=${HOOKS_TOKEN}
+      - TELEGRAM_OWNER_ID=${TELEGRAM_OWNER_ID}
+      - TG_TOKEN=${TG_TOKEN_ESTANCIA}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - HOME=/home/agent
