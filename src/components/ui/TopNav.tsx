@@ -2,9 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useWallet } from "@/lib/walletContext";
-import { transitionEvents, EXIT_DASHBOARD, EXIT_NETWORK } from "@/lib/transitionEvents";
 
 const NAV_TABS = [
   { label: "Dashboard", href: "/dashboard" },
@@ -100,30 +99,9 @@ function WalletButton() {
   );
 }
 
-/**
- * Determines whether a tab click should trigger a transition animation
- * instead of a normal navigation. Returns the event name to dispatch, or null.
- */
-function getTransitionEvent(currentPath: string, targetHref: string): string | null {
-  if (currentPath === "/dashboard" && targetHref === "/network") return EXIT_DASHBOARD;
-  if (currentPath === "/network" && targetHref === "/dashboard") return EXIT_NETWORK;
-  return null;
-}
-
 export default function TopNav() {
   const pathname = usePathname();
-  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const handleTabClick = (href: string) => {
-    const evt = getTransitionEvent(pathname, href);
-    if (evt) {
-      // Dispatch transition event — the page component handles animation + navigation
-      transitionEvents.dispatchEvent(new CustomEvent(evt));
-    } else {
-      router.push(href);
-    }
-  };
 
   return (
     <nav className="h-[56px] bg-[#08080F]/80 backdrop-blur-md border-b border-white/[0.06] px-4 sm:px-6 flex items-center justify-between relative z-50 shrink-0">
@@ -134,33 +112,18 @@ export default function TopNav() {
       <div className="hidden md:flex items-center gap-1">
         {NAV_TABS.map((tab) => {
           const isActive = pathname === tab.href;
-          const needsTransition = getTransitionEvent(pathname, tab.href) !== null;
-          // Use a button for transition-aware tabs, Link for others
-          if (needsTransition || isActive) {
-            return (
-              <button
-                key={tab.href}
-                onClick={() => !isActive && handleTabClick(tab.href)}
-                className={`relative px-4 py-[17px] text-[13px] font-medium transition-colors cursor-pointer ${
-                  isActive ? "text-white" : "text-white/40 hover:text-white/60"
-                }`}
-              >
-                {tab.label}
-                {isActive && (
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[calc(100%-16px)] h-[2px] bg-violet-400 rounded-full" />
-                )}
-              </button>
-            );
-          }
           return (
             <Link
               key={tab.href}
               href={tab.href}
               className={`relative px-4 py-[17px] text-[13px] font-medium transition-colors ${
-                "text-white/40 hover:text-white/60"
+                isActive ? "text-white" : "text-white/40 hover:text-white/60"
               }`}
             >
               {tab.label}
+              {isActive && (
+                <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[calc(100%-16px)] h-[2px] bg-violet-400 rounded-full" />
+              )}
             </Link>
           );
         })}
@@ -186,23 +149,6 @@ export default function TopNav() {
         <div className="absolute top-[56px] left-0 right-0 bg-[#08080F]/95 backdrop-blur-md border-b border-white/[0.06] md:hidden z-50">
           {NAV_TABS.map((tab) => {
             const isActive = pathname === tab.href;
-            const needsTransition = getTransitionEvent(pathname, tab.href) !== null;
-            if (needsTransition) {
-              return (
-                <button
-                  key={tab.href}
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    handleTabClick(tab.href);
-                  }}
-                  className={`block w-full text-left px-6 py-3 text-[13px] font-medium border-b border-white/[0.04] transition-colors cursor-pointer ${
-                    isActive ? "text-white bg-violet-500/10" : "text-white/40 hover:text-white/60"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              );
-            }
             return (
               <Link
                 key={tab.href}

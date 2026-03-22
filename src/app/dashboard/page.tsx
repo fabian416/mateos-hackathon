@@ -1,15 +1,14 @@
 "use client";
 
-import { useState, useEffect, Suspense, useCallback } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { useSearchParams, useRouter } from "next/navigation";
-import { motion, useAnimation } from "framer-motion";
+import { useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
 import TopNav from "@/components/ui/TopNav";
 import AgentNetworkVisual from "@/components/dashboard/AgentNetworkVisual";
 import StarField from "@/components/dashboard/StarField";
 import ActivityFeedLight from "@/components/dashboard/ActivityFeedLight";
 import RevenueChartLight from "@/components/dashboard/RevenueChartLight";
-import { transitionEvents, EXIT_DASHBOARD } from "@/lib/transitionEvents";
 
 // The user's own squad — everything else is "external"
 const MY_SQUAD = "bsas";
@@ -26,15 +25,12 @@ const SQUAD_INFO: Record<string, { name: string; agents: number; color: string }
 
 function DashboardContent() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const fromNetwork = searchParams.get("squad");
   const squadId = fromNetwork || MY_SQUAD;
   const isOwner = squadId === MY_SQUAD;
   const squad = SQUAD_INFO[squadId] || SQUAD_INFO[MY_SQUAD];
   const [revenueOpen, setRevenueOpen] = useState(true);
   const [hasAnimated, setHasAnimated] = useState(false);
-  const [isExiting, setIsExiting] = useState(false);
-  const exitControls = useAnimation();
 
   useEffect(() => {
     if (fromNetwork) {
@@ -44,30 +40,8 @@ function DashboardContent() {
     }
   }, [fromNetwork]);
 
-  // Listen for exit-dashboard transition (zoom out to network)
-  const handleExitDashboard = useCallback(() => {
-    if (isExiting) return;
-    setIsExiting(true);
-    exitControls.start({
-      scale: 0.8,
-      opacity: 0,
-      transition: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1] },
-    }).then(() => {
-      router.push("/network");
-    });
-  }, [isExiting, exitControls, router]);
-
-  useEffect(() => {
-    transitionEvents.addEventListener(EXIT_DASHBOARD, handleExitDashboard);
-    return () => transitionEvents.removeEventListener(EXIT_DASHBOARD, handleExitDashboard);
-  }, [handleExitDashboard]);
-
   return (
-    <motion.div
-      className="min-h-screen overflow-y-auto flex flex-col bg-[#0B0B14] relative"
-      animate={exitControls}
-      style={{ transformOrigin: "center center" }}
-    >
+    <div className="min-h-screen overflow-y-auto flex flex-col bg-[#0B0B14] relative">
       {/* Star field background */}
       <StarField />
       {/* Top nav */}
@@ -194,7 +168,7 @@ function DashboardContent() {
         </div>
       </div>
       </motion.div>
-    </motion.div>
+    </div>
   );
 }
 
