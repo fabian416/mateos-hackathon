@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { pollOnchainEvents, type OnchainSquadEvent } from "@/lib/onchainEvents";
 
 // --- Squad nodes positioned on Argentina's geography ---
 interface Squad {
@@ -134,20 +135,20 @@ export default function ArgentinaNetwork() {
     [getMapTransform]
   );
 
-  // Fire inter-squad pulses
-  const firePulse = useCallback(() => {
-    const template = TASK_TEMPLATES[Math.floor(Math.random() * TASK_TEMPLATES.length)];
-    const conn = CONNECTIONS.find((c) => c.from === template.from && c.to === template.to);
-    const color = conn ? CONNECTION_COLORS[conn.type] : "#fff";
+  // Fire a pulse between two squads (used by both simulated + onchain)
+  const firePulseRaw = useCallback((from: string, to: string, label: string, isOnchain = false) => {
+    const conn = CONNECTIONS.find((c) => (c.from === from && c.to === to) || (c.from === to && c.to === from));
+    const color = conn ? CONNECTION_COLORS[conn.type] : (isOnchain ? "#34D399" : "#fff");
 
     pulseCounter++;
-    const pulse: Pulse = { id: pulseCounter, from: template.from, to: template.to, color, label: template.action };
+    const pulse: Pulse = { id: pulseCounter, from, to, color, label };
     setPulses((prev) => [...prev.slice(-8), pulse]);
-    setActiveConnection(`${template.from}-${template.to}`);
+    setActiveConnection(`${from}-${to}`);
 
     const now = new Date();
     const time = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}:${now.getSeconds().toString().padStart(2, "0")}`;
-    setTaskLog((prev) => [{ id: pulseCounter, text: template.action, from: template.from, to: template.to, time }, ...prev].slice(0, 12));
+    const prefix = isOnchain ? "⛓ " : "";
+    setTaskLog((prev) => [{ id: pulseCounter, text: prefix + label, from, to, time }, ...prev].slice(0, 12));
 
     setTimeout(() => {
       setPulses((prev) => prev.filter((p) => p.id !== pulse.id));
@@ -155,9 +156,15 @@ export default function ArgentinaNetwork() {
     }, 1800);
   }, []);
 
+  // Simulated pulses (fallback when no onchain activity)
+  const firePulse = useCallback(() => {
+    const template = TASK_TEMPLATES[Math.floor(Math.random() * TASK_TEMPLATES.length)];
+    firePulseRaw(template.from, template.to, template.action, false);
+  }, [firePulseRaw]);
+
   useEffect(() => {
     function scheduleNext() {
-      const delay = 1500 + Math.random() * 3000;
+      const delay = 2000 + Math.random() * 4000;
       timerRef.current = setTimeout(() => {
         firePulse();
         scheduleNext();
@@ -168,6 +175,19 @@ export default function ArgentinaNetwork() {
       if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, [firePulse]);
+
+  // Poll onchain events every 12 seconds — show real pulses from Base Mainnet
+  useEffect(() => {
+    const poll = async () => {
+      const events = await pollOnchainEvents();
+      for (const evt of events) {
+        firePulseRaw(evt.from, evt.to, evt.label, true);
+      }
+    };
+    poll(); // initial
+    const interval = setInterval(poll, 12000);
+    return () => clearInterval(interval);
+  }, [firePulseRaw]);
 
   const { w, h } = dims;
 
@@ -389,7 +409,7 @@ export default function ArgentinaNetwork() {
                     <span className="text-[9px] text-white/20">→</span>
                     <div className="w-[6px] h-[6px] rounded-full" style={{ backgroundColor: toSquad?.color }} />
                   </div>
-                  <span className="text-[11px] text-white/40 truncate">{task.text}</span>
+                  <span className={`text-[11px] truncate ${task.text.startsWith("⛓") ? "text-emerald-400/60" : "text-white/40"}`}>{task.text}</span>
                 </motion.div>
               );
             })}
