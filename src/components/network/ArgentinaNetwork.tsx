@@ -86,7 +86,7 @@ interface Pulse {
   label: string;
 }
 
-let pulseCounter = 0;
+// Counter initialized inside useRef to avoid hydration mismatch
 
 // Real Argentina outline from world-map-country-shapes (viewBox origin ~619,712 size ~62x216)
 // We transform it to fit our SVG by mapping to relative coords
@@ -100,8 +100,9 @@ export default function ArgentinaNetwork() {
   const [dims, setDims] = useState({ w: 800, h: 700 });
   const [pulses, setPulses] = useState<Pulse[]>([]);
   const [activeConnection, setActiveConnection] = useState<string | null>(null);
-  const [taskLog, setTaskLog] = useState<{ id: number; text: string; from: string; to: string; time: string }[]>([]);
+  const [taskLog, setTaskLog] = useState<{ id: number; text: string; from: string; to: string; time: string; txHash?: string }[]>([]);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pulseIdRef = useRef(0);
   const [zoomTarget, setZoomTarget] = useState<{ x: number; y: number; squadId: string } | null>(null);
 
   useEffect(() => {
@@ -123,9 +124,9 @@ export default function ArgentinaNetwork() {
   }, [dims]);
 
   const getPos = useCallback(
-    (id: string) => {
+    (id: string): { x: number; y: number } | null => {
       const s = SQUADS.find((sq) => sq.id === id);
-      if (!s) return { x: 0, y: 0 };
+      if (!s) return null;
       const { scale, offsetX, offsetY } = getMapTransform();
       return {
         x: offsetX + (s.x - ARG_BBOX.x) * scale,
@@ -136,19 +137,19 @@ export default function ArgentinaNetwork() {
   );
 
   // Fire a pulse between two squads (used by both simulated + onchain)
-  const firePulseRaw = useCallback((from: string, to: string, label: string, isOnchain = false) => {
+  const firePulseRaw = useCallback((from: string, to: string, label: string, isOnchain = false, txHash?: string) => {
     const conn = CONNECTIONS.find((c) => (c.from === from && c.to === to) || (c.from === to && c.to === from));
     const color = conn ? CONNECTION_COLORS[conn.type] : (isOnchain ? "#34D399" : "#fff");
 
-    pulseCounter++;
-    const pulse: Pulse = { id: pulseCounter, from, to, color, label };
+    pulseIdRef.current++;
+    const pulse: Pulse = { id: pulseIdRef.current, from, to, color, label };
     setPulses((prev) => [...prev.slice(-8), pulse]);
     setActiveConnection(`${from}-${to}`);
 
     const now = new Date();
     const time = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}:${now.getSeconds().toString().padStart(2, "0")}`;
     const prefix = isOnchain ? "⛓ " : "";
-    setTaskLog((prev) => [{ id: pulseCounter, text: prefix + label, from, to, time }, ...prev].slice(0, 12));
+    setTaskLog((prev) => [{ id: pulseIdRef.current, text: prefix + label, from, to, time, txHash }, ...prev].slice(0, 12));
 
     setTimeout(() => {
       setPulses((prev) => prev.filter((p) => p.id !== pulse.id));
@@ -181,7 +182,7 @@ export default function ArgentinaNetwork() {
     const poll = async () => {
       const events = await pollOnchainEvents();
       for (const evt of events) {
-        firePulseRaw(evt.from, evt.to, evt.label, true);
+        firePulseRaw(evt.from, evt.to, evt.label, true, evt.txHash);
       }
     };
     poll(); // initial
@@ -273,6 +274,7 @@ export default function ArgentinaNetwork() {
         {CONNECTIONS.map((conn, idx) => {
           const from = getPos(conn.from);
           const to = getPos(conn.to);
+          if (!from || !to) return null;
           const cp = getCurveCP(from, to, idx);
           const pathD = `M ${from.x} ${from.y} Q ${cp.x} ${cp.y} ${to.x} ${to.y}`;
           const isActive = activeConnection === `${conn.from}-${conn.to}`;
@@ -301,15 +303,16 @@ export default function ArgentinaNetwork() {
         })}
 
         {/* Pulses traveling along connections */}
-        {pulses.map((pulse) => {
+        {pulses.map((pulse, pi) => {
           const from = getPos(pulse.from);
           const to = getPos(pulse.to);
-          const connIdx = CONNECTIONS.findIndex((c) => c.from === pulse.from && c.to === pulse.to);
-          const cp = getCurveCP(from, to, connIdx >= 0 ? connIdx : 0);
+          if (!from || !to) return null;
+          const connIdx = CONNECTIONS.findIndex((c) => (c.from === pulse.from && c.to === pulse.to) || (c.from === pulse.to && c.to === pulse.from));
+          const cp = getCurveCP(from, to, connIdx >= 0 ? connIdx : pi);
           const pathD = `M ${from.x} ${from.y} Q ${cp.x} ${cp.y} ${to.x} ${to.y}`;
 
           return (
-            <g key={`pulse-${pulse.id}`}>
+            <g key={`pulse-${pulse.id}-${pi}`}>
               <motion.path
                 d={pathD}
                 fill="none"
@@ -336,13 +339,15 @@ export default function ArgentinaNetwork() {
         {/* Squad nodes */}
         {SQUADS.map((squad) => {
           const pos = getPos(squad.id);
+          if (!pos) return null;
           const cx = pos.x;
           const cy = pos.y;
           return (
             <g key={squad.id} onClick={() => {
               if (zoomTarget) return;
-              const pos = getPos(squad.id);
-              setZoomTarget({ x: pos.x, y: pos.y, squadId: squad.id });
+              const p = getPos(squad.id);
+              if (!p) return;
+              setZoomTarget({ x: p.x, y: p.y, squadId: squad.id });
               setTimeout(() => router.push(`/dashboard?squad=${squad.id}`), 1000);
             }} className="cursor-pointer">
               {/* Ambient glow — disabled during zoom for performance */}
@@ -398,18 +403,29 @@ export default function ArgentinaNetwork() {
               const toSquad = SQUADS.find((s) => s.id === task.to);
               return (
                 <motion.div
-                  key={task.id}
+                  key={`log-${task.id}-${i}`}
                   initial={i === 0 ? { opacity: 0, y: -8 } : false}
                   animate={{ opacity: 1 - i * 0.25, y: 0 }}
                   className="flex items-start gap-2"
                 >
                   <span className="text-[10px] text-white/15 font-mono shrink-0 mt-0.5">{task.time}</span>
                   <div className="flex items-center gap-1 shrink-0 mt-0.5">
-                    <div className="w-[6px] h-[6px] rounded-full" style={{ backgroundColor: fromSquad?.color }} />
+                    <div className="w-[6px] h-[6px] rounded-full" style={{ backgroundColor: fromSquad?.color || "#666" }} />
                     <span className="text-[9px] text-white/20">→</span>
-                    <div className="w-[6px] h-[6px] rounded-full" style={{ backgroundColor: toSquad?.color }} />
+                    <div className="w-[6px] h-[6px] rounded-full" style={{ backgroundColor: toSquad?.color || "#666" }} />
                   </div>
                   <span className={`text-[11px] truncate ${task.text.startsWith("⛓") ? "text-emerald-400/60" : "text-white/40"}`}>{task.text}</span>
+                  {task.txHash && (
+                    <a
+                      href={`https://basescan.org/tx/${task.txHash}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[9px] text-violet-400/40 hover:text-violet-400 transition-colors shrink-0 font-mono ml-1"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      verify ↗
+                    </a>
+                  )}
                 </motion.div>
               );
             })}

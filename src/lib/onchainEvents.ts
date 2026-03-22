@@ -90,34 +90,42 @@ export async function pollOnchainEvents(): Promise<OnchainSquadEvent[]> {
 
     lastSeenBlock = currentBlock;
 
+    // Our agentIds as a Set for fast lookup
+    const OUR_AGENTS = new Set([35270, 35303, 35304, 35305, 35306, 35307]);
+
     // Filter and map to squad events
     const events: OnchainSquadEvent[] = [];
 
     for (const log of logs) {
-      const agentId = parseInt(log.topics[1] || "0", 16);
-      const senderAddr = ("0x" + (log.topics[2] || "").slice(26)).toLowerCase();
-      const score = parseInt("0x" + log.data.slice(66, 130), 16);
-      const blockNum = parseInt(log.blockNumber, 16);
+      if (!log.topics[1] || !log.topics[2]) continue;
 
+      const agentId = parseInt(log.topics[1], 16);
+
+      // Skip events not targeting our agents
+      if (!OUR_AGENTS.has(agentId)) continue;
+
+      const senderAddr = ("0x" + log.topics[2].slice(26)).toLowerCase();
       const toSquad = AGENT_TO_SQUAD[agentId];
       const fromSquad = WALLET_TO_SQUAD[senderAddr];
 
       // Only include events between our 6 squads
-      if (toSquad && fromSquad && toSquad !== fromSquad) {
-        const key = `${fromSquad}→${toSquad}`;
-        const labels = INTERACTION_LABELS[key] || [`Interaction verified (score: ${score})`];
-        const label = labels[Math.floor(Math.random() * labels.length)];
+      if (!toSquad || !fromSquad || toSquad === fromSquad) continue;
 
-        events.push({
-          from: fromSquad,
-          to: toSquad,
-          score,
-          label,
-          txHash: log.transactionHash,
-          blockNumber: blockNum,
-          timestamp: Date.now(),
-        });
-      }
+      const score = parseInt("0x" + log.data.slice(66, 130), 16);
+      const blockNum = parseInt(log.blockNumber, 16);
+      const key = `${fromSquad}→${toSquad}`;
+      const labels = INTERACTION_LABELS[key] || [`Verified interaction (score: ${score})`];
+      const label = labels[Math.floor(Math.random() * labels.length)];
+
+      events.push({
+        from: fromSquad,
+        to: toSquad,
+        score,
+        label,
+        txHash: log.transactionHash,
+        blockNumber: blockNum,
+        timestamp: Date.now(),
+      });
     }
 
     return events;
