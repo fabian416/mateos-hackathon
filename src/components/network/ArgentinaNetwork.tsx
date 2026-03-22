@@ -101,6 +101,7 @@ export default function ArgentinaNetwork() {
   const [activeConnection, setActiveConnection] = useState<string | null>(null);
   const [taskLog, setTaskLog] = useState<{ id: number; text: string; from: string; to: string; time: string }[]>([]);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [zoomTarget, setZoomTarget] = useState<{ x: number; y: number; squadId: string } | null>(null);
 
   useEffect(() => {
     const up = () => {
@@ -182,8 +183,27 @@ export default function ArgentinaNetwork() {
 
   return (
     <div ref={ref} className="w-full h-full relative overflow-hidden">
-      {/* Background grid */}
-      <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "30px 30px" }} />
+      {/* Zoom wrapper — scales entire scene toward clicked node */}
+      <motion.div
+        className="w-full h-full"
+        style={{
+          transformOrigin: zoomTarget ? `${zoomTarget.x}px ${zoomTarget.y}px` : "center",
+          willChange: zoomTarget ? "transform, opacity" : "auto",
+        }}
+        animate={zoomTarget ? {
+          scale: 8,
+          opacity: [1, 1, 0],
+        } : { scale: 1, opacity: 1 }}
+        transition={zoomTarget ? {
+          duration: 1,
+          ease: [0.25, 0.1, 0.25, 1],
+          opacity: { duration: 1, times: [0, 0.6, 1] },
+        } : { duration: 0 }}
+      >
+      {/* Background grid — hidden during zoom to avoid pixelation */}
+      {!zoomTarget && (
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "30px 30px" }} />
+      )}
 
       {/* Title */}
       <div className="absolute top-4 left-5 z-20">
@@ -243,7 +263,7 @@ export default function ArgentinaNetwork() {
               <path d={pathD} fill="none" stroke={color} strokeWidth={isActive ? 1.5 : 0.6} opacity={isActive ? 0.5 : 0.12} />
               {isActive && (
                 <>
-                  <path d={pathD} fill="none" stroke={color} strokeWidth={3} filter="url(#net-glow)" opacity={0.2} />
+                  <path d={pathD} fill="none" stroke={color} strokeWidth={3} filter={zoomTarget ? undefined : "url(#net-glow)"} opacity={0.2} />
                   <motion.path
                     d={pathD}
                     fill="none"
@@ -275,7 +295,7 @@ export default function ArgentinaNetwork() {
                 fill="none"
                 stroke={pulse.color}
                 strokeWidth={2}
-                filter="url(#net-glow)"
+                filter={zoomTarget ? undefined : "url(#net-glow)"}
                 initial={{ pathLength: 0, opacity: 0.7 }}
                 animate={{ pathLength: 1, opacity: 0 }}
                 transition={{ duration: 1.5, ease: "easeOut" }}
@@ -283,7 +303,7 @@ export default function ArgentinaNetwork() {
               <motion.circle
                 r={7}
                 fill={pulse.color}
-                filter="url(#net-glow)"
+                filter={zoomTarget ? undefined : "url(#net-glow)"}
                 initial={{ cx: from.x, cy: from.y, opacity: 1 }}
                 animate={{ cx: to.x, cy: to.y, opacity: [1, 0.8, 0.2] }}
                 transition={{ duration: 1.5, ease: "easeOut" }}
@@ -299,9 +319,14 @@ export default function ArgentinaNetwork() {
           const cx = pos.x;
           const cy = pos.y;
           return (
-            <g key={squad.id} onClick={() => router.push(`/dashboard?squad=${squad.id}`)} className="cursor-pointer">
-              {/* Ambient glow */}
-              <circle cx={cx} cy={cy} r={50} fill={squad.color} opacity={0.08} filter="url(#city-glow)" />
+            <g key={squad.id} onClick={() => {
+              if (zoomTarget) return;
+              const pos = getPos(squad.id);
+              setZoomTarget({ x: pos.x, y: pos.y, squadId: squad.id });
+              setTimeout(() => router.push(`/dashboard?squad=${squad.id}`), 1000);
+            }} className="cursor-pointer">
+              {/* Ambient glow — disabled during zoom for performance */}
+              <circle cx={cx} cy={cy} r={50} fill={squad.color} opacity={0.08} filter={zoomTarget ? undefined : "url(#city-glow)"} />
 
               {/* Breathing ring */}
               <motion.circle
@@ -334,9 +359,14 @@ export default function ArgentinaNetwork() {
           );
         })}
       </svg>
+      </motion.div>
 
-      {/* Live task log — always visible */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 bg-gradient-to-t from-[#08080F] via-[#08080F]/95 to-transparent pt-6">
+      {/* Live task log — fades out during zoom */}
+      <motion.div
+        className="fixed bottom-0 left-0 right-0 z-30 bg-gradient-to-t from-[#08080F] via-[#08080F]/95 to-transparent pt-6"
+        animate={{ opacity: zoomTarget ? 0 : 1 }}
+        transition={{ duration: zoomTarget ? 0.3 : 0 }}
+      >
         <div className="px-5 pb-4">
           <div className="flex items-center gap-2 mb-2">
             <div className="w-[6px] h-[6px] rounded-full bg-emerald-400 animate-pulse" />
@@ -365,7 +395,7 @@ export default function ArgentinaNetwork() {
             })}
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
