@@ -63,6 +63,9 @@ send_telegram() {
   local message="$2"
   local token="${BOT_TOKENS[$bot_key]}"
 
+  # Simulate human thinking before sending
+  human_delay
+
   curl -s "https://api.telegram.org/bot${token}/sendMessage" \
     -d "chat_id=${OWNER_ID}" \
     -d "text=${message}" \
@@ -112,6 +115,9 @@ give_feedback_onchain() {
   local score="$3"
   local tag1="$4"
   local tag2="$5"
+
+  # Small delay before onchain action
+  sleep 2
 
   local feedback_json="{\"agentId\":${to_agent_id},\"value\":${score},\"tag1\":\"${tag1}\",\"tag2\":\"${tag2}\",\"ts\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"}"
   local feedback_hash=$(echo -n "$feedback_json" | cast keccak 2>/dev/null || echo "0x0000000000000000000000000000000000000000000000000000000000000000")
@@ -308,14 +314,20 @@ Notify affected suppliers.")
 # ── Main loop ──
 
 ONCE=false
-INTERVAL=600
+INTERVAL=60
 
 for arg in "$@"; do
   case $arg in
     --once) ONCE=true ;;
-    --interval) shift; INTERVAL="${2:-600}" ;;
+    --interval) shift; INTERVAL="${2:-60}" ;;
   esac
 done
+
+# Random delay between 3-8 seconds to simulate human typing
+human_delay() {
+  local delay=$((3 + RANDOM % 6))
+  sleep $delay
+}
 
 run_scenario() {
   local scenario="${SCENARIOS[$((RANDOM % ${#SCENARIOS[@]}))]}"
@@ -342,10 +354,12 @@ run_scenario() {
 if $ONCE; then
   run_scenario
 else
-  log "Starting supply chain loop (interval: ${INTERVAL}s)"
+  log "Starting supply chain loop (base interval: ${INTERVAL}s)"
   while true; do
     run_scenario
-    log "Next scenario in ${INTERVAL}s..."
-    sleep "$INTERVAL"
+    # Add jitter: interval ± 30% to look natural
+    local jitter=$((INTERVAL * 70 / 100 + RANDOM % (INTERVAL * 60 / 100)))
+    log "Next scenario in ${jitter}s..."
+    sleep "$jitter"
   done
 fi
