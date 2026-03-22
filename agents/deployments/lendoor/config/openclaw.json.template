@@ -1,4 +1,11 @@
 {
+  "providers": {
+    "bankr": {
+      "baseUrl": "https://llm.bankr.bot",
+      "apiKey": "${BANKR_LLM_KEY}",
+      "apiType": "openai-completions"
+    }
+  },
   "agents": {
     "defaults": {
       "model": {

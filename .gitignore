@@ -44,3 +44,4 @@ google-service-account*.json
 *.tsbuildinfo
 next-env.d.ts
 .claude/worktrees/
+.env.local

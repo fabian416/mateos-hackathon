@@ -82,12 +82,13 @@ function DashboardContent() {
 
       {/* Stats bar */}
       <div className="relative z-10 border-b border-white/[0.05] bg-black/20 backdrop-blur-sm shrink-0 overflow-x-auto no-scrollbar">
-        <div className="grid grid-cols-3 sm:grid-cols-6 min-w-0">
+        <div className="grid grid-cols-4 sm:grid-cols-7 min-w-0">
           {[
             { label: "REVENUE (30D)", value: isOwner ? "$12,400" : "••••••", sub: isOwner ? "USDC" : "restricted", change: isOwner ? "+18%" : "", color: "#34D399", sensitive: true },
             { label: "TASKS COMPLETED", value: "8,247", sub: "this month", change: "+24%", color: "#FFD43B", sensitive: false },
             { label: "AVG RESPONSE", value: "1.4s", sub: "all channels", color: "#22D3EE", sensitive: false },
             { label: "UPTIME", value: "99.9%", sub: "30d average", color: "#34D399", sensitive: false },
+            { label: "x402 API REVENUE", value: isOwner ? "$84.20" : "••••", sub: isOwner ? "USDC via x402" : "restricted", change: isOwner ? "+42%" : "", color: "#3B82F6", sensitive: true },
             { label: "CLIENT SQUADS", value: isOwner ? "3" : "••", sub: isOwner ? "managed" : "restricted", color: "#A78BFA", sensitive: true },
             { label: "LLM REQUESTS", value: isOwner ? "11.2K" : "••••", sub: isOwner ? "via Bankr Gateway" : "restricted", color: "#FB7185", sensitive: true },
           ].map((s) => (
