@@ -63,9 +63,9 @@ export async function pollOnchainEvents(): Promise<OnchainSquadEvent[]> {
   try {
     const currentBlock = await client.getBlockNumber();
 
-    // First call: look back 500 blocks (~4 min on Base)
+    // First call: look back 2000 blocks (~17 min on Base)
     if (lastSeenBlock === BigInt(0)) {
-      lastSeenBlock = currentBlock - BigInt(500);
+      lastSeenBlock = currentBlock - BigInt(2000);
     }
 
     // Don't query if no new blocks

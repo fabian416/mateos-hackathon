@@ -1,152 +1,159 @@
-# MateOS -- Zero Human Factory
+# MateOS — Zero Human Factory
 
-AI agent squads for Argentine SMEs. Autonomous operations, real customers, zero fluff.
+A self-sustaining network of AI-operated businesses. Agent squads run real companies, coordinate commercially with each other, and fund their own intelligence through the revenue they generate — all with verifiable onchain trust.
 
 ## What is MateOS
 
-MateOS is an AI-powered operations platform built by MateOS. It deploys squads of specialized agents that handle sales, support, admin, content, and technical operations for small and medium businesses in Argentina. Each agent runs autonomously on its own Docker container, communicates with teammates through an internal router, and interacts with the outside world via WhatsApp, email, Telegram, Twitter, Google Sheets, and Google Calendar. The system is designed to replace entire operational teams at a fraction of the cost.
+MateOS deploys squads of specialized AI agents that operate real businesses end-to-end. Each squad handles sales, support, admin, content, and coordination autonomously. Squads communicate with each other through an ERC-8004 verified trust layer — before accepting a message from another squad, the receiving agent checks the sender's onchain identity and reputation on Base Mainnet.
+
+The network currently runs 6 squads across Argentina's supply chain: wineries in Mendoza and Salta, a citrus processor in Tucumán, a cured meats producer in Córdoba, a logistics hub in Rosario, and a farm-to-table restaurant in Buenos Aires. All coordinating autonomously, all verifiable onchain.
 
 ## Architecture
 
 ```
-                         +-------------------+
-                         |     Caddy         |
-                         |  (HTTPS / Proxy)  |
-                         +--------+----------+
-                                  |
-                    +-------------+-------------+
-                    |                           |
-             +------+------+          +--------+--------+
-             |  Frontend   |          |  Agent Router   |
-             |  (Next.js)  |          |  (FastAPI)      |
-             +-------------+          +--------+--------+
-                                               |
-                  +----------+---------+-------+-------+---------+----------+
-                  |          |         |               |         |          |
-              +---+---+ +---+---+ +---+---+     +-----+---+ +--+----+ +---+---+
-              |  CEO  | |Tropero| |Domador|     |Rastreador| |Relator| |Baquean|
-              |Twitter| | Sales | | Admin |     | Tech L1  | |Content| |Support|
-              +-------+ +-------+ +-------+     +----------+ +-------+ +-------+
-                  |          |         |               |         |          |
-                  +----------+---------+-------+-------+---------+----------+
-                                               |
-                                     Shared: SQUAD_AUTH_TOKEN
-                                     Protocol: HTTP + JSON
+                    mateos.tech
+                        │
+                   ┌────┴────┐
+                   │  Caddy  │  (HTTPS, reverse proxy)
+                   └────┬────┘
+                        │
+              ┌─────────┴─────────┐
+              │                   │
+        ┌─────┴─────┐    ┌───────┴────────┐
+        │ Frontend   │    │ Buenos Table   │  (7 agents, main squad)
+        │ Next.js 16 │    │ OpenClaw       │
+        └────────────┘    └───────┬────────┘
+                                  │ ERC-8004 verified
+              ┌───────────────────┼───────────────────┐
+              │                   │                   │
+     ┌────────┴───────┐  ┌───────┴──────┐  ┌────────┴───────┐
+     │ Andes Vineyard │  │ Central      │  │ Altura Wines   │
+     │ Mendoza        │  │ Logistics    │  │ Salta          │
+     │ (1 CEO agent)  │  │ Rosario      │  │ (1 CEO agent)  │
+     └────────────────┘  │ (1 CEO agent)│  └────────────────┘
+                         └──────────────┘
+              ┌───────────────────┼───────────────────┐
+              │                                       │
+     ┌────────┴───────┐                     ┌────────┴───────┐
+     │ Norte Citrus   │                     │ Estancia Meats │
+     │ Tucumán        │                     │ Córdoba        │
+     │ (1 CEO agent)  │                     │ (1 CEO agent)  │
+     └────────────────┘                     └────────────────┘
 ```
+
+## Onchain Infrastructure (Base Mainnet)
+
+| Component | Contract | Purpose |
+|-----------|----------|---------|
+| ERC-8004 Identity Registry | `0x8004A169...` | Each squad has a registered NFT identity |
+| ERC-8004 Reputation Registry | `0x8004BAa1...` | Cross-squad feedback scores (25+ recorded) |
+| MateOS SelfValidation | `0x17Fa2eF5...` | Audit trail for agent work verification |
+
+6 squads registered with 6 independent wallets. Feedback is cross-verified — Buenos Table rates Andes Vineyard and vice versa. All verifiable on [BaseScan](https://basescan.org).
 
 ## Agent Types
 
-| Agent | Codename | Role | Capabilities |
-|-------|----------|------|-------------|
-| Mateo CEO | `el-ceo` | Brand / Twitter | Tweet scheduling, content calendar, public-facing persona |
-| El Tropero | `el-tropero` | Sales / Leads | Lead contact in <5 min, follow-up at 48h, pipeline in Sheets, meeting scheduling |
-| El Domador | `el-domador` | Admin / Data | Google Sheets and Calendar, daily reports, deadline tracking, task automation |
-| El Rastreador | `el-rastreador` | Tech Support L1 | Diagnostics, step-by-step guides, L2/L3 escalation, known issue tracking |
-| El Relator | `el-relator` | Content / Marketing | Articles, social posts, newsletters, editorial calendar, brand storytelling |
-| El Baqueano | `el-baqueano` | Customer Support | Email and WhatsApp support, SLA <15 min WA / <4h email, diagnosis before resolution |
-| El Paisano | `el-paisano` | Custom (Template) | Blank template -- define role, personality, tools, and channels per client |
+| Agent | Name | Role |
+|-------|------|------|
+| ChatGod | WhatsApp Support | Responds to customers 24/7, resolves complaints |
+| BagChaser | Billing & Collections | Invoices, payments, debt follow-up |
+| CalendApe | Scheduling | Appointments, reminders, zero double-bookings |
+| DM Sniper | Lead Outreach | Prospect finding, qualification, conversion |
+| PostMalone | Social Media | Instagram, stories, engagement |
+| HypeSmith | Content & Marketing | Newsletters, articles, brand storytelling |
+| OpsChad | Coordination | Squad orchestration, reports, optimization |
+
+## Supply Chain Demo
+
+The network map (`/network`) shows a live supply chain across Argentina:
+
+- **Wine Route**: Andes Vineyard (Mendoza) + Altura Wines (Salta) → Central Logistics (Rosario)
+- **Food Route**: Norte Citrus Co. (Tucumán) + Estancia Meats (Córdoba) → Central Logistics (Rosario)
+- **Both converge at**: Buenos Table (Buenos Aires) — farm-to-table restaurant
+
+Inter-squad messages flow through an ERC-8004 verification hook. After each interaction, `giveFeedback()` is called onchain. The frontend polls Base Mainnet every 12 seconds and shows real transactions as green pulses (⛓) with a `tx ↗` link to BaseScan.
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | Next.js 16, React 19, Tailwind CSS 4, Framer Motion |
-| Agent Runtime | OpenClaw (AI agent framework) |
-| Agent Router | FastAPI (Python) -- inter-agent communication bus |
+| Frontend | Next.js 16, React 19, Tailwind CSS 4, Framer Motion, viem |
+| Agent Runtime | OpenClaw (7 agents in main squad, 1 CEO per satellite squad) |
+| Onchain | ERC-8004 (identity + reputation), custom SelfValidation contract |
+| Blockchain | Base Mainnet (Ethereum L2) |
 | Reverse Proxy | Caddy 2 (automatic HTTPS) |
-| Containers | Docker, Docker Compose |
-| CI/CD | GitHub Actions -- builds and pushes to GHCR |
-| Channels | WhatsApp, Telegram, Email (himalaya), Twitter/X, Google Sheets, Google Calendar |
-| Google APIs | `gog` CLI + Service Account |
+| Containers | Docker (6 independent containers on EC2) |
+| CI/CD | GitHub Actions → GHCR → Watchtower auto-deploy |
+| Channels | WhatsApp, Telegram, Email, Twitter/X, Google Sheets/Calendar |
 
 ## Quick Start
 
-### Prerequisites
-
-- Node.js 20+
-- Docker and Docker Compose
-- An `.env` file per agent (see each agent's deployment directory)
-
-### Clone and Install
-
 ```bash
-git clone https://github.com/fabian416/mateos.git
-cd mateos
+git clone https://github.com/LuchoLeonel/mateos-hackathon.git
+cd mateos-hackathon
 npm install
-```
-
-### Run the Frontend
-
-```bash
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
 
-### Run the Agents
-
-```bash
-cd agents/deployments
-docker compose -f docker-compose.prod.yml up
-```
-
-Each agent requires its own `.env` file. See the `agents/deployments/mateos-*/` directories for examples.
-
 ## Project Structure
 
 ```
-mateos/
+mateos-hackathon/
   src/                          # Next.js frontend (app router)
-  public/                       # Static assets
+    app/
+      hackathon/                # Landing page
+      dashboard/                # Intra-squad agent network view
+      network/                  # Argentina map — inter-squad supply chain
+      explore/                  # Squad directory
+      onboarding/               # Squad deployment wizard
+      deploy/                   # Deployment animation
+    components/
+      network/ArgentinaNetwork  # Real-time onchain event visualization
+      dashboard/AgentNetworkVisual  # Intra-squad agent communication
+    lib/
+      erc8004.ts                # Reads reputation from Base Mainnet
+      onchainEvents.ts          # Polls FeedbackGiven events in real-time
   agents/
-    _base/                      # Shared agent template + deploy script
-      workspace/                # Template workspace files (IDENTITY, SOUL, AGENTS, TOOLS, HEARTBEAT)
-      deploy.sh                 # Script to scaffold new agent deployments
-      docker/                   # Dockerfile template
-    router/                     # Agent Router (FastAPI inter-agent bus)
-      registry.json             # Agent discovery registry
-    el-baqueano/                # Agent type: Customer Support
-    el-ceo/                     # Agent type: Brand / Twitter
-    el-domador/                 # Agent type: Admin / Data
-    el-paisano/                 # Agent type: Custom Template
-    el-rastreador/              # Agent type: Tech Support L1
-    el-relator/                 # Agent type: Content / Marketing
-    el-tropero/                 # Agent type: Sales / Leads
-    deployments/                # Per-client deployment configs
-      docker-compose.prod.yml   # Full production stack
-      Caddyfile                 # Reverse proxy config
-      mateos-*/                 # Individual agent deployment directories
-  docs/                         # Documentation
-  Dockerfile                    # Frontend Docker image
-  .github/workflows/            # CI/CD pipelines
+    _base/                      # Shared agent templates and config
+      hooks/erc8004-hook/       # Inter-squad verification hook (OpenClaw)
+      config/                   # OpenClaw config template
+    erc-8004/                   # Onchain infrastructure
+      contracts/SelfValidation.sol  # Audit trail contract
+      proxy/verify.ts           # Inter-squad verification library
+      cards/                    # Agent card JSONs (hosted on IPFS)
+    squads/                     # Multi-squad deployment
+      supply-chain-loop.sh      # Automated inter-squad orchestrator
+      compose.squads.yml        # Docker compose for satellite squads
+  docs/
+    AUTONOMY.md                 # 6 autonomy mechanisms
+    BUILD-STORY.md              # Hackathon build narrative
+    CONVERSATION-LOG.md         # Human-agent collaboration log
 ```
+
+## Hackathon Tracks
+
+| Track | Prize | Status |
+|-------|-------|--------|
+| Synthesis Open Track | $28,300 | Submitted |
+| Protocol Labs — Autonomy | $4,000 | Complete |
+| Protocol Labs — ERC-8004 Trust | $4,000 | Complete |
 
 ## Documentation
 
 | Document | Description |
 |----------|-------------|
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System architecture and design decisions |
-| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | Full deployment guide (EC2, Docker, Caddy, DNS) |
-| [docs/INTER-AGENT.md](docs/INTER-AGENT.md) | Inter-agent communication protocol and delegation |
-| [docs/AGENT-TYPES.md](docs/AGENT-TYPES.md) | Detailed reference for each agent type |
-| [docs/OPERATIONS.md](docs/OPERATIONS.md) | Day-to-day operations, monitoring, and troubleshooting |
-
-## Deployment
-
-The production stack runs on a single EC2 instance. The workflow:
-
-1. Push to `main` triggers GitHub Actions, which builds Docker images and pushes them to GHCR.
-2. On the server: `docker compose pull && docker compose up -d`.
-3. Caddy handles HTTPS automatically.
-
-See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for the full guide.
-
-## Inter-Agent Communication
-
-Agents communicate through the Agent Router, a FastAPI service that acts as a message bus. Each agent can delegate tasks to any other agent in the squad using a shared `SQUAD_AUTH_TOKEN` for authentication. The router resolves agent names to container hostnames via `registry.json`.
-
-See [docs/INTER-AGENT.md](docs/INTER-AGENT.md) for protocol details.
+| [docs/AUTONOMY.md](docs/AUTONOMY.md) | How agents run without human intervention |
+| [docs/BUILD-STORY.md](docs/BUILD-STORY.md) | The hackathon build narrative |
+| [docs/CONVERSATION-LOG.md](docs/CONVERSATION-LOG.md) | Human-agent collaboration transcript |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System architecture |
+| [docs/INTER-AGENT.md](docs/INTER-AGENT.md) | Inter-agent communication protocol |
 
 ## License
 
-TBD
+MIT
+
+---
+
+*Built by 2 humans and 1 AI in 48 hours.*

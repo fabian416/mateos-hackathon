@@ -149,7 +149,7 @@ export default function ArgentinaNetwork() {
     const now = new Date();
     const time = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}:${now.getSeconds().toString().padStart(2, "0")}`;
     const prefix = isOnchain ? "⛓ " : "";
-    setTaskLog((prev) => [{ id: pulseIdRef.current, text: prefix + label, from, to, time, txHash }, ...prev].slice(0, 12));
+    setTaskLog((prev) => [{ id: pulseIdRef.current, text: prefix + label, from, to, time, txHash }, ...prev].slice(0, 50));
 
     setTimeout(() => {
       setPulses((prev) => prev.filter((p) => p.id !== pulse.id));
@@ -393,20 +393,33 @@ export default function ArgentinaNetwork() {
         transition={{ duration: zoomTarget ? 0.3 : 0 }}
       >
         <div className="px-5 pb-4">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-[6px] h-[6px] rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-[11px] text-white/40 uppercase tracking-wider font-semibold">Inter-Squad Activity</span>
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <div className="w-[6px] h-[6px] rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[11px] text-white/40 uppercase tracking-wider font-semibold">Inter-Squad Activity</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400/60" />
+                <span className="text-[9px] text-white/20">onchain</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
+                <span className="text-[9px] text-white/20">simulated</span>
+              </div>
+            </div>
           </div>
-          <div className="space-y-1 max-h-[120px] overflow-hidden">
-            {taskLog.slice(0, 4).map((task, i) => {
+          <div className="space-y-1 max-h-[160px] overflow-y-auto no-scrollbar">
+            {taskLog.map((task, i) => {
               const fromSquad = SQUADS.find((s) => s.id === task.from);
               const toSquad = SQUADS.find((s) => s.id === task.to);
+              const isOnchain = !!task.txHash;
               return (
                 <motion.div
                   key={`log-${task.id}-${i}`}
                   initial={i === 0 ? { opacity: 0, y: -8 } : false}
-                  animate={{ opacity: 1 - i * 0.25, y: 0 }}
-                  className="flex items-start gap-2"
+                  animate={{ opacity: 1 - i * 0.15, y: 0 }}
+                  className={`flex items-start gap-2 ${isOnchain ? "bg-emerald-500/[0.04] rounded px-1.5 py-0.5 -mx-1.5" : ""}`}
                 >
                   <span className="text-[10px] text-white/15 font-mono shrink-0 mt-0.5">{task.time}</span>
                   <div className="flex items-center gap-1 shrink-0 mt-0.5">
@@ -414,16 +427,16 @@ export default function ArgentinaNetwork() {
                     <span className="text-[9px] text-white/20">→</span>
                     <div className="w-[6px] h-[6px] rounded-full" style={{ backgroundColor: toSquad?.color || "#666" }} />
                   </div>
-                  <span className={`text-[11px] truncate ${task.text.startsWith("⛓") ? "text-emerald-400/60" : "text-white/40"}`}>{task.text}</span>
-                  {task.txHash && (
+                  <span className={`text-[11px] truncate ${isOnchain ? "text-emerald-400/70" : "text-white/40"}`}>{task.text}</span>
+                  {isOnchain && (
                     <a
                       href={`https://basescan.org/tx/${task.txHash}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[9px] text-violet-400/40 hover:text-violet-400 transition-colors shrink-0 font-mono ml-1"
+                      className="text-[9px] text-emerald-400/50 hover:text-emerald-400 transition-colors shrink-0 font-mono ml-auto border border-emerald-500/20 rounded px-1.5 py-0.5 hover:bg-emerald-500/10"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      verify ↗
+                      tx ↗
                     </a>
                   )}
                 </motion.div>

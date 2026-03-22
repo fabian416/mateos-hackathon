@@ -12,23 +12,12 @@ const NAV_TABS = [
   { label: "Deploy Squad", href: "/onboarding" },
 ];
 
+import MateLogo from "@/components/MateLogo";
+
 function MateOSLogo() {
   return (
     <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity shrink-0">
-      <svg className="w-8 h-8" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="navGrad" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#7C5CFF" />
-            <stop offset="100%" stopColor="#00D1FF" />
-          </radialGradient>
-        </defs>
-        <circle cx="110" cy="110" r="90" stroke="url(#navGrad)" strokeWidth="4" opacity="0.6" />
-        <circle cx="110" cy="110" r="35" fill="url(#navGrad)" />
-        <circle cx="110" cy="40" r="6" fill="#7C5CFF" />
-        <circle cx="180" cy="110" r="6" fill="#00D1FF" />
-        <circle cx="110" cy="180" r="6" fill="#7C5CFF" />
-        <circle cx="40" cy="110" r="6" fill="#00D1FF" />
-      </svg>
+      <MateLogo size={32} />
       <span className="font-bold text-white text-[16px] tracking-tight">MateOS</span>
     </Link>
   );

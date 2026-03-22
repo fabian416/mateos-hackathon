@@ -3,6 +3,7 @@
 import { useEffect, useState, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
+import TopNav from "@/components/ui/TopNav";
 
 const AGENT_META: Record<string, { name: string; subtitle: string; color: string }> = {
   baqueano: { name: "ChatGod", subtitle: "WhatsApp Support", color: "#10B981" },
@@ -76,11 +77,13 @@ function DeployContent() {
 
   return (
     <div
-      className="min-h-screen text-text-inverse flex flex-col items-center justify-center relative overflow-hidden"
+      className="min-h-screen text-text-inverse flex flex-col relative overflow-hidden"
       style={{
         background: "radial-gradient(ellipse at 50% 40%, #111130 0%, #0a0a14 70%)",
       }}
     >
+      <TopNav />
+      <div className="flex-1 flex flex-col items-center justify-center">
       {/* Background particles */}
       <div className="absolute inset-0">
         {Array.from({ length: 30 }).map((_, i) => (
@@ -290,6 +293,7 @@ function DeployContent() {
             </motion.div>
           )}
         </AnimatePresence>
+      </div>
       </div>
     </div>
   );
