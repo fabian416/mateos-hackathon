@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import TopNav from "@/components/ui/TopNav";
+import { useWallet } from "@/lib/walletContext";
 
 const StarField = dynamic(() => import("@/components/dashboard/StarField"), { ssr: false });
 
@@ -43,12 +44,14 @@ const STEP_LABELS = ["Name", "Industry", "Squad"];
 
 export default function OnboardingPage() {
   const router = useRouter();
+  const { connected, address, connect, isOnBase, switchToBase } = useWallet();
   const [step, setStep] = useState(0);
   const [businessName, setBusinessName] = useState("");
   const [businessType, setBusinessType] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [hoveredAgent, setHoveredAgent] = useState<string | null>(null);
   const [deploying, setDeploying] = useState(false);
+  const [walletConnecting, setWalletConnecting] = useState(false);
 
   useEffect(() => { setDeploying(false); }, []);
 
@@ -68,10 +71,24 @@ export default function OnboardingPage() {
     });
   };
 
+  const handleConnectWallet = async () => {
+    setWalletConnecting(true);
+    try {
+      await connect();
+    } finally {
+      setWalletConnecting(false);
+    }
+  };
+
   const handleDeploy = () => {
     setDeploying(true);
     setTimeout(() => {
-      const params = new URLSearchParams({ name: businessName || "My Business", type: businessType, agents: Array.from(selected).join(",") });
+      const params = new URLSearchParams({
+        name: businessName || "My Business",
+        type: businessType,
+        agents: Array.from(selected).join(","),
+        ...(address ? { wallet: address } : {}),
+      });
       router.push(`/deploy?${params.toString()}`);
     }, 1500);
   };
@@ -275,10 +292,40 @@ export default function OnboardingPage() {
                     </div>
                     <div className="flex items-center gap-3">
                       <button onClick={() => setStep(1)} className="text-[12px] text-white/20 hover:text-white/40 transition-colors px-3 py-2 cursor-pointer">Back</button>
-                      <button onClick={handleDeploy} disabled={selected.size === 0}
-                        className="bg-white text-black font-semibold px-6 py-2.5 rounded-xl text-[13px] hover:bg-white/90 transition-all disabled:opacity-15 disabled:cursor-not-allowed cursor-pointer">
-                        Deploy Squad &rarr;
-                      </button>
+
+                      {/* Wallet connect + deploy */}
+                      {!connected ? (
+                        <button
+                          onClick={handleConnectWallet}
+                          disabled={walletConnecting}
+                          className="bg-violet-600 text-white font-semibold px-6 py-2.5 rounded-xl text-[13px] hover:bg-violet-500 transition-all disabled:opacity-50 cursor-pointer"
+                        >
+                          {walletConnecting ? "Connecting..." : "Connect Wallet to Deploy"}
+                        </button>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          {connected && !isOnBase && (
+                            <button
+                              onClick={switchToBase}
+                              className="text-[11px] text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-2 rounded-lg hover:bg-amber-500/20 transition-all cursor-pointer"
+                            >
+                              Switch to Base
+                            </button>
+                          )}
+                          <span className="text-[11px] text-white/30 font-mono">
+                            {address && address.length > 10
+                              ? `${address.slice(0, 6)}...${address.slice(-4)}`
+                              : address}
+                          </span>
+                          <button
+                            onClick={handleDeploy}
+                            disabled={selected.size === 0}
+                            className="bg-white text-black font-semibold px-6 py-2.5 rounded-xl text-[13px] hover:bg-white/90 transition-all disabled:opacity-15 disabled:cursor-not-allowed cursor-pointer"
+                          >
+                            Deploy Squad &rarr;
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </motion.div>
