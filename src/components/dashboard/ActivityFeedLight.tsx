@@ -27,7 +27,7 @@ export default function ActivityFeedLight({ isOwner = true }: { isOwner?: boolea
       </div>
       <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-1">
         {events.length === 0 && (
-          <div className="text-[12px] text-white/15 text-center py-8">Waiting for agent activity...</div>
+          <div className="text-[12px] text-white/35 text-center py-8">Waiting for agent activity...</div>
         )}
         {events.slice(0, 10).map((e, i) => (
           <motion.div
@@ -41,17 +41,17 @@ export default function ActivityFeedLight({ isOwner = true }: { isOwner?: boolea
               {/* From → To dots */}
               <div className="flex items-center gap-1 mt-1.5 shrink-0">
                 <div className="w-[7px] h-[7px] rounded-full" style={{ backgroundColor: AGENT_COLORS[e.from] }} />
-                <span className="text-[9px] text-white/20">→</span>
+                <span className="text-[9px] text-white/40">→</span>
                 <div className="w-[7px] h-[7px] rounded-full" style={{ backgroundColor: AGENT_COLORS[e.to] }} />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
                   <span className="text-[13px] font-semibold" style={{ color: AGENT_COLORS[e.from] }}>{AGENT_NAMES[e.from]}</span>
-                  <span className="text-[10px] text-white/15">→</span>
+                  <span className="text-[10px] text-white/35">→</span>
                   <span className="text-[13px] font-semibold" style={{ color: AGENT_COLORS[e.to] }}>{AGENT_NAMES[e.to]}</span>
-                  <span className="text-[10px] text-white/20 ml-auto shrink-0">{e.timestamp}</span>
+                  <span className="text-[10px] text-white/40 ml-auto shrink-0">{e.timestamp}</span>
                 </div>
-                <p className={`text-[11px] mt-0.5 truncate font-mono ${isOwner ? "text-white/45" : "text-white/20 blur-[4px] select-none"}`}>{isOwner ? e.action : "━━━━━━━━━━━━━━━━━━━━"}</p>
+                <p className={`text-[11px] mt-0.5 truncate font-mono ${isOwner ? "text-white/45" : "text-white/40 blur-[4px] select-none"}`}>{isOwner ? e.action : "━━━━━━━━━━━━━━━━━━━━"}</p>
               </div>
             </div>
           </motion.div>

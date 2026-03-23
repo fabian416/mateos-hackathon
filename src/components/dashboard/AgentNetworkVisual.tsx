@@ -93,10 +93,31 @@ export default function AgentNetworkVisual() {
   const [fullSync, setFullSync] = useState(false);
   const [reputation, setReputation] = useState<SquadReputation | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const mountedRef = useRef(true);
+  const innerTimers = useRef<Set<ReturnType<typeof setTimeout>>>(new Set());
+
+  // Track inner timeouts for cleanup on unmount
+  const safeTimeout = useCallback((fn: () => void, ms: number) => {
+    const id = setTimeout(() => {
+      innerTimers.current.delete(id);
+      if (mountedRef.current) fn();
+    }, ms);
+    innerTimers.current.add(id);
+    return id;
+  }, []);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      innerTimers.current.forEach(clearTimeout);
+      innerTimers.current.clear();
+    };
+  }, []);
 
   // Fetch onchain reputation from ERC-8004 Reputation Registry
   useEffect(() => {
-    getSquadReputation().then(setReputation);
+    getSquadReputation().then((r) => { if (mountedRef.current) setReputation(r); });
   }, []);
 
   useEffect(() => {
@@ -124,16 +145,16 @@ export default function AgentNetworkVisual() {
       ...a, tasks: a.id === fromId ? a.tasks + 1 : a.tasks,
     })));
 
-    setTimeout(() => {
+    safeTimeout(() => {
       setPulses((prev) => prev.filter((p) => p.id !== pulse.id));
       setImpacts((prev) => [...prev.slice(-10), { id: pulse.id, agentId: toId, color }]);
       setActiveAgent(toId);
-      setTimeout(() => {
+      safeTimeout(() => {
         setImpacts((prev) => prev.filter((i) => i.id !== pulse.id));
         setActiveAgent(null);
       }, 3200);
     }, 600);
-  }, []);
+  }, [safeTimeout]);
 
   // STOCHASTIC PULSE TIMING — variable intervals
   useEffect(() => {
@@ -177,13 +198,13 @@ export default function AgentNetworkVisual() {
         firePulse(conn[0], conn[1], fromAgent.color, true);
 
         // Secondary pulses from the receiver
-        setTimeout(() => {
+        safeTimeout(() => {
           const receiverConns = CONNECTIONS.filter(([f, t]) => f === conn[1] || t === conn[1]);
           const targets = receiverConns.slice(0, 3);
           targets.forEach(([f, t], i) => {
             const target = f === conn[1] ? t : f;
             const receiverAgent = agents.find((a) => a.id === conn[1]);
-            setTimeout(() => {
+            safeTimeout(() => {
               firePulse(conn[1], target, receiverAgent?.color || "#fff", true);
             }, 100 + i * 150);
           });
@@ -194,7 +215,7 @@ export default function AgentNetworkVisual() {
     };
     const cascadeTimer = { current: schedule() };
     return () => clearTimeout(cascadeTimer.current);
-  }, [agents, firePulse]);
+  }, [agents, firePulse, safeTimeout]);
 
   // FULL SYNC EVENT — every 45-65s
   useEffect(() => {
@@ -203,12 +224,12 @@ export default function AgentNetworkVisual() {
       setFullSync(true);
       const peripherals = agents.filter((a) => a.id !== "ceo");
       peripherals.forEach((a, i) => {
-        setTimeout(() => firePulse(a.id, "ceo", a.color), i * 80);
+        safeTimeout(() => firePulse(a.id, "ceo", a.color), i * 80);
       });
-      setTimeout(() => setFullSync(false), 3000);
+      safeTimeout(() => setFullSync(false), 3000);
     }, delay);
     return () => clearTimeout(timer);
-  }, [agents, firePulse]);
+  }, [agents, firePulse, safeTimeout]);
 
   // OVERLOAD EVENT — every 55-80s
   useEffect(() => {
@@ -217,19 +238,19 @@ export default function AgentNetworkVisual() {
       const nonCeo = agents.filter((a) => a.id !== "ceo");
       const target = nonCeo[Math.floor(Math.random() * nonCeo.length)];
       const pos = getPos(target.id);
-      setTimeout(() => {
+      safeTimeout(() => {
         setShockwave({ x: pos.x, y: pos.y, color: target.color });
-        setTimeout(() => setShockwave(null), 2000);
+        safeTimeout(() => setShockwave(null), 2000);
       }, 2500);
     }, delay);
     return () => clearTimeout(timer);
-  }, [agents, getPos]);
+  }, [agents, getPos, safeTimeout]);
 
   const { w, h } = dims;
 
   return (
     <div ref={ref} className="w-full h-full relative overflow-visible">
-      <svg width={w} height={h} className="absolute inset-0">
+      <svg width={w} height={h} className="absolute inset-0" aria-label="Agent network visualization showing 7 AI agents and their communication patterns" role="img">
         <defs>
           <filter id="pulse-glow">
             <feGaussianBlur stdDeviation="4" result="blur" />

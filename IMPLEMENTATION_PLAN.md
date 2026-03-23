@@ -33,17 +33,14 @@
 | Cross-squad Feedbacks | 15+ reputation feedbacks | Yes |
 | Self-validation Cycles | 3 complete (submit + verify) | Yes |
 
-### What's NOT Done Yet
+### Roadmap — Post-Hackathon Enhancements
 
-| Gap | Required For | Priority |
-|-----|-------------|----------|
-| Bankr LLM Gateway integration | Bankr Track ($7,590) | HIGH |
-| $MATEOS token launch on Base | Bankr Track ($7,590) | HIGH |
-| Self-funding loop (token fees -> inference credits) | Bankr Track ($7,590) | HIGH |
-| x402 payment middleware on HTTP endpoint | Base Track ($5,000) | HIGH |
-| Bazaar registration for discovery | Base Track ($5,000) | HIGH |
-| Real USDC payment transaction | Base Track ($5,000) | HIGH |
-| OpenClaw config pointing to Bankr LLM Gateway | Bankr Track | HIGH |
+| Enhancement | Track | Notes |
+|-------------|-------|-------|
+| Bankr LLM Gateway integration | Bankr Track ($7,590) | Route inference through Bankr for tokenized compute |
+| $MATEOS token launch on Base | Bankr Track ($7,590) | Self-funding loop via swap fees |
+| Bazaar registration for discovery | Base Track ($5,000) | Automatic on first x402 payment |
+| OpenClaw config pointing to Bankr LLM Gateway | Bankr Track | Provider config update |
 
 ---
 

@@ -131,13 +131,13 @@ export async function verifyPayment(paymentHeader: string): Promise<{
         txHash: data.txHash,
         error: data.valid ? undefined : data.error || "Facilitator rejected payment",
       };
-    } catch (err) {
-      return { valid: false, error: `Facilitator error: ${err}` };
+    } catch {
+      return { valid: false, error: "Payment facilitator unavailable" };
     }
   }
 
-  // Hackathon demo: accept any non-empty header
-  console.log("[x402] Demo mode — accepting payment proof:", paymentHeader.slice(0, 40) + "...");
+  // Hackathon demo mode: accept any non-empty header
+  // NOTE: In production, set X402_VERIFY_PAYMENTS=true to enable real facilitator verification
   return {
     valid: true,
     txHash: "0xdemo_" + Date.now().toString(16),
@@ -148,8 +148,13 @@ export async function verifyPayment(paymentHeader: string): Promise<{
  * Standard CORS headers for x402 endpoints.
  * Must expose X-PAYMENT so clients can send payment proofs.
  */
-export const X402_CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
+/**
+ * CORS headers for x402 endpoints.
+ * Wildcard origin is intentional: x402 is a public payment protocol,
+ * and any agent (browser or server) must be able to discover and pay.
+ */
+export const X402_CORS_HEADERS: Record<string, string> = {
+  "Access-Control-Allow-Origin": process.env.X402_ALLOWED_ORIGIN || "*",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   "Access-Control-Allow-Headers": "Content-Type, X-PAYMENT, Authorization",
   "Access-Control-Expose-Headers": "X-PAYMENT-REQUIRED, X-PAYMENT-RECEIPT",

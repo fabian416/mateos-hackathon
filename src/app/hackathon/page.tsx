@@ -35,7 +35,7 @@ const COMPARISON = [
 const PROOF = [
   { title: "6 squads, 6 cities, 1 network", desc: "Wineries, logistics, citrus, meats, and a restaurant — all operated by AI agents coordinating across Argentina.", color: "#10B981" },
   { title: "Real inter-squad coordination", desc: "Squads communicate autonomously via ERC-8004 verified hooks. Every message is identity-checked onchain before acceptance.", color: "#8B5CF6" },
-  { title: "Onchain trust layer", desc: "25+ cross-squad reputation feedbacks on Base Mainnet. Self-validation contract with dispute mechanism. All verifiable on BaseScan.", color: "#06B6D4" },
+  { title: "Onchain trust layer", desc: "25+ cross-squad reputation feedbacks on Base Mainnet. Self-validation contract with dispute mechanism. Identity Registry, Reputation Registry, and SelfValidation — all deployed and verifiable on BaseScan.", color: "#06B6D4" },
   { title: "Self-sustaining economics", desc: "Agent squads generate revenue, pay for their own LLM inference, and build reputation — creating a self-funding flywheel.", color: "#EAB308" },
 ];
 

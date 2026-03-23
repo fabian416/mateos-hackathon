@@ -4,12 +4,19 @@ import {
   createPublicClient,
   http,
   parseAbi,
+  isAddress,
+  getAddress,
   type Hex,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { base } from "viem/chains";
+import { z } from "zod";
 
 const IDENTITY_REGISTRY = "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432" as const;
+
+/** ERC-721 Transfer event signature: Transfer(address,address,uint256) */
+const ERC721_TRANSFER_TOPIC =
+  "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef" as const;
 
 const abi = parseAbi([
   "function register(string uri) external",
@@ -17,16 +24,27 @@ const abi = parseAbi([
   "event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)",
 ]);
 
+const registerSquadSchema = z.object({
+  ownerAddress: z.string().refine((v) => isAddress(v), { message: "Invalid Ethereum address" }),
+  metadataUri: z.string().regex(/^(ipfs:\/\/[a-zA-Z0-9]+|https?:\/\/.+)$/, "Invalid metadata URI format"),
+  squadName: z.string().min(2).max(50).optional(),
+  agents: z.array(z.string()).max(10).optional(),
+});
+
 export async function POST(req: NextRequest) {
   try {
-    const { ownerAddress, metadataUri, squadName, agents } = await req.json();
+    const body = await req.json();
+    const parsed = registerSquadSchema.safeParse(body);
 
-    if (!ownerAddress || !metadataUri) {
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Missing required fields: ownerAddress, metadataUri" },
+        { error: parsed.error.issues.map((i) => i.message).join(", ") },
         { status: 400 },
       );
     }
+
+    const { ownerAddress, metadataUri, squadName, agents } = parsed.data;
+    const checksumOwner = getAddress(ownerAddress) as Hex;
 
     const privateKey = process.env.WALLET_BUENOS_TABLE;
     if (!privateKey) {
@@ -60,12 +78,21 @@ export async function POST(req: NextRequest) {
     const registerReceipt = await publicClient.waitForTransactionReceipt({
       hash: registerHash,
       confirmations: 1,
+      timeout: 60_000,
     });
 
-    // Extract agentId (tokenId) from Transfer event — topics[3] is the indexed tokenId
+    if (registerReceipt.status === "reverted") {
+      return NextResponse.json(
+        { error: "Registration transaction reverted on-chain" },
+        { status: 500 },
+      );
+    }
+
+    // Extract agentId from ERC-721 Transfer event — verify event signature
     const transferLog = registerReceipt.logs.find(
       (log) =>
         log.address.toLowerCase() === IDENTITY_REGISTRY.toLowerCase() &&
+        log.topics[0] === ERC721_TRANSFER_TOPIC &&
         log.topics.length >= 4,
     );
 
@@ -78,33 +105,38 @@ export async function POST(req: NextRequest) {
 
     const agentId = BigInt(transferLog.topics[3]);
 
+    if (agentId <= BigInt(0)) {
+      return NextResponse.json(
+        { error: "Invalid agent ID extracted from transfer event" },
+        { status: 500 },
+      );
+    }
+
     // Step 2: Transfer NFT from relayer to user's wallet
     const transferHash = await walletClient.writeContract({
       address: IDENTITY_REGISTRY,
       abi,
       functionName: "transferFrom",
-      args: [account.address, ownerAddress as Hex, agentId],
+      args: [account.address, checksumOwner, agentId],
     });
 
     await publicClient.waitForTransactionReceipt({
       hash: transferHash,
       confirmations: 1,
+      timeout: 60_000,
     });
-
-    console.log(
-      `[register-squad] Squad "${squadName}" registered — agentId: ${agentId}, agents: ${agents?.join(",")}, owner: ${ownerAddress}`,
-    );
 
     return NextResponse.json({
       agentId: Number(agentId),
       txHash: registerHash,
       transferTxHash: transferHash,
-      owner: ownerAddress,
+      owner: checksumOwner,
     });
   } catch (err) {
     console.error("register-squad error:", err);
-    const message =
-      err instanceof Error ? err.message : "Internal server error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Registration failed. Please try again." },
+      { status: 500 },
+    );
   }
 }

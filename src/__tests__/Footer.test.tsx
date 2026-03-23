@@ -12,24 +12,24 @@ describe("Footer", () => {
   it("should render the tagline", () => {
     render(<Footer />);
 
-    expect(screen.getByText("Agentes de IA para empresas argentinas.")).toBeInTheDocument();
+    expect(screen.getByText("A self-sustaining network of AI-operated businesses.")).toBeInTheDocument();
   });
 
   it("should render product links", () => {
     render(<Footer />);
 
-    expect(screen.getByText("Agentes")).toBeInTheDocument();
-    expect(screen.getByText("Proceso")).toBeInTheDocument();
-    expect(screen.getByText("Precios")).toBeInTheDocument();
-    expect(screen.getByText("FAQ")).toBeInTheDocument();
+    expect(screen.getByText("Network")).toBeInTheDocument();
+    expect(screen.getByText("Dashboard")).toBeInTheDocument();
+    expect(screen.getByText("Explore")).toBeInTheDocument();
+    expect(screen.getByText("Deploy")).toBeInTheDocument();
   });
 
   it("should render the contact email", () => {
     render(<Footer />);
 
-    const emailLink = screen.getByText("contacto@mateos.ar");
+    const emailLink = screen.getByText("contacto@mateos.tech");
     expect(emailLink).toBeInTheDocument();
-    expect(emailLink.closest("a")).toHaveAttribute("href", "mailto:contacto@mateos.ar");
+    expect(emailLink.closest("a")).toHaveAttribute("href", "mailto:contacto@mateos.tech");
   });
 
   it("should render the location", () => {
@@ -41,13 +41,14 @@ describe("Footer", () => {
   it("should render copyright text", () => {
     render(<Footer />);
 
-    expect(screen.getByText("2026 MateOS. Todos los derechos reservados.")).toBeInTheDocument();
+    expect(screen.getByText("2026 MateOS. Built by 2 humans and 1 AI.")).toBeInTheDocument();
   });
 
-  it("should show coming soon badges", () => {
+  it("should show hackathon badges", () => {
     render(<Footer />);
 
-    const badges = screen.getAllByText("próximamente");
-    expect(badges.length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText("Synthesis 2026")).toBeInTheDocument();
+    expect(screen.getByText("Base Mainnet")).toBeInTheDocument();
+    expect(screen.getByText("ERC-8004")).toBeInTheDocument();
   });
 });

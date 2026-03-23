@@ -106,7 +106,7 @@ export default function TopNav() {
               key={tab.href}
               href={tab.href}
               className={`relative px-4 py-[17px] text-[13px] font-medium transition-colors ${
-                isActive ? "text-white" : "text-white/40 hover:text-white/60"
+                isActive ? "text-white" : "text-white/60 hover:text-white/80"
               }`}
             >
               {tab.label}
@@ -144,7 +144,7 @@ export default function TopNav() {
                 href={tab.href}
                 onClick={() => setMobileMenuOpen(false)}
                 className={`block px-6 py-3 text-[13px] font-medium border-b border-white/[0.04] transition-colors ${
-                  isActive ? "text-white bg-violet-500/10" : "text-white/40 hover:text-white/60"
+                  isActive ? "text-white bg-violet-500/10" : "text-white/60 hover:text-white/80"
                 }`}
               >
                 {tab.label}

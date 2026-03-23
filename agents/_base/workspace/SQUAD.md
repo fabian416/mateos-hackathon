@@ -48,6 +48,7 @@ sessions_send(sessionKey="agent:rastreador:main", message="URGENTE: Cliente no p
 2. **Un mensaje, una tarea** — no mandes múltiples tareas en un solo mensaje
 3. **No cadenas infinitas** — si A delega a B y B necesita delegar de vuelta a A, escalá al operador
 4. **Urgencia** — incluí "URGENTE" en el mensaje solo para cosas que no pueden esperar
+5. **Máximo 3 niveles de profundidad** — si una delegación ya pasó por 3 agentes (ej: Baqueano → Tropero → Domador → ?), no delegues más. Resolvé vos o escalá al operador. Para trackear profundidad, cada delegación debe incluir `[depth:N]` donde N es el nivel actual (1, 2, 3). Si recibís un mensaje con `[depth:3]`, NO delegues — resolvé o escalá.
 
 ## Flujo típico: Lead → Venta → Onboarding
 

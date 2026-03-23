@@ -14,12 +14,19 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import {
   buildPaymentRequiredResponse,
   verifyPayment,
   X402_CORS_HEADERS,
   X402_CONFIG,
 } from "@/lib/x402";
+
+const agentTaskSchema = z.object({
+  task: z.string().min(1).max(1000).optional(),
+  agentId: z.string().min(1).max(50).optional(),
+  message: z.string().max(2000).optional(),
+});
 
 // --- CORS preflight ---
 export async function OPTIONS() {
@@ -65,10 +72,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // 3. Payment verified — execute the agent task
-  let body: { task?: string; agentId?: string; message?: string };
+  // 3. Payment verified — parse and validate the request body
+  let rawBody: unknown;
   try {
-    body = await request.json();
+    rawBody = await request.json();
   } catch {
     return NextResponse.json(
       { error: "Invalid JSON body. Expected: { task, agentId?, message? }" },
@@ -76,9 +83,17 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const task = body.task || "general";
-  const agentId = body.agentId || "mateo-ceo";
-  const message = body.message || "";
+  const parsed = agentTaskSchema.safeParse(rawBody);
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: parsed.error.issues.map((i) => i.message).join(", ") },
+      { status: 400, headers },
+    );
+  }
+
+  const task = parsed.data.task || "general";
+  const agentId = parsed.data.agentId || "mateo-ceo";
+  const message = parsed.data.message || "";
 
   // Route to appropriate agent for task execution
   // In production, this calls the OpenClaw gateway at localhost:3100

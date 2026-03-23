@@ -116,6 +116,7 @@ void main(){vec2 fragCoord=vUv*iResolution.xy;vec4 col=mainImage(fragCoord);gl_F
       if (container.contains(gl.canvas)) container.removeChild(gl.canvas);
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- vert/frag are stable string literals defined in render scope
   }, [hue, hoverIntensity, rotateOnHover, forceHoverState, globalMouseTracking, backgroundColor]);
 
   return <div ref={ctnDom} className={className} style={{ width: "100%", height: "100%" }} />;

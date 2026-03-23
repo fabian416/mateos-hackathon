@@ -11,20 +11,20 @@
 
 set -euo pipefail
 
-# ── Config ──
-OWNER_ID="832970133"
-HOOKS_TOKEN="7de1889cdf99f993be21ee7352275351889d6e8a4e49537a"
-RPC_URL="https://mainnet.base.org"
+# ── Config (loaded from environment) ──
+OWNER_ID="${TELEGRAM_OWNER_ID:?Missing TELEGRAM_OWNER_ID}"
+HOOKS_TOKEN="${HOOKS_TOKEN:?Missing HOOKS_TOKEN}"
+RPC_URL="${RPC_URL:-https://mainnet.base.org}"
 REP_REGISTRY="0x8004BAa17C55a88189AE136b182e5fdA19dE9b63"
 VAL_CONTRACT="0x17Fa2eF50Cc53A96C08610f345fAd0F2c4Ecc149"
 
-# Squad bot tokens
+# Squad bot tokens — loaded from environment variables
 declare -A BOT_TOKENS
-BOT_TOKENS[andes]="8609503683:AAESxz0axA5tLVclrkeMfp9G3o5C8i3MYbU"
-BOT_TOKENS[altura]="8128932743:AAEcYjgQgZ5Ope8tBB3sArFrComtTl7p0Bg"
-BOT_TOKENS[central]="8697532710:AAEIeAq-yldJ8VFAIOVcqaLBiy-n2NfBnu0"
-BOT_TOKENS[citrus]="8715073440:AAF58kY8MdzY1oYnnop06Qyl5pFTMCiwL5k"
-BOT_TOKENS[estancia]="8761323333:AAGlDcRFMGbY_8h5hnHKk5iJo31Qu9PLPJ8"
+BOT_TOKENS[andes]="${TG_TOKEN_ANDES:?Missing TG_TOKEN_ANDES}"
+BOT_TOKENS[altura]="${TG_TOKEN_ALTURA:?Missing TG_TOKEN_ALTURA}"
+BOT_TOKENS[central]="${TG_TOKEN_CENTRAL:?Missing TG_TOKEN_CENTRAL}"
+BOT_TOKENS[citrus]="${TG_TOKEN_CITRUS:?Missing TG_TOKEN_CITRUS}"
+BOT_TOKENS[estancia]="${TG_TOKEN_ESTANCIA:?Missing TG_TOKEN_ESTANCIA}"
 
 # Squad agent IDs (ERC-8004)
 declare -A AGENT_IDS
@@ -35,14 +35,14 @@ AGENT_IDS[citrus]=35306
 AGENT_IDS[estancia]=35307
 AGENT_IDS[buenos]=35270
 
-# Squad wallets for onchain operations
+# Squad wallets — loaded from environment variables
 declare -A WALLETS
-WALLETS[buenos]="af25b8a317b9f26545bfb49c41b671bf2028cb81ab65d031950cc483cc2d099a"
-WALLETS[andes]="5a5ab352967b807d1e798d7846bc24580dbc7d779c79f4ed9782b7a278ed285a"
-WALLETS[central]="4dd60b956711b3fa970dbbed1a4556ba6781394a04c18c2b1b1f4a283820a9b7"
-WALLETS[altura]="0741ed3ff8c88081fb16081c5b739468833d97666b389b9d6ed1c0ce7bf23bde"
-WALLETS[citrus]="90f9cc5ea64048042e9c975026575cb4dad25ff9880321d7eb72a2ca3b246451"
-WALLETS[estancia]="79b1f68892619ae4d07206c17b8b5c85b4b082613c27a79b18a891008b2dcab9"
+WALLETS[buenos]="${WALLET_BUENOS:?Missing WALLET_BUENOS}"
+WALLETS[andes]="${WALLET_ANDES:?Missing WALLET_ANDES}"
+WALLETS[central]="${WALLET_CENTRAL:?Missing WALLET_CENTRAL}"
+WALLETS[altura]="${WALLET_ALTURA:?Missing WALLET_ALTURA}"
+WALLETS[citrus]="${WALLET_CITRUS:?Missing WALLET_CITRUS}"
+WALLETS[estancia]="${WALLET_ESTANCIA:?Missing WALLET_ESTANCIA}"
 
 # ── Supply chain scenarios ──
 SCENARIOS=(

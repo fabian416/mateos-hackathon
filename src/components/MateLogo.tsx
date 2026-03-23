@@ -13,6 +13,8 @@ export default function MateLogo({
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      aria-label="MateOS Logo"
+      role="img"
     >
       <defs>
         {/* Gold gradient for the badge border */}

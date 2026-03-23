@@ -1,15 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+
+const uploadMetadataSchema = z.object({
+  squadName: z.string().min(2, "Squad name must be at least 2 characters").max(50).trim(),
+  businessType: z.string().max(50).optional(),
+  agents: z.array(z.string()).min(1, "At least one agent required").max(10),
+  ownerAddress: z.string().min(1, "Owner address required"),
+});
 
 export async function POST(req: NextRequest) {
   try {
-    const { squadName, businessType, agents, ownerAddress } = await req.json();
+    const body = await req.json();
+    const parsed = uploadMetadataSchema.safeParse(body);
 
-    if (!squadName || !agents || !ownerAddress) {
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Missing required fields: squadName, agents, ownerAddress" },
+        { error: parsed.error.issues.map((i) => i.message).join(", ") },
         { status: 400 },
       );
     }
+
+    const { squadName, businessType, agents, ownerAddress } = parsed.data;
 
     const pinataJwt = process.env.PINATA_JWT;
     if (!pinataJwt) {

@@ -9,26 +9,17 @@ import AgentNetworkVisual from "@/components/dashboard/AgentNetworkVisual";
 import StarField from "@/components/dashboard/StarField";
 import ActivityFeedLight from "@/components/dashboard/ActivityFeedLight";
 import RevenueChartLight from "@/components/dashboard/RevenueChartLight";
+import { SQUAD_MAP } from "@/lib/squads";
 
-// The user's own squad — everything else is "external"
 const MY_SQUAD = "bsas";
-
-const SQUAD_INFO: Record<string, { name: string; agents: number; color: string }> = {
-  hq: { name: "MateOS HQ", agents: 7, color: "#EAB308" },
-  mendoza: { name: "Andes Vineyard", agents: 5, color: "#10B981" },
-  salta: { name: "Altura Wines", agents: 4, color: "#F97316" },
-  tucuman: { name: "Norte Citrus Co.", agents: 4, color: "#EC4899" },
-  cordoba: { name: "Estancia Meats", agents: 4, color: "#06B6D4" },
-  rosario: { name: "Central Logistics", agents: 6, color: "#8B5CF6" },
-  bsas: { name: "Buenos Table", agents: 7, color: "#EAB308" },
-};
 
 function DashboardContent() {
   const searchParams = useSearchParams();
   const fromNetwork = searchParams.get("squad");
   const squadId = fromNetwork || MY_SQUAD;
   const isOwner = squadId === MY_SQUAD;
-  const squad = SQUAD_INFO[squadId] || SQUAD_INFO[MY_SQUAD];
+  const squadInfo = SQUAD_MAP[squadId] || SQUAD_MAP[MY_SQUAD];
+  const squad = { name: squadInfo.name, agents: squadInfo.agents, color: squadInfo.color };
   const [revenueOpen, setRevenueOpen] = useState(true);
   const [hasAnimated, setHasAnimated] = useState(false);
 
@@ -80,7 +71,7 @@ function DashboardContent() {
       >
       {/* Stats bar */}
       <div className="relative z-10 border-b border-white/[0.05] bg-black/20 backdrop-blur-sm shrink-0 overflow-x-auto no-scrollbar">
-        <div className="grid grid-cols-4 sm:grid-cols-7 min-w-0">
+        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 min-w-0">
           {[
             { label: "REVENUE (30D)", value: isOwner ? "$12,400" : "••••••", sub: isOwner ? "USDC" : "restricted", change: isOwner ? "+18%" : "", color: "#34D399", sensitive: true },
             { label: "TASKS COMPLETED", value: "8,247", sub: "this month", change: "+24%", color: "#FFD43B", sensitive: false },
@@ -90,13 +81,13 @@ function DashboardContent() {
             { label: "CLIENT SQUADS", value: isOwner ? "3" : "••", sub: isOwner ? "managed" : "restricted", color: "#A78BFA", sensitive: true },
             { label: "LLM REQUESTS", value: isOwner ? "11.2K" : "••••", sub: isOwner ? "via Bankr Gateway" : "restricted", color: "#FB7185", sensitive: true },
           ].map((s) => (
-            <div key={s.label} className="px-3 sm:px-4 py-2 sm:py-2.5 border-r border-white/[0.04] last:border-r-0">
-              <div className="text-[9px] sm:text-[10px] text-white/50 uppercase tracking-wider mb-0.5">{s.label}</div>
+            <div key={s.label} className="px-3 sm:px-4 py-2.5 sm:py-3 border-r border-white/[0.04] last:border-r-0">
+              <div className="text-[10px] sm:text-[11px] text-white/60 uppercase tracking-wider mb-0.5">{s.label}</div>
               <div className="flex items-baseline gap-1">
-                <span className={`text-base sm:text-xl font-bold ${!isOwner && s.sensitive ? "blur-[6px] select-none" : ""}`} style={{ color: s.color }}>{s.value}</span>
-                {s.change && <span className="text-[9px] sm:text-[10px] text-emerald-400/70">{s.change}</span>}
+                <span className={`text-lg sm:text-xl font-bold ${!isOwner && s.sensitive ? "blur-[6px] select-none" : ""}`} style={{ color: s.color }}>{s.value}</span>
+                {s.change && <span className="text-[10px] sm:text-[11px] text-emerald-400/80">{s.change}</span>}
               </div>
-              <div className="text-[9px] sm:text-[10px] text-white/35">{s.sub}</div>
+              <div className="text-[10px] sm:text-[11px] text-white/45">{s.sub}</div>
             </div>
           ))}
         </div>

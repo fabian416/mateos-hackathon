@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { pollOnchainEvents, type OnchainSquadEvent } from "@/lib/onchainEvents";
+import { pollOnchainEvents } from "@/lib/onchainEvents";
 
 // --- Squad nodes positioned on Argentina's geography ---
 interface Squad {
@@ -250,7 +250,7 @@ export default function ArgentinaNetwork() {
         ))}
       </div>
 
-      <svg width={w} height={h} className="absolute inset-0">
+      <svg width={w} height={h} className="absolute inset-0" aria-label="Supply chain network map of Argentina showing 6 AI-operated squads" role="img">
         <defs>
           <filter id="net-glow">
             <feGaussianBlur stdDeviation="4" result="blur" />

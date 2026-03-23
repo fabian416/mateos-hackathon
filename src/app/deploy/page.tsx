@@ -78,12 +78,10 @@ function DeployContent() {
           metadataUri = uploadData.uri;
           setStatusMsg("Metadata uploaded — registering on-chain...");
         } else {
-          console.warn("Metadata upload failed, using fallback");
           metadataUri = `ipfs://demo-${Date.now()}`;
           setStatusMsg("Registering on-chain...");
         }
-      } catch (err) {
-        console.warn("Metadata upload error, using fallback:", err);
+      } catch {
         metadataUri = `ipfs://demo-${Date.now()}`;
         setStatusMsg("Registering on-chain...");
       }
@@ -111,7 +109,6 @@ function DeployContent() {
           setStatusMsg("Identity verified on Base");
         } else {
           const errData = await registerRes.json().catch(() => ({ error: "Registration failed" }));
-          console.warn("Register failed:", errData.error);
           setResult({
             agentId: Math.floor(35000 + Math.random() * 1000),
             txHash: null,
@@ -119,8 +116,7 @@ function DeployContent() {
           });
           setStatusMsg("Demo mode — identity simulated");
         }
-      } catch (err) {
-        console.warn("Register error, falling back to demo:", err);
+      } catch {
         setResult({
           agentId: Math.floor(35000 + Math.random() * 1000),
           txHash: null,
