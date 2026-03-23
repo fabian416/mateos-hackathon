@@ -16,16 +16,17 @@ interface Agent {
   size: number;
   tasks: number;
   status: "working" | "idle" | "coordinating";
+  telegram: string;
 }
 
 const AGENTS: Agent[] = [
-  { id: "ceo", name: "OpsChad", letter: "OC", subtitle: "Coordination", color: "#EAB308", x: 0.5, y: 0.42, size: 52, tasks: 247, status: "coordinating" },
-  { id: "baqueano", name: "ChatGod", letter: "CG", subtitle: "WhatsApp", color: "#10B981", x: 0.18, y: 0.22, size: 46, tasks: 1842, status: "working" },
-  { id: "tropero", name: "BagChaser", letter: "BC", subtitle: "Billing", color: "#8B5CF6", x: 0.82, y: 0.22, size: 44, tasks: 631, status: "working" },
-  { id: "domador", name: "CalendApe", letter: "CA", subtitle: "Scheduling", color: "#A855F7", x: 0.1, y: 0.65, size: 42, tasks: 924, status: "working" },
-  { id: "rastreador", name: "DM Sniper", letter: "DS", subtitle: "Outreach", color: "#06B6D4", x: 0.9, y: 0.65, size: 40, tasks: 456, status: "idle" },
-  { id: "paisano", name: "PostMalone", letter: "PM", subtitle: "Social", color: "#EC4899", x: 0.3, y: 0.82, size: 40, tasks: 312, status: "working" },
-  { id: "relator", name: "HypeSmith", letter: "HS", subtitle: "Content", color: "#F97316", x: 0.7, y: 0.82, size: 40, tasks: 189, status: "working" },
+  { id: "ceo", name: "OpsChad", letter: "OC", subtitle: "Coordination", color: "#EAB308", x: 0.5, y: 0.42, size: 52, tasks: 247, status: "coordinating", telegram: "mateos_ceo" },
+  { id: "baqueano", name: "ChatGod", letter: "CG", subtitle: "WhatsApp", color: "#10B981", x: 0.18, y: 0.22, size: 46, tasks: 1842, status: "working", telegram: "mateos_ceo" },
+  { id: "tropero", name: "BagChaser", letter: "BC", subtitle: "Billing", color: "#8B5CF6", x: 0.82, y: 0.22, size: 44, tasks: 631, status: "working", telegram: "mateos_ceo" },
+  { id: "domador", name: "CalendApe", letter: "CA", subtitle: "Scheduling", color: "#A855F7", x: 0.1, y: 0.65, size: 42, tasks: 924, status: "working", telegram: "mateos_ceo" },
+  { id: "rastreador", name: "DM Sniper", letter: "DS", subtitle: "Outreach", color: "#06B6D4", x: 0.9, y: 0.65, size: 40, tasks: 456, status: "idle", telegram: "mateos_ceo" },
+  { id: "paisano", name: "PostMalone", letter: "PM", subtitle: "Social", color: "#EC4899", x: 0.3, y: 0.82, size: 40, tasks: 312, status: "working", telegram: "mateos_ceo" },
+  { id: "relator", name: "HypeSmith", letter: "HS", subtitle: "Content", color: "#F97316", x: 0.7, y: 0.82, size: 40, tasks: 189, status: "working", telegram: "mateos_ceo" },
 ];
 
 const CONNECTIONS: [string, string][] = [
@@ -637,6 +638,16 @@ export default function AgentNetworkVisual() {
                     </div>
                   )}
                 </div>
+                <a
+                  href={`https://t.me/${a.telegram}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-2 flex items-center justify-center gap-2 w-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.06] hover:border-white/[0.12] rounded-lg py-1.5 transition-all"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <span className="text-[12px]">💬</span>
+                  <span className="text-[10px] text-white/50 font-medium">Message on Telegram</span>
+                </a>
               </motion.div>
             </>
           );

@@ -1,15 +1,17 @@
-import { Mail, MapPin, Linkedin, Instagram } from "lucide-react";
+import { Mail, MapPin } from "lucide-react";
+import MateLogo from "@/components/MateLogo";
 
-const productoLinks = [
-  { label: "Agentes", href: "#agentes" },
-  { label: "Proceso", href: "#proceso" },
-  { label: "Precios", href: "#precios" },
-  { label: "FAQ", href: "#faq" },
+const productLinks = [
+  { label: "Network", href: "/network" },
+  { label: "Dashboard", href: "/dashboard" },
+  { label: "Explore", href: "/explore" },
+  { label: "Deploy", href: "/onboarding" },
 ];
 
-const empresaLinks = [
-  { label: "Contacto", href: "#contacto" },
-  { label: "Blog", href: "#", comingSoon: true },
+const resourceLinks = [
+  { label: "ERC-8004", href: "https://eips.ethereum.org/EIPS/eip-8004" },
+  { label: "BaseScan", href: "https://basescan.org/address/0x8004BAa17C55a88189AE136b182e5fdA19dE9b63" },
+  { label: "GitHub", href: "https://github.com/LuchoLeonel/mateos-hackathon" },
 ];
 
 export default function Footer() {
@@ -17,32 +19,27 @@ export default function Footer() {
     <footer className="py-16 px-6" style={{ backgroundColor: "#0D0D1A" }}>
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
-          {/* Col 1: Logo + description */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-2">
-              <svg className="w-7 h-7" viewBox="0 0 220 220" fill="none"><defs><radialGradient id="ftGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#7C5CFF"/><stop offset="100%" stopColor="#00D1FF"/></radialGradient></defs><circle cx="110" cy="110" r="90" stroke="url(#ftGrad)" strokeWidth="4" opacity="0.6"/><circle cx="110" cy="110" r="35" fill="url(#ftGrad)"/><circle cx="110" cy="40" r="6" fill="#7C5CFF"/><circle cx="180" cy="110" r="6" fill="#00D1FF"/><circle cx="110" cy="180" r="6" fill="#7C5CFF"/><circle cx="40" cy="110" r="6" fill="#00D1FF"/></svg>
-              <span className="text-text-inverse font-bold text-xl">MateOS</span>
+              <MateLogo size={28} />
+              <span className="text-white font-bold text-xl">MateOS</span>
             </div>
-            <p className="text-slate-300 text-sm mt-4">
-              Agentes de IA para empresas argentinas.
+            <p className="text-white/40 text-sm mt-4">
+              A self-sustaining network of AI-operated businesses.
             </p>
-            <p className="text-slate-300 text-sm italic mt-2">
-              Mientras vos dormís, tu agente labura.
+            <p className="text-white/25 text-sm mt-2">
+              Zero Human Factory
             </p>
           </div>
 
-          {/* Col 2: Producto */}
           <div>
-            <h4 className="text-text-muted text-xs uppercase tracking-widest font-semibold mb-4">
-              Producto
+            <h4 className="text-white/30 text-xs uppercase tracking-widest font-semibold mb-4">
+              Product
             </h4>
             <ul className="space-y-3">
-              {productoLinks.map((link) => (
+              {productLinks.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-slate-300 hover:text-text-inverse transition text-sm"
-                  >
+                  <a href={link.href} className="text-white/50 hover:text-white transition text-sm">
                     {link.label}
                   </a>
                 </li>
@@ -50,76 +47,56 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Col 3: Empresa */}
           <div>
-            <h4 className="text-text-muted text-xs uppercase tracking-widest font-semibold mb-4">
-              Empresa
+            <h4 className="text-white/30 text-xs uppercase tracking-widest font-semibold mb-4">
+              Resources
             </h4>
             <ul className="space-y-3">
-              {empresaLinks.map((link) => (
+              {resourceLinks.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-slate-300 hover:text-text-inverse transition text-sm inline-flex items-center gap-2"
-                  >
-                    {link.label}
-                    {link.comingSoon && (
-                      <span className="text-xs bg-secondary/20 text-secondary px-2 py-0.5 rounded-full">
-                        próximamente
-                      </span>
-                    )}
+                  <a href={link.href} target="_blank" rel="noopener noreferrer"
+                    className="text-white/50 hover:text-white transition text-sm">
+                    {link.label} ↗
                   </a>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Col 4: Contacto */}
           <div className="col-span-2 md:col-span-1">
-            <h4 className="text-text-muted text-xs uppercase tracking-widest font-semibold mb-4">
-              Contacto
+            <h4 className="text-white/30 text-xs uppercase tracking-widest font-semibold mb-4">
+              Contact
             </h4>
             <ul className="space-y-3">
               <li>
-                <a
-                  href="mailto:contacto@mateos.ar"
-                  className="text-slate-300 hover:text-text-inverse transition text-sm flex items-center gap-2 break-all"
-                >
+                <a href="mailto:contacto@mateos.tech"
+                  className="text-white/50 hover:text-white transition text-sm flex items-center gap-2">
                   <Mail size={16} className="flex-shrink-0" />
-                  contacto@mateos.ar
+                  contacto@mateos.tech
                 </a>
               </li>
-              <li className="text-slate-300 text-sm flex items-center gap-2">
+              <li className="text-white/50 text-sm flex items-center gap-2">
                 <MapPin size={16} />
                 Buenos Aires, Argentina
               </li>
             </ul>
-            <div className="flex gap-4 mt-4">
-              <span
-                className="text-text-muted opacity-50 cursor-default inline-flex items-center gap-1"
-                aria-label="LinkedIn"
-              >
-                <Linkedin size={20} />
-                <span className="text-xs">(próximamente)</span>
+            <div className="flex items-center gap-2 mt-4">
+              <span className="text-[10px] text-white/20 bg-white/5 border border-white/10 rounded-full px-3 py-1">
+                Synthesis 2026
               </span>
-              <span
-                className="text-text-muted opacity-50 cursor-default inline-flex items-center gap-1"
-                aria-label="Instagram"
-              >
-                <Instagram size={20} />
-                <span className="text-xs">(próximamente)</span>
+              <span className="text-[10px] text-white/20 bg-white/5 border border-white/10 rounded-full px-3 py-1">
+                Base Mainnet
+              </span>
+              <span className="text-[10px] text-white/20 bg-white/5 border border-white/10 rounded-full px-3 py-1">
+                ERC-8004
               </span>
             </div>
           </div>
         </div>
 
-        {/* Separator + copyright */}
-        <div
-          className="mt-12 pt-8"
-          style={{ borderTop: "1px solid rgba(255, 255, 255, 0.1)" }}
-        >
-          <p className="text-slate-300 text-sm text-center">
-            2026 MateOS. Todos los derechos reservados.
+        <div className="mt-12 pt-8" style={{ borderTop: "1px solid rgba(255, 255, 255, 0.06)" }}>
+          <p className="text-white/20 text-sm text-center">
+            2026 MateOS. Built by 2 humans and 1 AI.
           </p>
         </div>
       </div>

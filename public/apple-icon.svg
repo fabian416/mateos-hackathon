@@ -1,20 +1,32 @@
-<svg width="180" height="180" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="180" height="180" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <radialGradient id="grad" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#7C5CFF"/>
-      <stop offset="100%" stop-color="#00D1FF"/>
-    </radialGradient>
+    <linearGradient id="goldBorder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4A843"/>
+      <stop offset="50%" stop-color="#F0D078"/>
+      <stop offset="100%" stop-color="#C4993B"/>
+    </linearGradient>
+    <linearGradient id="mateBody" x1="24" y1="24" x2="40" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#D4A843"/>
+      <stop offset="60%" stop-color="#C4993B"/>
+      <stop offset="100%" stop-color="#8B6914"/>
+    </linearGradient>
+    <linearGradient id="rimGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#C4993B"/>
+      <stop offset="40%" stop-color="#F0D078"/>
+      <stop offset="100%" stop-color="#C4993B"/>
+    </linearGradient>
+    <linearGradient id="bombillaGrad" x1="36" y1="10" x2="33" y2="42" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E8CC7A"/>
+      <stop offset="50%" stop-color="#D4A843"/>
+      <stop offset="100%" stop-color="#A07828"/>
+    </linearGradient>
   </defs>
-
-  <!-- Outer glow ring -->
-  <circle cx="110" cy="110" r="90" stroke="url(#grad)" stroke-width="4" opacity="0.6"/>
-
-  <!-- Inner core -->
-  <circle cx="110" cy="110" r="35" fill="url(#grad)"/>
-
-  <!-- Small agents -->
-  <circle cx="110" cy="40" r="6" fill="#7C5CFF"/>
-  <circle cx="180" cy="110" r="6" fill="#00D1FF"/>
-  <circle cx="110" cy="180" r="6" fill="#7C5CFF"/>
-  <circle cx="40" cy="110" r="6" fill="#00D1FF"/>
+  <circle cx="32" cy="32" r="31" fill="#1A1A2E"/>
+  <circle cx="32" cy="32" r="30" fill="none" stroke="url(#goldBorder)" stroke-width="2"/>
+  <path d="M25 26.5 C27 22, 30 20, 32 19.5 C34 20, 37 22, 39 26.5" fill="#3D5A1E" opacity="0.7"/>
+  <path d="M24 28 C22 32, 22 37, 23.5 42 C25 47, 28 50, 32 51 C36 50, 39 47, 40.5 42 C42 37, 42 32, 40 28" fill="url(#mateBody)" stroke="#8B6914" stroke-width="0.6"/>
+  <ellipse cx="32" cy="27.5" rx="9" ry="2.8" fill="url(#rimGrad)" stroke="#8B6914" stroke-width="0.5"/>
+  <line x1="37.5" y1="13" x2="34" y2="40" stroke="url(#bombillaGrad)" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M35.8 12 L39.2 12 L39.5 13.5 L38 14 L37 14 L35.5 13.5 Z" fill="#D4A843" stroke="#A07828" stroke-width="0.4"/>
+  <ellipse cx="33.8" cy="41" rx="2.5" ry="1.3" fill="#D4A843" stroke="#A07828" stroke-width="0.4"/>
 </svg>

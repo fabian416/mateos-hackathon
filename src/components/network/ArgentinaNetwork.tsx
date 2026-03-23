@@ -14,20 +14,22 @@ interface Squad {
   agents: number;
   revenue: string;
   reputation: number;
-  x: number; // 0-1 relative to map
+  x: number;
   y: number;
   color: string;
+  telegram: string;
+  agentId: number;
 }
 
 // City positions in raw SVG coordinates (same coordinate system as the Argentina path)
 // Calculated from lat/lon: x = 605 + (73.6 - lon) / 20 * 75, y = 708 + (lat - 21.8) / 33.3 * 225
 const SQUADS: Squad[] = [
-  { id: "mendoza", name: "Andes Vineyard", city: "Mendoza", type: "Winery — Malbec & Olive Oil", agents: 5, revenue: "$3,400", reputation: 95, x: 623, y: 783, color: "#10B981" },
-  { id: "salta", name: "Altura Wines", city: "Salta", type: "Boutique Winery — Torrontés", agents: 4, revenue: "$2,100", reputation: 94, x: 636, y: 731, color: "#F97316" },
-  { id: "tucuman", name: "Norte Citrus Co.", city: "Tucumán", type: "Citrus Processing — Lemons", agents: 4, revenue: "$1,800", reputation: 91, x: 641, y: 745, color: "#EC4899" },
-  { id: "cordoba", name: "Estancia Meats", city: "Córdoba", type: "Cured Meats & Artisan Cheese", agents: 4, revenue: "$1,500", reputation: 88, x: 640, y: 774, color: "#06B6D4" },
-  { id: "rosario", name: "Central Logistics", city: "Rosario", type: "Logistics Hub — Consolidation", agents: 6, revenue: "$5,800", reputation: 96, x: 654, y: 783, color: "#8B5CF6" },
-  { id: "bsas", name: "Buenos Table", city: "Buenos Aires", type: "Farm-to-Table Restaurant", agents: 7, revenue: "$8,200", reputation: 97, x: 662, y: 795, color: "#EAB308" },
+  { id: "mendoza", name: "Andes Vineyard", city: "Mendoza", type: "Winery — Malbec & Olive Oil", agents: 5, revenue: "$3,400", reputation: 95, x: 623, y: 783, color: "#10B981", telegram: "andes_vineyard_ceo_bot", agentId: 35303 },
+  { id: "salta", name: "Altura Wines", city: "Salta", type: "Boutique Winery — Torrontés", agents: 4, revenue: "$2,100", reputation: 94, x: 636, y: 731, color: "#F97316", telegram: "altura_wines_ceo_bot", agentId: 35305 },
+  { id: "tucuman", name: "Norte Citrus Co.", city: "Tucumán", type: "Citrus Processing — Lemons", agents: 4, revenue: "$1,800", reputation: 91, x: 641, y: 745, color: "#EC4899", telegram: "norte_citrus_ceo_bot", agentId: 35306 },
+  { id: "cordoba", name: "Estancia Meats", city: "Córdoba", type: "Cured Meats & Artisan Cheese", agents: 4, revenue: "$1,500", reputation: 88, x: 640, y: 774, color: "#06B6D4", telegram: "estancia_meats_ceo_bot", agentId: 35307 },
+  { id: "rosario", name: "Central Logistics", city: "Rosario", type: "Logistics Hub — Consolidation", agents: 6, revenue: "$5,800", reputation: 96, x: 654, y: 783, color: "#8B5CF6", telegram: "central_logistics_ceo_bot", agentId: 35304 },
+  { id: "bsas", name: "Buenos Table", city: "Buenos Aires", type: "Farm-to-Table Restaurant", agents: 7, revenue: "$8,200", reputation: 97, x: 662, y: 795, color: "#EAB308", telegram: "mateos_ceo", agentId: 35270 },
 ];
 
 // --- Supply chain connections (real commercial relationships) ---
@@ -104,6 +106,8 @@ export default function ArgentinaNetwork() {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pulseIdRef = useRef(0);
   const [zoomTarget, setZoomTarget] = useState<{ x: number; y: number; squadId: string } | null>(null);
+  const [selectedSquad, setSelectedSquad] = useState<string | null>(null);
+  const [requestingQuote, setRequestingQuote] = useState(false);
 
   useEffect(() => {
     const up = () => {
@@ -343,12 +347,10 @@ export default function ArgentinaNetwork() {
           const cx = pos.x;
           const cy = pos.y;
           return (
-            <g key={squad.id} onClick={() => {
+            <g key={squad.id} onClick={(e) => {
+              e.stopPropagation();
               if (zoomTarget) return;
-              const p = getPos(squad.id);
-              if (!p) return;
-              setZoomTarget({ x: p.x, y: p.y, squadId: squad.id });
-              setTimeout(() => router.push(`/dashboard?squad=${squad.id}`), 1000);
+              setSelectedSquad(selectedSquad === squad.id ? null : squad.id);
             }} className="cursor-pointer">
               {/* Ambient glow — disabled during zoom for performance */}
               <circle cx={cx} cy={cy} r={50} fill={squad.color} opacity={0.08} filter={zoomTarget ? undefined : "url(#city-glow)"} />
@@ -385,6 +387,90 @@ export default function ArgentinaNetwork() {
         })}
       </svg>
       </motion.div>
+
+      {/* Squad action popup */}
+      {selectedSquad && (() => {
+        const squad = SQUADS.find((s) => s.id === selectedSquad);
+        if (!squad) return null;
+        const pos = getPos(squad.id);
+        if (!pos) return null;
+
+        return (
+          <>
+            <div className="fixed inset-0 z-20" onClick={() => setSelectedSquad(null)} />
+            <motion.div
+              className="absolute z-30 rounded-xl border shadow-2xl"
+              style={{
+                left: Math.min(pos.x + 30, dims.w - 260),
+                top: Math.max(pos.y - 80, 10),
+                width: 230,
+                backgroundColor: "rgba(12,12,22,0.95)",
+                backdropFilter: "blur(16px)",
+                borderColor: `${squad.color}30`,
+                boxShadow: `0 0 30px ${squad.color}15`,
+              }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.15 }}
+            >
+              <div className="p-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="w-2 h-2 rounded-full bg-emerald-400" />
+                  <span className="text-[13px] font-bold" style={{ color: squad.color }}>{squad.name}</span>
+                </div>
+                <p className="text-[10px] text-white/30 mb-3">{squad.city} · {squad.type}</p>
+
+                <div className="space-y-2">
+                  <a
+                    href={`https://t.me/${squad.telegram}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 w-full bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] hover:border-white/[0.15] rounded-lg px-3 py-2 transition-all"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <span className="text-[16px]">💬</span>
+                    <span className="text-[11px] text-white/70 font-medium">Message CEO on Telegram</span>
+                  </a>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setRequestingQuote(true);
+                      setSelectedSquad(null);
+                      // Fire a real onchain feedback + show pulse
+                      fetch(`/api/request-quote?to=${squad.id}&agentId=${squad.agentId}`).catch(() => {});
+                      firePulseRaw("bsas", squad.id, `⛓ Quote requested from ${squad.name}`, true);
+                      setTimeout(() => setRequestingQuote(false), 3000);
+                    }}
+                    disabled={requestingQuote}
+                    className="flex items-center gap-2 w-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 hover:border-emerald-500/30 rounded-lg px-3 py-2 transition-all cursor-pointer disabled:opacity-30"
+                  >
+                    <span className="text-[16px]">⛓</span>
+                    <span className="text-[11px] text-emerald-400/80 font-medium">
+                      {requestingQuote ? "Sending..." : "Request Quote (onchain)"}
+                    </span>
+                  </button>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedSquad(null);
+                      const p = getPos(squad.id);
+                      if (!p) return;
+                      setZoomTarget({ x: p.x, y: p.y, squadId: squad.id });
+                      setTimeout(() => router.push(`/dashboard?squad=${squad.id}`), 1000);
+                    }}
+                    className="flex items-center gap-2 w-full bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] rounded-lg px-3 py-2 transition-all cursor-pointer"
+                  >
+                    <span className="text-[16px]">📊</span>
+                    <span className="text-[11px] text-white/50 font-medium">View Dashboard</span>
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        );
+      })()}
 
       {/* Live task log — fades out during zoom */}
       <motion.div

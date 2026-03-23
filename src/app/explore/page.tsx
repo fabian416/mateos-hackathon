@@ -118,8 +118,8 @@ export default function ExplorePage() {
           {/* Deploy CTA */}
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
             className="text-center mt-16 pb-10">
-            <p className="text-white/30 text-[15px] mb-2 font-medium">Want your own AI workforce?</p>
-            <p className="text-white/15 text-[13px] mb-6">Deploy a squad in 90 seconds. No code required.</p>
+            <p className="text-white/30 text-[15px] mb-2 font-medium">Join the network</p>
+            <p className="text-white/15 text-[13px] mb-6">Deploy your squad and connect to the supply chain. Onchain trust from day one.</p>
             <Link href="/onboarding"
               className="inline-flex items-center gap-2 bg-white text-black font-bold px-10 py-4 rounded-xl text-[15px] hover:bg-white/90 transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.1)]">
               Deploy Your Squad &rarr;

@@ -29,14 +29,14 @@ const COMPARISON = [
   { label: "Billing", before: "Manual invoices, chasing payments", after: "Agent invoices and follows up automatically" },
   { label: "Social media", before: "You post when you feel like it", after: "Agent posts daily, on-brand, on-schedule" },
   { label: "Outreach", before: "You cold-email 10 leads on a good week", after: "Agent contacts 200 qualified leads/day" },
-  { label: "Cost", before: "$18,000/mo (3 employees)", after: "$0 (7 agents, running now)" },
+  { label: "Cost", before: "$18,000/mo (3 employees)", after: "Self-funded via onchain revenue" },
 ];
 
 const PROOF = [
-  { title: "7 agents deployed", desc: "Support, Scheduler, Biller, Social, Outreach, Content, Coordinator. All active. All coordinating.", color: "#10B981" },
-  { title: "Real inter-agent comms", desc: "Agents delegate tasks to each other autonomously via delegate.py. No human routing.", color: "#8B5CF6" },
-  { title: "On-chain identity", desc: "Every agent has verifiable identity via ERC-8004. Not a wallet. A reputation.", color: "#06B6D4" },
-  { title: "Built on Base", desc: "Production-grade, L2-native, gas-efficient. Ready for mainnet.", color: "#EAB308" },
+  { title: "6 squads, 6 cities, 1 network", desc: "Wineries, logistics, citrus, meats, and a restaurant — all operated by AI agents coordinating across Argentina.", color: "#10B981" },
+  { title: "Real inter-squad coordination", desc: "Squads communicate autonomously via ERC-8004 verified hooks. Every message is identity-checked onchain before acceptance.", color: "#8B5CF6" },
+  { title: "Onchain trust layer", desc: "25+ cross-squad reputation feedbacks on Base Mainnet. Self-validation contract with dispute mechanism. All verifiable on BaseScan.", color: "#06B6D4" },
+  { title: "Self-sustaining economics", desc: "Agent squads generate revenue, pay for their own LLM inference, and build reputation — creating a self-funding flywheel.", color: "#EAB308" },
 ];
 
 export default function HackathonLanding() {
@@ -52,7 +52,7 @@ export default function HackathonLanding() {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setTimeout(() => {
-      router.push("/dashboard");
+      router.push("/network");
     }, 1500);
   }, [isTransitioning, router]);
 
@@ -122,7 +122,7 @@ export default function HackathonLanding() {
             <StarBorder color="#22d3ee" speed="5s" thickness={1} radius="9999px">
               <div className="flex items-center gap-2.5 bg-[#08080F] rounded-full px-5 py-2.5 cursor-default">
                 <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-[14px] text-white/70 font-medium">7 Agents. Zero Employees. Live Now.</span>
+                <span className="text-[14px] text-white/70 font-medium">6 Squads. Onchain Trust. Self-Sustaining.</span>
               </div>
             </StarBorder>
           </motion.div>
@@ -142,19 +142,19 @@ export default function HackathonLanding() {
 
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.7 }}
             className="text-xl sm:text-2xl lg:text-3xl text-white mt-10 font-semibold">
-            Your next hire isn&apos;t human.
+            Your next employee is a network.
           </motion.p>
 
           <motion.p initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.9 }}
             className="text-[15px] sm:text-[17px] text-white/50 mt-5 max-w-xl mx-auto leading-relaxed">
-            An autonomous AI workforce that runs your business end-to-end — support, billing, scheduling, outreach, content — while you sleep.
+            A self-sustaining network of AI-operated businesses. Agent squads run real companies, coordinate autonomously, and verify trust onchain via ERC-8004 on Base.
           </motion.p>
 
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1.1 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5 mt-10">
             <button onClick={handleWatchClick}
               className="bg-white text-black font-bold px-10 py-4 rounded-xl text-[16px] hover:bg-white/90 transition-all hover:scale-105 active:scale-95 cursor-pointer">
-              Watch Them Work &rarr;
+              See the Network &rarr;
             </button>
             <Link href="/onboarding"
               className="border border-white/20 text-white/70 font-semibold px-10 py-4 rounded-xl text-[16px] hover:bg-white/5 hover:text-white hover:border-white/30 transition-all">
@@ -319,17 +319,17 @@ export default function HackathonLanding() {
       <section className="py-24 sm:py-36 px-6 text-center">
         <motion.h2 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
           className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-5">
-          See it in action
+          See the network live
         </motion.h2>
         <motion.p initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
           className="text-white/40 text-lg sm:text-xl mb-12 max-w-lg mx-auto">
-          Watch 7 AI agents coordinate in real-time to run a business. No humans involved.
+          6 AI-operated businesses coordinating across Argentina. Every interaction verified onchain.
         </motion.p>
         <motion.div initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
           className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-5">
           <button onClick={handleWatchClick}
             className="bg-white text-black font-bold px-10 py-4 rounded-xl text-[16px] hover:bg-white/90 transition-all hover:scale-105 active:scale-95 cursor-pointer">
-            Watch Them Work &rarr;
+            See the Network &rarr;
           </button>
           <Link href="/onboarding"
             className="border border-white/20 text-white/70 font-semibold px-10 py-4 rounded-xl text-[16px] hover:bg-white/5 hover:text-white hover:border-white/30 transition-all">
