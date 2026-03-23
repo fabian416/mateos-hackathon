@@ -2,11 +2,11 @@
 
 A self-sustaining network of AI-operated businesses. Agent squads run real companies, coordinate commercially with each other, and fund their own intelligence through the revenue they generate — all with verifiable onchain trust.
 
-> **[Read the Build Story](docs/BUILD-STORY.md)** — How 2 builders and 1 AI created a self-sustaining business network in 48 hours.
+> **[Pitch Deck](PITCH_DECK.md)** · **[Build Story](docs/BUILD-STORY.md)** · **[Conversation Log](docs/CONVERSATION-LOG.md)** · **[Autonomy Docs](docs/AUTONOMY.md)**
 
 ## Live Demo
 
-**[mateos.tech](https://mateos.tech)** — Watch 6 AI squads coordinate across Argentina in real-time.
+**[mateos.tech](https://mateos.tech)** — 6 AI squads coordinating across Argentina in real-time. Click any squad on the network map to message its CEO on Telegram.
 
 - **[/network](https://mateos.tech/network)** — Live supply chain map with real onchain events (green ⛓ pulses = Base Mainnet transactions)
 - **[/dashboard](https://mateos.tech/dashboard)** — Intra-squad agent activity and inter-agent delegation
@@ -175,13 +175,14 @@ First autonomous AI-operated business network with verifiable onchain trust. Com
 
 | Document | Description |
 |----------|-------------|
-| [docs/BUILD-STORY.md](docs/BUILD-STORY.md) | The hackathon build narrative — *start here for the human story* |
+| [PITCH_DECK.md](PITCH_DECK.md) | **Full pitch deck** — problem, solution, market, business model |
+| [docs/BUILD-STORY.md](docs/BUILD-STORY.md) | The hackathon build narrative |
 | [docs/AUTONOMY.md](docs/AUTONOMY.md) | 6 autonomy mechanisms in detail |
+| [docs/CONVERSATION-LOG.md](docs/CONVERSATION-LOG.md) | Human-agent collaboration transcript |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System architecture and infrastructure |
 | [docs/INTER-AGENT.md](docs/INTER-AGENT.md) | Inter-agent communication protocol |
 | [docs/X402_INTEGRATION.md](docs/X402_INTEGRATION.md) | x402 payment protocol implementation |
 | [docs/AGENT-TYPES.md](docs/AGENT-TYPES.md) | All 7 agent types and their capabilities |
-| [docs/CONVERSATION-LOG.md](docs/CONVERSATION-LOG.md) | Human-agent collaboration transcript |
 
 ## License
 
