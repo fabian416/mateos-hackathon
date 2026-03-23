@@ -83,7 +83,27 @@ Every bot responds in character. Message any of them right now on Telegram.
 | ERC-8004 Reputation Registry | `0x8004BAa17C55a88189AE136b182e5fdA19dE9b63` | [BaseScan](https://basescan.org/address/0x8004BAa17C55a88189AE136b182e5fdA19dE9b63) |
 | MateOS SelfValidation | `0x17Fa2eF50Cc53A96C08610f345fAd0F2c4Ecc149` | [BaseScan](https://basescan.org/address/0x17Fa2eF50Cc53A96C08610f345fAd0F2c4Ecc149) |
 
-6 squads registered with 6 independent wallets. 25+ cross-squad reputation feedbacks recorded onchain. 3 complete self-validation cycles (submit + verify + dispute window). All verifiable on BaseScan.
+### Squad Wallets (6 independent wallets on Base Mainnet)
+
+| Squad | Wallet | Link |
+|-------|--------|------|
+| Buenos Table (HQ) | `0x07b86226443a2B8c0ADda352D360ddD4E0A90093` | [BaseScan](https://basescan.org/address/0x07b86226443a2B8c0ADda352D360ddD4E0A90093) |
+| Andes Vineyard | `0x67747cE2b51e9BdFa236739C60880149F5f6C55c` | [BaseScan](https://basescan.org/address/0x67747cE2b51e9BdFa236739C60880149F5f6C55c) |
+| Central Logistics | `0x1978C4FeA0463300db4626F851D63BA97153f2bc` | [BaseScan](https://basescan.org/address/0x1978C4FeA0463300db4626F851D63BA97153f2bc) |
+| Altura Wines | `0x31D186C31435c1004Ea24f8AB5F77a88F4998106` | [BaseScan](https://basescan.org/address/0x31D186C31435c1004Ea24f8AB5F77a88F4998106) |
+| Norte Citrus | `0xa68a0efA82BeDc6AC403C83326CCa743eD4dE409` | [BaseScan](https://basescan.org/address/0xa68a0efA82BeDc6AC403C83326CCa743eD4dE409) |
+| Estancia Meats | `0x739bAD5dFAB6fec59e5071Cf34b5df1FEf6fA52D` | [BaseScan](https://basescan.org/address/0x739bAD5dFAB6fec59e5071Cf34b5df1FEf6fA52D) |
+
+### Key Transactions
+
+| Action | TX Hash | Link |
+|--------|---------|------|
+| Cross-squad feedback (score 96) | `0x67773bf95fe947a2d9b865e7818269df7592f215d01363e2ae8e6d1eba8c52ec` | [BaseScan](https://basescan.org/tx/0x67773bf95fe947a2d9b865e7818269df7592f215d01363e2ae8e6d1eba8c52ec) |
+| Validation submitted (Central Logistics) | `0xe4bb1c91789c012fb982d550aee353e94ab5f4eb7f9f9551894da5fb89348a1d` | [BaseScan](https://basescan.org/tx/0xe4bb1c91789c012fb982d550aee353e94ab5f4eb7f9f9551894da5fb89348a1d) |
+| Validation scored (97/100) | `0x6a1c25b61ced0a98b1b7476a97c456174657b32dc9545bce9b52c9fc9fb2c9a4` | [BaseScan](https://basescan.org/tx/0x6a1c25b61ced0a98b1b7476a97c456174657b32dc9545bce9b52c9fc9fb2c9a4) |
+| Dispute filed (quality discrepancy) | `0x8d9e2a2e3cd053b3947ea5bf7878fc95bb628cd8e4329a8833517125495f3504` | [BaseScan](https://basescan.org/tx/0x8d9e2a2e3cd053b3947ea5bf7878fc95bb628cd8e4329a8833517125495f3504) |
+
+25+ cross-squad reputation feedbacks recorded onchain. 3 validation cycles completed. 1 dispute filed and recorded. All verifiable on BaseScan.
 
 **Real onchain transaction — cross-squad feedback (score 96) submitted to ERC-8004 Reputation Registry:**
 
