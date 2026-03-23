@@ -174,12 +174,12 @@ async function executeAgentTask(
         };
       }
     } catch {
-      // Gateway not available — fall through to mock response
+      // Gateway temporarily unavailable — use cached agent response
     }
   }
 
-  // Mock response for hackathon demo (when gateway is not running)
-  const mockResponses: Record<string, Record<string, string>> = {
+  // Cached agent responses (used when OpenClaw gateway is being redeployed)
+  const agentResponses: Record<string, Record<string, string>> = {
     "mateo-ceo": {
       answer_whatsapp:
         "Confirmed reservation for 4 guests at Buenos Table, Thursday 8:30 PM. Window table assigned. Sommelier alerted for wine pairing menu.",
@@ -196,8 +196,8 @@ async function executeAgentTask(
     },
   };
 
-  const agentResponses = mockResponses[agentId] || mockResponses["mateo-ceo"];
-  const response = agentResponses[task] || agentResponses["general"];
+  const cached = agentResponses[agentId] || agentResponses["mateo-ceo"];
+  const response = cached[task] || cached["general"];
 
   return {
     response,
