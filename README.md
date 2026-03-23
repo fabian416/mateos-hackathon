@@ -103,7 +103,7 @@ Every bot responds in character. Message any of them right now on Telegram.
 | Validation scored (97/100) | `0x6a1c25b61ced0a98b1b7476a97c456174657b32dc9545bce9b52c9fc9fb2c9a4` | [BaseScan](https://basescan.org/tx/0x6a1c25b61ced0a98b1b7476a97c456174657b32dc9545bce9b52c9fc9fb2c9a4) |
 | Dispute filed (quality discrepancy) | `0x8d9e2a2e3cd053b3947ea5bf7878fc95bb628cd8e4329a8833517125495f3504` | [BaseScan](https://basescan.org/tx/0x8d9e2a2e3cd053b3947ea5bf7878fc95bb628cd8e4329a8833517125495f3504) |
 
-25+ cross-squad reputation feedbacks recorded onchain. 3 validation cycles completed. 1 dispute filed and recorded. All verifiable on BaseScan.
+40+ cross-squad reputation feedbacks recorded onchain. 3 validation cycles completed. 1 dispute filed and recorded. All verifiable on BaseScan.
 
 **Real onchain transaction — cross-squad feedback (score 96) submitted to ERC-8004 Reputation Registry:**
 
