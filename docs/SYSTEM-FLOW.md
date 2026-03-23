@@ -1,171 +1,174 @@
 # MateOS — System Flow Diagram
 
-> Copy this Mermaid code into [Excalidraw](https://excalidraw.com) (paste as Mermaid) to generate an editable diagram.
+> Copy the Mermaid code into [Excalidraw](https://excalidraw.com) or [mermaid.live](https://mermaid.live) to render.
 
 ```mermaid
 flowchart TB
-    subgraph USER["🧑 User / External Agent"]
-        Customer["Customer<br/>(WhatsApp / Telegram / Email)"]
-        ExtAgent["External AI Agent<br/>(any agent with USDC)"]
+    subgraph USER["USER / EXTERNAL AGENT"]
+        Customer["Customer\nWhatsApp / Telegram / Email"]
+        ExtAgent["External AI Agent\nany agent with USDC on Base"]
     end
 
-    subgraph FRONTEND["🌐 Frontend — mateos.tech<br/><i>Next.js 16 + React 19 + Tailwind</i>"]
-        Network["/network<br/>Argentina Supply Chain Map"]
-        Dashboard["/dashboard<br/>Agent Network Visual"]
-        Explore["/explore<br/>Squad Directory"]
-        Onboarding["/onboarding → /deploy<br/>Squad Deployment Wizard"]
+    subgraph FRONTEND["FRONTEND — mateos.tech"]
+        Network["/network\nArgentina Map + Live Onchain Events"]
+        Dashboard["/dashboard\nAgent Network + Activity Feed"]
+        Onboarding["/onboarding\nSquad Deployment Wizard"]
     end
 
-    subgraph X402["💳 x402 Payment Protocol<br/>🏷️ BASE TRACK + OPENSERV"]
-        Endpoint["POST /api/agent-task<br/>$0.01 USDC per request"]
-        Verify["verifyPayment()<br/>Coinbase Facilitator"]
-        USDC["USDC on Base Mainnet<br/>0x833589fCD6eDb6E..."]
+    subgraph X402["x402 PAYMENT PROTOCOL\n--- BASE TRACK + OPENSERV ---"]
+        Endpoint["POST /api/agent-task\n$0.01 USDC per request"]
+        Facilitator["Coinbase Facilitator\nverify + settle USDC"]
     end
 
-    subgraph AGENTS["🤖 Agent Runtime — OpenClaw<br/>🏷️ OPENSERV + AUTONOMY"]
-        subgraph HQ["Buenos Table HQ — 7 Agents"]
-            CEO["OpsChad<br/>(Coordination)"]
-            ChatGod["ChatGod<br/>(WhatsApp Support)"]
-            BagChaser["BagChaser<br/>(Billing)"]
-            CalendApe["CalendApe<br/>(Scheduling)"]
-            DMSniper["DM Sniper<br/>(Outreach)"]
-            PostMalone["PostMalone<br/>(Social)"]
-            HypeSmith["HypeSmith<br/>(Content)"]
-        end
-
-        subgraph SQUADS["Satellite Squads — 1 CEO each"]
-            Andes["Andes Vineyard<br/>(Mendoza)"]
-            Central["Central Logistics<br/>(Rosario)"]
-            Altura["Altura Wines<br/>(Salta)"]
-            Citrus["Norte Citrus<br/>(Tucumán)"]
-            Estancia["Estancia Meats<br/>(Córdoba)"]
-        end
-
-        subgraph AUTONOMY["⚡ 6 Autonomy Mechanisms<br/>🏷️ PROTOCOL LABS — AUTONOMY"]
-            Heartbeat["Heartbeat System<br/>(Haiku, $0.02/day)"]
-            ChannelChk["Channel Checker<br/>(Python, $0 cost)"]
-            MemDecay["Memory Decay<br/>(hot → warm → cold)"]
-            TrustLadder["Trust Ladder<br/>(4 levels, earned)"]
-            Delegation["Inter-Agent Delegation<br/>(sessions_send, depth≤3)"]
-            Recovery["Auto-Recovery<br/>(Docker healthcheck)"]
-        end
+    subgraph HQ["BUENOS TABLE HQ — 7 AGENTS\n--- OPENSERV ---"]
+        CEO["OpsChad\nCoordination"]
+        ChatGod["ChatGod\nWhatsApp"]
+        BagChaser["BagChaser\nBilling"]
+        CalendApe["CalendApe\nScheduling"]
+        DMSniper["DM Sniper\nOutreach"]
+        PostMalone["PostMalone\nSocial"]
+        HypeSmith["HypeSmith\nContent"]
     end
 
-    subgraph ONCHAIN["⛓️ Base Mainnet — ERC-8004<br/>🏷️ PROTOCOL LABS — ERC-8004 TRUST"]
-        Identity["Identity Registry<br/>0x8004A169..."]
-        Reputation["Reputation Registry<br/>0x8004BAa1..."]
-        SelfVal["SelfValidation Contract<br/>0x17Fa2eF5..."]
-        Hook["ERC-8004 Verification Hook<br/>(check identity + reputation ≥ 70)"]
+    subgraph SQUADS["SATELLITE SQUADS — 5 CEOs"]
+        Andes["Andes Vineyard\nMendoza"]
+        Central["Central Logistics\nRosario"]
+        Altura["Altura Wines\nSalta"]
+        Citrus["Norte Citrus\nTucuman"]
+        Estancia["Estancia Meats\nCordoba"]
     end
 
-    subgraph BANKR["🏦 Bankr — Self-Funding Loop<br/>🏷️ BANKR TRACK"]
-        Token["$MATEOS Token<br/>(Base Mainnet)"]
-        SwapFees["Swap Fees<br/>(1.2% per trade)"]
-        Gateway["Bankr LLM Gateway<br/>(llm.bankr.bot)"]
-        Credits["Inference Credits<br/>(auto top-up)"]
+    subgraph AUTONOMY["6 AUTONOMY MECHANISMS\n--- PROTOCOL LABS AUTONOMY ---"]
+        Heartbeat["Heartbeat\nHaiku $0.02/day"]
+        ChannelChk["Channel Checker\nPython $0 cost"]
+        MemDecay["Memory Decay\nhot / warm / cold"]
+        TrustLadder["Trust Ladder\n4 levels"]
+        Delegation["Delegation\nsessions_send depth≤3"]
+        Recovery["Auto-Recovery\nDocker healthcheck"]
     end
 
-    subgraph INFRA["🏗️ Infrastructure"]
-        Docker["Docker Containers<br/>(EC2 + Caddy HTTPS)"]
-        CICD["GitHub Actions<br/>→ GHCR → Watchtower"]
-        Channels["WhatsApp / Telegram<br/>Email / Twitter / Sheets"]
+    subgraph ONCHAIN["BASE MAINNET — ERC-8004\n--- PROTOCOL LABS TRUST ---"]
+        Identity["Identity Registry\n0x8004A169..."]
+        Reputation["Reputation Registry\n0x8004BAa1..."]
+        SelfVal["SelfValidation\n0x17Fa2eF5..."]
+        Hook["Verification Hook\ncheck identity + rep >= 70"]
     end
 
-    %% User flows
-    Customer -->|"message"| Channels
-    Channels -->|"channel-checker polls"| ChannelChk
-    ChannelChk -->|"wake agent"| ChatGod
-    ExtAgent -->|"POST + USDC"| Endpoint
+    subgraph BANKR["BANKR — SELF-FUNDING LOOP\n--- BANKR TRACK ---"]
+        Token["$MATEOS Token\nBase Mainnet"]
+        SwapFees["Swap Fees\n1.2% per trade"]
+        Gateway["Bankr LLM Gateway\nllm.bankr.bot"]
+        Credits["Inference Credits\nauto top-up"]
+    end
 
-    %% x402 flow
-    Endpoint -->|"no payment"| ExtAgent
-    Endpoint -->|"X-PAYMENT header"| Verify
-    Verify -->|"settle USDC"| USDC
-    USDC -->|"payment confirmed"| CEO
-    Endpoint -.->|"402 → pay → retry"| ExtAgent
+    %% === CUSTOMER FLOW ===
+    Customer -->|message| ChannelChk
+    ChannelChk -->|wake agent| ChatGod
+    ChatGod -->|delegate lead| DMSniper
+    DMSniper -->|delegate schedule| CalendApe
+    CalendApe -->|delegate invoice| BagChaser
 
-    %% Frontend reads onchain
-    Network -->|"poll every 12s"| Reputation
-    Dashboard -->|"getSquadReputation()"| Reputation
-    Onboarding -->|"register-squad API"| Identity
+    %% === x402 FLOW ===
+    ExtAgent -->|POST without payment| Endpoint
+    Endpoint -->|402 Payment Required| ExtAgent
+    ExtAgent -->|retry with X-PAYMENT| Endpoint
+    Endpoint -->|verify proof| Facilitator
+    Facilitator -->|settle USDC| CEO
 
-    %% Internal agent coordination
-    CEO <-->|"sessions_send"| ChatGod
-    CEO <-->|"sessions_send"| BagChaser
-    CEO <-->|"sessions_send"| CalendApe
-    CEO <-->|"sessions_send"| DMSniper
-    ChatGod -->|"delegate lead"| DMSniper
-    DMSniper -->|"delegate schedule"| CalendApe
-    CalendApe -->|"delegate invoice"| BagChaser
+    %% === FRONTEND READS ONCHAIN ===
+    Network -->|poll 12s| Reputation
+    Dashboard -->|getSquadReputation| Reputation
+    Onboarding -->|register-squad| Identity
 
-    %% Inter-squad communication
-    CEO -->|"inter-squad request"| Hook
-    Hook -->|"verify identity"| Identity
-    Hook -->|"check reputation ≥ 70"| Reputation
-    Hook -->|"✓ verified"| Andes
-    Hook -->|"✓ verified"| Central
-    Andes -->|"giveFeedback(score)"| Reputation
-    Central -->|"giveFeedback(score)"| Reputation
-    Estancia -->|"giveFeedback(score)"| Reputation
+    %% === INTER-SQUAD TRUST ===
+    CEO -->|inter-squad request| Hook
+    Hook -->|verify| Identity
+    Hook -->|check score| Reputation
+    Hook -->|verified| Andes
+    Hook -->|verified| Central
+    Hook -->|verified| Estancia
 
-    %% SelfValidation
-    CEO -->|"submitValidation()"| SelfVal
-    Andes -->|"respondValidation(score)"| SelfVal
-    Andes -->|"disputeValidation()"| SelfVal
+    %% === FEEDBACK ONCHAIN ===
+    Andes -->|giveFeedback 94| Reputation
+    Central -->|giveFeedback 96| Reputation
+    Estancia -->|giveFeedback 95| Reputation
 
-    %% USDC payments between squads
-    CEO -->|"1.00 USDC"| Andes
-    CEO -->|"1.00 USDC"| Central
-    CEO -->|"1.00 USDC"| Estancia
+    %% === USDC PAYMENTS ===
+    CEO -->|1.00 USDC wine| Andes
+    CEO -->|1.00 USDC logistics| Central
+    CEO -->|1.00 USDC meats| Estancia
 
-    %% Bankr self-funding loop
-    Token -->|"trades"| SwapFees
-    SwapFees -->|"57% to treasury"| Credits
-    Credits -->|"auto top-up"| Gateway
-    Gateway -->|"LLM inference"| CEO
-    Gateway -->|"LLM inference"| ChatGod
-    CEO -->|"revenue"| Token
+    %% === SELF-VALIDATION ===
+    CEO -->|submitValidation| SelfVal
+    Andes -->|respondValidation 97| SelfVal
+    Andes -->|disputeValidation| SelfVal
 
-    %% Autonomy mechanisms
-    Heartbeat -->|"check health"| CEO
-    TrustLadder -->|"level 2: draft+approve"| Channels
-    MemDecay -->|"7d hot → 30d warm"| CEO
-    Recovery -->|"restart on crash"| Docker
+    %% === BANKR LOOP ===
+    Token -->|trades| SwapFees
+    SwapFees -->|57% treasury| Credits
+    Credits -->|auto top-up| Gateway
+    Gateway -->|LLM inference| CEO
+    Gateway -->|LLM inference| ChatGod
+    CEO -->|revenue generates demand| Token
 
-    %% Infrastructure
-    Docker -->|"hosts"| HQ
-    Docker -->|"hosts"| SQUADS
-    CICD -->|"auto-deploy"| Docker
+    %% === AUTONOMY ===
+    Heartbeat -.->|health check| CEO
+    TrustLadder -.->|draft + approve| ChatGod
+    MemDecay -.->|decay old context| CEO
+    Recovery -.->|restart on crash| HQ
 
-    %% Styling
-    classDef track fill:#1a1a2e,stroke:#C4A35A,stroke-width:2px,color:#fff
-    classDef erc8004 fill:#0d1b2a,stroke:#10B981,stroke-width:2px,color:#fff
-    classDef autonomy fill:#0d1b2a,stroke:#8B5CF6,stroke-width:2px,color:#fff
-    classDef bankr fill:#0d1b2a,stroke:#F97316,stroke-width:2px,color:#fff
-    classDef x402 fill:#0d1b2a,stroke:#06B6D4,stroke-width:2px,color:#fff
-    classDef agent fill:#12121F,stroke:#EAB308,stroke-width:1px,color:#fff
+    %% === INTERNAL COORDINATION ===
+    CEO <-->|sessions_send| ChatGod
+    CEO <-->|sessions_send| BagChaser
+    CEO <-->|sessions_send| CalendApe
 
-    class ONCHAIN erc8004
-    class AUTONOMY autonomy
-    class BANKR bankr
+    %% === STYLING ===
+    classDef user fill:#FFEAA7,stroke:#F39C12,stroke-width:2px,color:#000
+    classDef frontend fill:#DFE6E9,stroke:#636E72,stroke-width:2px,color:#000
+    classDef x402 fill:#74B9FF,stroke:#0984E3,stroke-width:3px,color:#000
+    classDef agents fill:#FD79A8,stroke:#E84393,stroke-width:2px,color:#000
+    classDef squads fill:#FDCB6E,stroke:#E17055,stroke-width:2px,color:#000
+    classDef autonomy fill:#A29BFE,stroke:#6C5CE7,stroke-width:3px,color:#000
+    classDef onchain fill:#55EFC4,stroke:#00B894,stroke-width:3px,color:#000
+    classDef bankr fill:#FAB1A0,stroke:#E17055,stroke-width:3px,color:#000
+    classDef infra fill:#B2BEC3,stroke:#636E72,stroke-width:1px,color:#000
+
+    class USER user
+    class FRONTEND frontend
     class X402 x402
-    class CEO,ChatGod,BagChaser,CalendApe,DMSniper,PostMalone,HypeSmith agent
+    class HQ agents
+    class SQUADS squads
+    class AUTONOMY autonomy
+    class ONCHAIN onchain
+    class BANKR bankr
+
+    class Customer,ExtAgent user
+    class Network,Dashboard,Onboarding frontend
+    class Endpoint,Facilitator x402
+    class CEO,ChatGod,BagChaser,CalendApe,DMSniper,PostMalone,HypeSmith agents
+    class Andes,Central,Altura,Citrus,Estancia squads
+    class Heartbeat,ChannelChk,MemDecay,TrustLadder,Delegation,Recovery autonomy
+    class Identity,Reputation,SelfVal,Hook onchain
+    class Token,SwapFees,Gateway,Credits bankr
 ```
 
 ## Track Legend
 
-| Color | Track | Prize |
-|-------|-------|-------|
-| 🟢 Green border | Protocol Labs — ERC-8004 Trust | $4,000 |
-| 🟣 Purple border | Protocol Labs — Autonomy | $4,000 |
-| 🟠 Orange border | Bankr — Self-Funding Loop | $7,590 |
-| 🔵 Cyan border | Base + OpenServ — x402 Payments | $5,000 + $5,000 |
-| 🟡 Gold border | Open Track (everything) | $28,300 |
+| Color | Block | Track | Prize |
+|-------|-------|-------|-------|
+| 🟢 Green | Base Mainnet — ERC-8004 | Protocol Labs — Trust | $4,000 |
+| 🟣 Purple | 6 Autonomy Mechanisms | Protocol Labs — Autonomy | $4,000 |
+| 🔵 Blue | x402 Payment Protocol | Base + OpenServ | $5,000 + $5,000 |
+| 🟠 Orange/Salmon | Bankr Self-Funding Loop | Bankr | $7,590 |
+| 🩷 Pink | Agent Runtime (7 agents) | OpenServ | $5,000 |
+| 🟡 Yellow | Satellite Squads | Open Track | $28,300 |
+| ⬜ Gray | Frontend + Infra | All tracks | — |
 
-## Key Flows to Highlight in Excalidraw
+## Key Flows
 
-1. **Customer → Agent → Response** (Autonomy track)
-2. **External Agent → x402 → Pay USDC → Get Result** (Base + OpenServ tracks)
-3. **Squad A → ERC-8004 Hook → Verify → Squad B → Feedback onchain** (ERC-8004 track)
-4. **Token trades → Fees → Credits → LLM → Agent works → Revenue** (Bankr track)
-5. **Submit → Validate → Dispute** (ERC-8004 SelfValidation)
+1. **Customer → Channel Checker → Agent → Delegate → Response** (Autonomy)
+2. **External Agent → 402 → Pay USDC → Facilitator → Agent executes** (Base + OpenServ)
+3. **Squad A → Hook → Verify Identity + Rep ≥ 70 → Squad B → giveFeedback()** (ERC-8004)
+4. **$MATEOS trades → Fees → Credits → LLM Gateway → Agent works → Revenue** (Bankr)
+5. **submitValidation() → respondValidation(97) → disputeValidation()** (ERC-8004)
+6. **Buenos Table → 1.00 USDC → Andes / Central / Estancia** (Base — real payments)
