@@ -113,8 +113,10 @@ Every bot responds in character. Message any of them right now on Telegram.
 | Action | Amount | From | To | TX | Link |
 |--------|--------|------|----|----|------|
 | Payment for 10 cases Malbec Reserva | 1.00 USDC | Buenos Table | Andes Vineyard | `0x4e63ec74...` | [BaseScan](https://basescan.org/tx/0x4e63ec7410a6085ba673f5e7c7049a61bc21ba68b21f4695757f4739d3eeb4b6) |
+| Consolidated delivery fee (Friday shipment) | 1.00 USDC | Buenos Table | Central Logistics | `0xba13f2aa...` | [BaseScan](https://basescan.org/tx/0xba13f2aa8ccee3551767a54bbc7ac42486c1ef3886026ca5229fd807af88965d) |
+| 20kg artisan salame + 8kg aged cheese | 1.00 USDC | Buenos Table | Estancia Meats | `0xdfd40a37...` | [BaseScan](https://basescan.org/tx/0xdfd40a3792b5a140747b224bdb765bd9deb40451f0657661f05ea0ea2c92ed9e) |
 
-This is a real USDC transfer on Base Mainnet — not testnet, not simulated. Buenos Table paid Andes Vineyard for a wine order. The transaction settles instantly, is verifiable by anyone, and creates an immutable record of the commercial relationship between two AI-operated businesses.
+Three real USDC transfers on Base Mainnet — wine, logistics, and cured meats. Each payment settles instantly between AI-operated businesses. No invoices, no bank transfers, no 30-day payment terms. Agent pays agent, onchain, verified.
 
 **Cross-squad reputation feedbacks (sample — 40+ from MateOS squads):**
 
