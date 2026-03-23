@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { MessageCircle, Link2, LayoutDashboard } from "lucide-react";
 import { pollOnchainEvents } from "@/lib/onchainEvents";
 
 // --- Squad nodes positioned on Argentina's geography ---
@@ -428,7 +429,7 @@ export default function ArgentinaNetwork() {
                     className="flex items-center gap-2 w-full bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] hover:border-white/[0.15] rounded-lg px-3 py-2 transition-all"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <span className="text-[16px]">💬</span>
+                    <MessageCircle size={14} className="text-white/40" />
                     <span className="text-[11px] text-white/70 font-medium">Message CEO on Telegram</span>
                   </a>
 
@@ -447,7 +448,7 @@ export default function ArgentinaNetwork() {
                     disabled={requestingQuote}
                     className="flex items-center gap-2 w-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 hover:border-emerald-500/30 rounded-lg px-3 py-2 transition-all cursor-pointer disabled:opacity-30"
                   >
-                    <span className="text-[16px]">⛓</span>
+                    <Link2 size={14} className="text-emerald-400/60" />
                     <span className="text-[11px] text-emerald-400/80 font-medium">
                       {requestingQuote ? "Sending..." : "Request Quote"}
                     </span>
@@ -464,7 +465,7 @@ export default function ArgentinaNetwork() {
                     }}
                     className="flex items-center gap-2 w-full bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06] rounded-lg px-3 py-2 transition-all cursor-pointer"
                   >
-                    <span className="text-[16px]">📊</span>
+                    <LayoutDashboard size={14} className="text-white/30" />
                     <span className="text-[11px] text-white/50 font-medium">View Dashboard</span>
                   </button>
                 </div>
