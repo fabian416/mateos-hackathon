@@ -96,14 +96,39 @@ Every bot responds in character. Message any of them right now on Telegram.
 
 ### Key Transactions
 
+**SelfValidation Contract (audit trail):**
+
 | Action | TX Hash | Link |
 |--------|---------|------|
-| Cross-squad feedback (score 96) | `0x67773bf95fe947a2d9b865e7818269df7592f215d01363e2ae8e6d1eba8c52ec` | [BaseScan](https://basescan.org/tx/0x67773bf95fe947a2d9b865e7818269df7592f215d01363e2ae8e6d1eba8c52ec) |
-| Validation submitted (Central Logistics) | `0xe4bb1c91789c012fb982d550aee353e94ab5f4eb7f9f9551894da5fb89348a1d` | [BaseScan](https://basescan.org/tx/0xe4bb1c91789c012fb982d550aee353e94ab5f4eb7f9f9551894da5fb89348a1d) |
-| Validation scored (97/100) | `0x6a1c25b61ced0a98b1b7476a97c456174657b32dc9545bce9b52c9fc9fb2c9a4` | [BaseScan](https://basescan.org/tx/0x6a1c25b61ced0a98b1b7476a97c456174657b32dc9545bce9b52c9fc9fb2c9a4) |
-| Dispute filed (quality discrepancy) | `0x8d9e2a2e3cd053b3947ea5bf7878fc95bb628cd8e4329a8833517125495f3504` | [BaseScan](https://basescan.org/tx/0x8d9e2a2e3cd053b3947ea5bf7878fc95bb628cd8e4329a8833517125495f3504) |
+| Validation request — Buenos Table (agentId 35270) | `0xc4812ea327f6706c28a3d726e819df2b7d29eb4f9dcd12e47ccb8fa627347cb3` | [BaseScan](https://basescan.org/tx/0xc4812ea327f6706c28a3d726e819df2b7d29eb4f9dcd12e47ccb8fa627347cb3) |
+| Validation scored 94/100 (tag: "support") | `0xe80a33c7b58928c10d4ea984932a65b33e960c9ff527f79b0fee5329af9714da` | [BaseScan](https://basescan.org/tx/0xe80a33c7b58928c10d4ea984932a65b33e960c9ff527f79b0fee5329af9714da) |
+| Validation request — Central Logistics (agentId 35304) | `0xe4bb1c91789c012fb982d550aee353e94ab5f4eb7f9f9551894da5fb89348a1d` | [BaseScan](https://basescan.org/tx/0xe4bb1c91789c012fb982d550aee353e94ab5f4eb7f9f9551894da5fb89348a1d) |
+| Validation scored 97/100 (tag: "logistics") | `0x6a1c25b61ced0a98b1b7476a97c456174657b32dc9545bce9b52c9fc9fb2c9a4` | [BaseScan](https://basescan.org/tx/0x6a1c25b61ced0a98b1b7476a97c456174657b32dc9545bce9b52c9fc9fb2c9a4) |
+| Validation request — Andes Vineyard | `0xdc61c0ee71f9446c3847a34e0bbb60579eaf4b999933ba61017557d83b0a1a32` | [BaseScan](https://basescan.org/tx/0xdc61c0ee71f9446c3847a34e0bbb60579eaf4b999933ba61017557d83b0a1a32) |
+| Validation scored | `0x2149431908f1125557e4fb16220d20bc7a9e95cdb25026924ff78fd8ac3232ce` | [BaseScan](https://basescan.org/tx/0x2149431908f1125557e4fb16220d20bc7a9e95cdb25026924ff78fd8ac3232ce) |
+| **Dispute filed** — quality discrepancy, delivery 4h late | `0x8d9e2a2e3cd053b3947ea5bf7878fc95bb628cd8e4329a8833517125495f3504` | [BaseScan](https://basescan.org/tx/0x8d9e2a2e3cd053b3947ea5bf7878fc95bb628cd8e4329a8833517125495f3504) |
 
-40+ cross-squad reputation feedbacks recorded onchain. 3 validation cycles completed. 1 dispute filed and recorded. All verifiable on BaseScan.
+**Cross-squad reputation feedbacks (sample — 40+ from MateOS squads):**
+
+| From | To | Score | Tag | TX | Link |
+|------|----|-------|-----|-----|------|
+| Buenos Table | Andes Vineyard | 94 | wine-delivery-quality | `0x9b83b76...` | [BaseScan](https://basescan.org/tx/0x9b83b7617dda3e7f8396a3c165f053ab4ec20f429c1427db723c61d2a556c883) |
+| Buenos Table | Central Logistics | 91 | shipment-consolidation | `0x4e8d06b...` | [BaseScan](https://basescan.org/tx/0x4e8d06baa66a751c9f830c245aa8ee374a9b34050f82897aeea94211b67026c5) |
+| Buenos Table | Norte Citrus | 88 | citrus-order-fulfilled | `0x64dab53...` | [BaseScan](https://basescan.org/tx/0x64dab53c0c9a79b442f5734bee789e08e4de51fc2d927dd3b0a0969303ce9d83) |
+| Andes Vineyard | Central Logistics | 95 | logistics-coordination | `0x692fb5e...` | [BaseScan](https://basescan.org/tx/0x692fb5e1e8acd5a062e714bc4cd77f3cfa379f141075678bbd8aec93f37aaaea) |
+| Andes Vineyard | Buenos Table | 92 | order-communication | `0x6947b22...` | [BaseScan](https://basescan.org/tx/0x6947b223b6bbf084253b8c0542417239ab58a55f7952a2bbb22ebfa55ede48bf) |
+| Central Logistics | Buenos Table | 93 | delivery-confirmed | `0x812c0ab...` | [BaseScan](https://basescan.org/tx/0x812c0abd771b7a68db806ccec5a2d36efbc84a75edcb9098b35f697b61280d2a) |
+| Central Logistics | Andes Vineyard | 96 | pickup-on-schedule | `0x07e9118...` | [BaseScan](https://basescan.org/tx/0x07e9118ae6f1b004bc7c2de4186ddefd20c6c9e63e042655153934a88972d7f4) |
+| Altura Wines | Central Logistics | 94 | cold-chain-maintained | `0x3b101ae...` | [BaseScan](https://basescan.org/tx/0x3b101ae51ade754137f462ecde527fe83c60b7d56ebfebb303f67333c85deb0d) |
+| Estancia Meats | Buenos Table | 95 | restaurant-partnership | `0xe2a303d...` | [BaseScan](https://basescan.org/tx/0xe2a303d5c9e64b395f4765a10a5318aa9620c96c9d6e487a56c76cf7f9ee6d13) |
+
+### Onchain Summary
+
+- **40+ cross-squad reputation feedbacks** from MateOS squads (scores 86-96)
+- **3 complete validation cycles** (submit → validate → scored)
+- **1 dispute filed and recorded** (first dispute on the contract)
+- **7 total SelfValidation events** on-chain
+- All verifiable on BaseScan — click any link above
 
 **Real onchain transaction — cross-squad feedback (score 96) submitted to ERC-8004 Reputation Registry:**
 
