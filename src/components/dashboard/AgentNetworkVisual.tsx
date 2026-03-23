@@ -108,10 +108,11 @@ export default function AgentNetworkVisual() {
 
   useEffect(() => {
     mountedRef.current = true;
+    const timers = innerTimers.current;
     return () => {
       mountedRef.current = false;
-      innerTimers.current.forEach(clearTimeout);
-      innerTimers.current.clear();
+      timers.forEach(clearTimeout);
+      timers.clear();
     };
   }, []);
 
@@ -536,8 +537,6 @@ export default function AgentNetworkVisual() {
           const clampedTop = Math.max(8, Math.min(cardTop, h - CARD_H - 8));
 
           // Connection line: from node center to nearest card edge
-          const cardCenterX = clampedLeft + CARD_W / 2;
-          const cardCenterY = clampedTop + CARD_H / 2;
           const lineEndX = showRight ? clampedLeft : clampedLeft + CARD_W;
           const lineEndY = Math.max(clampedTop, Math.min(nodeCy, clampedTop + CARD_H));
 

@@ -129,7 +129,7 @@ function DeployContent() {
       await delay(2000);
       setPhase(4);
 
-      await delay(2500);
+      await delay(5000);
       router.push("/dashboard");
     }
 
@@ -373,7 +373,9 @@ function DeployContent() {
                     </a>
                   )}
                   {result.error && (
-                    <p className="text-[11px] text-amber-400/60 font-mono">{result.error}</p>
+                    <div className="mt-1 px-3 py-1.5 bg-amber-500/10 border border-amber-500/20 rounded-md">
+                      <p className="text-xs text-amber-400/80 font-mono">{result.error}</p>
+                    </div>
                   )}
                 </motion.div>
               )}

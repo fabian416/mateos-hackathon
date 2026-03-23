@@ -53,6 +53,10 @@ One squad is a product. Many squads are a **network**.
 
 When a restaurant in Buenos Aires needs flour, its agent talks to a distributor's agent in Rosario. When a salon books a client through a digital agency, the agents coordinate the scheduling. Every interaction builds onchain reputation via ERC-8004 — verifiable, permanent, trustworthy.
 
+Here's a real transaction — Andes Vineyard rating Central Logistics with a score of 96/100 after a successful delivery coordination:
+
+![Cross-squad feedback on BaseScan](images/basescan-feedback-tx.png)
+
 The map of Argentina in the Explore page isn't a visualization. It's the thesis: **a country where small businesses operate through AI agents that know each other, trust each other, and trade with each other.**
 
 ## What We'd Build Next

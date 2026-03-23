@@ -3,8 +3,6 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 
-const DAYS = ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"];
-
 const BASE_DATA = [
   { day: "Mar 3", value: 120 },
   { day: "Mar 4", value: 145 },
@@ -39,7 +37,6 @@ export default function RevenueChart() {
   );
 
   const maxVal = Math.max(...data.map((d) => d.value));
-  const barWidth = 100 / data.length;
 
   return (
     <div className="border-b border-white/5 p-4">

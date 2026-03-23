@@ -85,6 +85,10 @@ Every bot responds in character. Message any of them right now on Telegram.
 
 6 squads registered with 6 independent wallets. 25+ cross-squad reputation feedbacks recorded onchain. 3 complete self-validation cycles (submit + verify + dispute window). All verifiable on BaseScan.
 
+**Real onchain transaction — cross-squad feedback (score 96) submitted to ERC-8004 Reputation Registry:**
+
+![BaseScan transaction showing cross-squad feedback submission](docs/images/basescan-feedback-tx.png)
+
 ## Agent Types
 
 | Agent | Name | Role |

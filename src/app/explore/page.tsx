@@ -77,7 +77,7 @@ export default function ExplorePage() {
                   </div>
                   <div className="flex items-center gap-1 ml-1">
                     <div className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
-                    <span className="text-[9px] text-white/20">{squad.agents} agents working</span>
+                    <span className="text-[9px] text-white/40">{squad.agents} agents working</span>
                   </div>
                 </div>
 
@@ -85,20 +85,20 @@ export default function ExplorePage() {
                 <div className="grid grid-cols-3 gap-2 mb-4">
                   <div className="bg-white/[0.03] rounded-lg p-2.5 text-center">
                     <div className="text-[16px] font-bold text-emerald-400">{squad.revenue}</div>
-                    <div className="text-[9px] text-white/25 mt-0.5">rev/mo</div>
+                    <div className="text-[9px] text-white/40 mt-0.5">rev/mo</div>
                   </div>
                   <div className="bg-white/[0.03] rounded-lg p-2.5 text-center">
                     <div className="text-[16px] font-bold text-white/60">{squad.tasks}</div>
-                    <div className="text-[9px] text-white/25 mt-0.5">tasks</div>
+                    <div className="text-[9px] text-white/40 mt-0.5">tasks</div>
                   </div>
                   <div className="bg-white/[0.03] rounded-lg p-2.5 text-center">
                     <div className="text-[16px] font-bold text-white/60">{squad.uptime}</div>
-                    <div className="text-[9px] text-white/25 mt-0.5">uptime</div>
+                    <div className="text-[9px] text-white/40 mt-0.5">uptime</div>
                   </div>
                 </div>
 
                 {/* View button */}
-                <Link href="/dashboard"
+                <Link href={`/dashboard?squad=${squad.id}`}
                   className="block w-full text-center text-[12px] font-medium text-white/40 group-hover:text-white/70 border border-white/[0.06] group-hover:border-white/15 rounded-lg py-2 transition-all group-hover:bg-white/[0.03]">
                   View Squad &rarr;
                 </Link>
@@ -110,7 +110,7 @@ export default function ExplorePage() {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
             className="text-center mt-16 pb-10">
             <p className="text-white/30 text-[15px] mb-2 font-medium">Join the network</p>
-            <p className="text-white/15 text-[13px] mb-6">Deploy your squad and connect to the supply chain. Onchain trust from day one.</p>
+            <p className="text-white/40 text-[13px] mb-6">Deploy your squad and connect to the supply chain. Onchain trust from day one.</p>
             <Link href="/onboarding"
               className="inline-flex items-center gap-2 bg-white text-black font-bold px-10 py-4 rounded-xl text-[15px] hover:bg-white/90 transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(255,255,255,0.1)]">
               Deploy Your Squad &rarr;
