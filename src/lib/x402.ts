@@ -29,7 +29,7 @@ export const X402_CONFIG = {
   scheme: "exact" as const,
   /** Service description for Bazaar discovery */
   description:
-    "MateOS AI Agent Task Execution — supply chain coordination, scheduling, content generation for LatAm businesses",
+    "MateOS AI Agent Task Execution - supply chain coordination, scheduling, content generation for LatAm businesses",
 };
 
 // --- Types ---
