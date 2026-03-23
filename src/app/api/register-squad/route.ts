@@ -73,6 +73,7 @@ export async function POST(req: NextRequest) {
       abi,
       functionName: "register",
       args: [metadataUri],
+      gas: BigInt(300000),
     });
 
     const registerReceipt = await publicClient.waitForTransactionReceipt({
@@ -118,6 +119,7 @@ export async function POST(req: NextRequest) {
       abi,
       functionName: "transferFrom",
       args: [account.address, checksumOwner, agentId],
+      gas: BigInt(100000),
     });
 
     await publicClient.waitForTransactionReceipt({
