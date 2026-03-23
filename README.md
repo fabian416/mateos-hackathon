@@ -44,6 +44,8 @@ Every bot responds in character. Message any of them right now on Telegram.
 
 ## Architecture
 
+![MateOS System Flow — all hackathon tracks](docs/images/system-flow-diagram.png)
+
 ```
                     mateos.tech
                         │

@@ -122,16 +122,15 @@ flowchart TB
     CEO <-->|sessions_send| BagChaser
     CEO <-->|sessions_send| CalendApe
 
-    %% === STYLING ===
-    classDef user fill:#FFEAA7,stroke:#F39C12,stroke-width:2px,color:#000
-    classDef frontend fill:#DFE6E9,stroke:#636E72,stroke-width:2px,color:#000
-    classDef x402 fill:#74B9FF,stroke:#0984E3,stroke-width:3px,color:#000
-    classDef agents fill:#FD79A8,stroke:#E84393,stroke-width:2px,color:#000
-    classDef squads fill:#FDCB6E,stroke:#E17055,stroke-width:2px,color:#000
-    classDef autonomy fill:#A29BFE,stroke:#6C5CE7,stroke-width:3px,color:#000
-    classDef onchain fill:#55EFC4,stroke:#00B894,stroke-width:3px,color:#000
-    classDef bankr fill:#FAB1A0,stroke:#E17055,stroke-width:3px,color:#000
-    classDef infra fill:#B2BEC3,stroke:#636E72,stroke-width:1px,color:#000
+    %% === STYLING — borders only, no fills ===
+    classDef user stroke:#F39C12,stroke-width:2px
+    classDef frontend stroke:#636E72,stroke-width:2px
+    classDef x402 stroke:#0984E3,stroke-width:3px
+    classDef agents stroke:#E84393,stroke-width:2px
+    classDef squads stroke:#E17055,stroke-width:2px
+    classDef autonomy stroke:#6C5CE7,stroke-width:3px
+    classDef onchain stroke:#00B894,stroke-width:3px
+    classDef bankr stroke:#E17055,stroke-width:3px
 
     class USER user
     class FRONTEND frontend
