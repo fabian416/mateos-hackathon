@@ -29,7 +29,7 @@ const SQUADS: Squad[] = [
   { id: "tucuman", name: "Norte Citrus Co.", city: "Tucumán", type: "Citrus Processing — Lemons", agents: 4, revenue: "$1,800", reputation: 91, x: 641, y: 745, color: "#EC4899", telegram: "norte_citrus_ceo_bot", agentId: 35306 },
   { id: "cordoba", name: "Estancia Meats", city: "Córdoba", type: "Cured Meats & Artisan Cheese", agents: 4, revenue: "$1,500", reputation: 88, x: 640, y: 774, color: "#06B6D4", telegram: "estancia_meats_ceo_bot", agentId: 35307 },
   { id: "rosario", name: "Central Logistics", city: "Rosario", type: "Logistics Hub — Consolidation", agents: 6, revenue: "$5,800", reputation: 96, x: 654, y: 783, color: "#8B5CF6", telegram: "central_logistics_ceo_bot", agentId: 35304 },
-  { id: "bsas", name: "Buenos Table", city: "Buenos Aires", type: "Farm-to-Table Restaurant", agents: 7, revenue: "$8,200", reputation: 97, x: 662, y: 795, color: "#EAB308", telegram: "mateos_ceo", agentId: 35270 },
+  { id: "bsas", name: "Buenos Table", city: "Buenos Aires", type: "Farm-to-Table Restaurant", agents: 7, revenue: "$8,200", reputation: 97, x: 662, y: 795, color: "#EAB308", telegram: "mateo_ceo_bot", agentId: 35270 },
 ];
 
 // --- Supply chain connections (real commercial relationships) ---
@@ -437,17 +437,19 @@ export default function ArgentinaNetwork() {
                       e.stopPropagation();
                       setRequestingQuote(true);
                       setSelectedSquad(null);
-                      // Fire a real onchain feedback + show pulse
-                      fetch(`/api/request-quote?to=${squad.id}&agentId=${squad.agentId}`).catch(() => {});
-                      firePulseRaw("bsas", squad.id, `⛓ Quote requested from ${squad.name}`, true);
-                      setTimeout(() => setRequestingQuote(false), 3000);
+                      // Fire visual pulse on the map
+                      firePulseRaw("bsas", squad.id, `Quote requested → ${squad.name}`, false);
+                      // Send actual Telegram message to the squad CEO
+                      const msg = encodeURIComponent(`⛓️ Inter-squad quote request from Buenos Table (ERC-8004 verified, agentId 35270, rep 92/100):\n\nRequesting a quote for our weekly supply order. Please confirm availability, pricing, and delivery timeline.`);
+                      window.open(`https://t.me/${squad.telegram}?text=${msg}`, "_blank");
+                      setTimeout(() => setRequestingQuote(false), 2000);
                     }}
                     disabled={requestingQuote}
                     className="flex items-center gap-2 w-full bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 hover:border-emerald-500/30 rounded-lg px-3 py-2 transition-all cursor-pointer disabled:opacity-30"
                   >
                     <span className="text-[16px]">⛓</span>
                     <span className="text-[11px] text-emerald-400/80 font-medium">
-                      {requestingQuote ? "Sending..." : "Request Quote (onchain)"}
+                      {requestingQuote ? "Sending..." : "Request Quote"}
                     </span>
                   </button>
 

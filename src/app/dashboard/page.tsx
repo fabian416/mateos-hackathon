@@ -46,50 +46,27 @@ function DashboardContent() {
       <StarField />
       {/* Top nav */}
       <TopNav />
-      {/* Sub header */}
-      <header className="relative z-10 border-b border-white/[0.06] px-4 sm:px-6 py-3 bg-black/20 backdrop-blur-sm shrink-0">
+      {/* Squad info bar */}
+      <header className="relative z-10 border-b border-white/[0.06] px-4 sm:px-6 py-2.5 bg-black/20 backdrop-blur-sm shrink-0">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 sm:gap-3">
-            <a href="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
-              <svg className="w-8 h-8 sm:w-9 sm:h-9" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <radialGradient id="hdrGrad" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="#7C5CFF"/>
-                    <stop offset="100%" stopColor="#00D1FF"/>
-                  </radialGradient>
-                </defs>
-                <circle cx="110" cy="110" r="90" stroke="url(#hdrGrad)" strokeWidth="4" opacity="0.6"/>
-                <circle cx="110" cy="110" r="35" fill="url(#hdrGrad)"/>
-                <circle cx="110" cy="40" r="6" fill="#7C5CFF"/>
-                <circle cx="180" cy="110" r="6" fill="#00D1FF"/>
-                <circle cx="110" cy="180" r="6" fill="#7C5CFF"/>
-                <circle cx="40" cy="110" r="6" fill="#00D1FF"/>
-              </svg>
-              <span className="font-bold text-white text-[15px] sm:text-[17px] tracking-tight">MateOS</span>
-            </a>
-            <span className="text-[11px] text-white/25 bg-white/5 border border-white/10 px-2.5 py-0.5 rounded-full ml-1 hidden sm:inline">Zero Human Factory</span>
+          <div className="flex items-center gap-3">
+            <Link href="/network"
+              className="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-lg px-3 py-1.5 transition-all group">
+              <span className="text-[12px] text-white/40 group-hover:text-white/70 transition-colors">&larr; Network</span>
+            </Link>
+            <div className="flex items-center gap-2 rounded-lg px-4 py-1.5" style={{ backgroundColor: `${squad.color}15`, borderColor: `${squad.color}30`, borderWidth: 1, boxShadow: `0 0 16px ${squad.color}15` }}>
+              <span style={{ color: squad.color }} className="text-[12px]">&#10022;</span>
+              <span className="text-[12px] font-semibold" style={{ color: `${squad.color}dd` }}>{squad.name}</span>
+              {isOwner && <span className="text-[10px] text-emerald-400/70 ml-1">Owner</span>}
+              {!isOwner && <span className="text-[10px] text-white/30 ml-1">Viewer</span>}
+            </div>
           </div>
-
-          <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
-              <span className="text-[11px] sm:text-[12px] text-emerald-400/80 font-medium">{squad.agents} online</span>
+              <span className="text-[11px] text-emerald-400/80 font-medium">{squad.agents} online</span>
             </div>
             <span className="text-[11px] text-white/25 hidden sm:inline">Base Mainnet</span>
-          </div>
-        </div>
-
-        {/* Current squad + navigation */}
-        <div className="flex items-center gap-3 mt-2">
-          <Link href="/network"
-            className="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 rounded-lg px-4 py-1.5 transition-all group">
-            <span className="text-[12px] text-white/40 group-hover:text-white/70 transition-colors">&larr; Network</span>
-          </Link>
-          <div className="flex items-center gap-2 rounded-lg px-4 py-1.5" style={{ backgroundColor: `${squad.color}15`, borderColor: `${squad.color}30`, borderWidth: 1, boxShadow: `0 0 16px ${squad.color}15` }}>
-            <span style={{ color: squad.color }} className="text-[12px]">&#10022;</span>
-            <span className="text-[12px] font-semibold" style={{ color: `${squad.color}dd` }}>{squad.name}</span>
-            {isOwner && <span className="text-[10px] text-emerald-400/70 ml-1">Owner</span>}
-            {!isOwner && <span className="text-[10px] text-white/30 ml-1">Viewer</span>}
           </div>
         </div>
       </header>

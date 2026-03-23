@@ -21,8 +21,8 @@ mkdir -p ~/.openclaw/workspaces/${SQUAD_AGENT_ID}/memory
 cp /mnt/workspace/*.md ~/.openclaw/workspaces/${SQUAD_AGENT_ID}/ 2>/dev/null || true
 echo "{}" > ~/.openclaw/workspaces/${SQUAD_AGENT_ID}/channel-state.json
 
-# Generate auth profile
-AUTH_JSON="{\"version\":1,\"profiles\":{\"google:default\":{\"type\":\"api_key\",\"provider\":\"google\",\"key\":\"${GOOGLE_API_KEY:-}\"}}}"
+# Generate auth profile (Google + AWS Bedrock)
+AUTH_JSON="{\"version\":1,\"profiles\":{\"google:default\":{\"type\":\"api_key\",\"provider\":\"google\",\"key\":\"${GOOGLE_API_KEY:-}\"},\"anthropic:default\":{\"type\":\"aws_bedrock\",\"provider\":\"anthropic\",\"awsRegion\":\"${AWS_REGION:-us-east-1}\",\"awsAccessKeyId\":\"${AWS_ACCESS_KEY_ID:-}\",\"awsSecretAccessKey\":\"${AWS_SECRET_ACCESS_KEY:-}\"}}}"
 mkdir -p ~/.openclaw/agents/${SQUAD_AGENT_ID}/agent
 echo "$AUTH_JSON" > ~/.openclaw/agents/${SQUAD_AGENT_ID}/agent/auth-profiles.json
 chmod 600 ~/.openclaw/agents/${SQUAD_AGENT_ID}/agent/auth-profiles.json

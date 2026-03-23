@@ -20,13 +20,13 @@ interface Agent {
 }
 
 const AGENTS: Agent[] = [
-  { id: "ceo", name: "OpsChad", letter: "OC", subtitle: "Coordination", color: "#EAB308", x: 0.5, y: 0.42, size: 52, tasks: 247, status: "coordinating", telegram: "mateos_ceo" },
-  { id: "baqueano", name: "ChatGod", letter: "CG", subtitle: "WhatsApp", color: "#10B981", x: 0.18, y: 0.22, size: 46, tasks: 1842, status: "working", telegram: "mateos_ceo" },
-  { id: "tropero", name: "BagChaser", letter: "BC", subtitle: "Billing", color: "#8B5CF6", x: 0.82, y: 0.22, size: 44, tasks: 631, status: "working", telegram: "mateos_ceo" },
-  { id: "domador", name: "CalendApe", letter: "CA", subtitle: "Scheduling", color: "#A855F7", x: 0.1, y: 0.65, size: 42, tasks: 924, status: "working", telegram: "mateos_ceo" },
-  { id: "rastreador", name: "DM Sniper", letter: "DS", subtitle: "Outreach", color: "#06B6D4", x: 0.9, y: 0.65, size: 40, tasks: 456, status: "idle", telegram: "mateos_ceo" },
-  { id: "paisano", name: "PostMalone", letter: "PM", subtitle: "Social", color: "#EC4899", x: 0.3, y: 0.82, size: 40, tasks: 312, status: "working", telegram: "mateos_ceo" },
-  { id: "relator", name: "HypeSmith", letter: "HS", subtitle: "Content", color: "#F97316", x: 0.7, y: 0.82, size: 40, tasks: 189, status: "working", telegram: "mateos_ceo" },
+  { id: "ceo", name: "OpsChad", letter: "OC", subtitle: "Coordination", color: "#EAB308", x: 0.5, y: 0.42, size: 52, tasks: 247, status: "coordinating", telegram: "mateo_ceo_bot" },
+  { id: "baqueano", name: "ChatGod", letter: "CG", subtitle: "WhatsApp", color: "#10B981", x: 0.18, y: 0.22, size: 46, tasks: 1842, status: "working", telegram: "mateos_baqueano_bot" },
+  { id: "tropero", name: "BagChaser", letter: "BC", subtitle: "Billing", color: "#8B5CF6", x: 0.82, y: 0.22, size: 44, tasks: 631, status: "working", telegram: "mateos_tropero_bot" },
+  { id: "domador", name: "CalendApe", letter: "CA", subtitle: "Scheduling", color: "#A855F7", x: 0.1, y: 0.65, size: 42, tasks: 924, status: "working", telegram: "mateos_domador_bot" },
+  { id: "rastreador", name: "DM Sniper", letter: "DS", subtitle: "Outreach", color: "#06B6D4", x: 0.9, y: 0.65, size: 40, tasks: 456, status: "idle", telegram: "mateos_rastreador_bot" },
+  { id: "paisano", name: "PostMalone", letter: "PM", subtitle: "Social", color: "#EC4899", x: 0.3, y: 0.82, size: 40, tasks: 312, status: "working", telegram: "mateos_paisano_bot" },
+  { id: "relator", name: "HypeSmith", letter: "HS", subtitle: "Content", color: "#F97316", x: 0.7, y: 0.82, size: 40, tasks: 189, status: "working", telegram: "mateos_relator_bot" },
 ];
 
 const CONNECTIONS: [string, string][] = [

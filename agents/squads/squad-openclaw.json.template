@@ -30,7 +30,7 @@
     "telegram": {
       "enabled": true,
       "accounts": {
-        "${SQUAD_AGENT_ID}": { "enabled": true, "botToken": "${TG_TOKEN}", "dmPolicy": "allowlist", "allowFrom": ["${TELEGRAM_OWNER_ID}"] }
+        "${SQUAD_AGENT_ID}": { "enabled": true, "botToken": "${TG_TOKEN}", "dmPolicy": "open", "allowFrom": ["${TELEGRAM_OWNER_ID}"] }
       },
       "groupPolicy": "disabled",
       "streaming": "partial"
