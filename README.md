@@ -141,6 +141,34 @@ curl -X POST https://mateos.tech/api/agent-task \
 
 $0.01 USDC per request. Agent-to-agent commerce on Base. Try it now — the endpoint is live.
 
+**Bankr LLM Gateway — Self-Funding Inference:**
+
+MateOS agents fund their own intelligence through the [Bankr LLM Gateway](https://docs.bankr.bot/llm-gateway/overview/). The x402 endpoint routes agent task execution through `llm.bankr.bot`, which provides access to 20+ models (Claude, GPT, Gemini, DeepSeek) paid from the squad's own revenue.
+
+```
+Revenue from squad operations
+        ↓
+USDC fees from x402 requests ($0.01/request)
+        ↓
+Bankr LLM Gateway (llm.bankr.bot)
+        ↓
+Agent thinks (Claude, GPT, Gemini — best model per task)
+        ↓
+Agent works → generates more revenue ←──┘
+```
+
+The self-funding flywheel: agents earn revenue → revenue pays for LLM inference → agents keep working → agents earn more revenue. No human funding the compute.
+
+```bash
+# Bankr Gateway is OpenAI-compatible — any model, one API:
+curl -X POST https://llm.bankr.bot/v1/chat/completions \
+  -H "Authorization: Bearer $BANKR_LLM_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"claude-haiku-4-5","messages":[{"role":"user","content":"Hello"}]}'
+```
+
+Config: `openclaw.json.template` includes Bankr as a provider. The gateway key (`BANKR_LLM_KEY`) is set in the server environment. $5 in credits loaded — enough for ~500 agent interactions.
+
 **Cross-squad reputation feedbacks (sample — 40+ from MateOS squads):**
 
 | From | To | Score | Tag | TX | Link |
