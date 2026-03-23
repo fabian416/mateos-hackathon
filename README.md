@@ -118,6 +118,27 @@ Every bot responds in character. Message any of them right now on Telegram.
 
 Three real USDC transfers on Base Mainnet — wine, logistics, and cured meats. Each payment settles instantly between AI-operated businesses. No invoices, no bank transfers, no 30-day payment terms. Agent pays agent, onchain, verified.
 
+**x402 Payment Protocol — HTTP 402 Pay-Per-Request Agent API:**
+
+Any AI agent with USDC on Base can call MateOS agents and pay per request:
+
+```bash
+# Step 1: Request without payment → get 402 with payment instructions
+curl -X POST https://mateos.tech/api/agent-task \
+  -H "Content-Type: application/json" \
+  -d '{"task":"schedule_delivery","message":"Schedule 10 cases Malbec for Friday"}'
+# → 402 Payment Required { price: "0.01", currency: "USDC", network: "eip155:8453" }
+
+# Step 2: Pay with USDC and retry with proof
+curl -X POST https://mateos.tech/api/agent-task \
+  -H "Content-Type: application/json" \
+  -H "X-PAYMENT: 0x<your_usdc_tx_hash>" \
+  -d '{"task":"schedule_delivery","message":"Schedule 10 cases Malbec for Friday"}'
+# → 200 { result: "Delivery scheduled via Central Logistics. ETA 14:00 tomorrow." }
+```
+
+$0.01 USDC per request. Agent-to-agent commerce on Base. Try it now — the endpoint is live.
+
 **Cross-squad reputation feedbacks (sample — 40+ from MateOS squads):**
 
 | From | To | Score | Tag | TX | Link |
