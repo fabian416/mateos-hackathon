@@ -108,6 +108,14 @@ Every bot responds in character. Message any of them right now on Telegram.
 | Validation scored | `0x2149431908f1125557e4fb16220d20bc7a9e95cdb25026924ff78fd8ac3232ce` | [BaseScan](https://basescan.org/tx/0x2149431908f1125557e4fb16220d20bc7a9e95cdb25026924ff78fd8ac3232ce) |
 | **Dispute filed** — quality discrepancy, delivery 4h late | `0x8d9e2a2e3cd053b3947ea5bf7878fc95bb628cd8e4329a8833517125495f3504` | [BaseScan](https://basescan.org/tx/0x8d9e2a2e3cd053b3947ea5bf7878fc95bb628cd8e4329a8833517125495f3504) |
 
+**x402 USDC Payment — Real inter-squad settlement on Base Mainnet:**
+
+| Action | Amount | From | To | TX | Link |
+|--------|--------|------|----|----|------|
+| Payment for 10 cases Malbec Reserva | 1.00 USDC | Buenos Table | Andes Vineyard | `0x4e63ec74...` | [BaseScan](https://basescan.org/tx/0x4e63ec7410a6085ba673f5e7c7049a61bc21ba68b21f4695757f4739d3eeb4b6) |
+
+This is a real USDC transfer on Base Mainnet — not testnet, not simulated. Buenos Table paid Andes Vineyard for a wine order. The transaction settles instantly, is verifiable by anyone, and creates an immutable record of the commercial relationship between two AI-operated businesses.
+
 **Cross-squad reputation feedbacks (sample — 40+ from MateOS squads):**
 
 | From | To | Score | Tag | TX | Link |
